@@ -1,7 +1,4 @@
-/**
- * DFP ADDER
- */
-
+//DFP Adder
 (function($,window) {
 
 	"use strict";
@@ -10,7 +7,8 @@
 	var dfp_id = '';
 
 	// Count of ads
-	var count = 0;
+	var count = 0,
+		rendered = 0;
 
 	// Default DFP jQuery selector
 	var dfp_selector = '.adunit';
@@ -91,13 +89,26 @@
 				google_adunit.oldRenderEnded = google_adunit.renderEnded;
 				google_adunit.renderEnded = function() {
 
+					rendered++;
+
 					var display = $(adunit).css('display');
+					$(adunit).addClass('display-'+display);
 					// if the div has been collapsed but there was existing content expand the
 					// div and reinsert the existing content.
 					if(display === 'none' && $existing_content.trim().length > 0) {
 						$(adunit).show().html($existing_content);
 					}
 					google_adunit.oldRenderEnded();
+
+					// Excute afterEachAdLoaded
+					if(typeof dfp_options.afterEachAdLoaded === 'function') {
+						dfp_options.afterEachAdLoaded.call(this,adunit);
+					}
+
+					// Excute afterAllAdsLoaded
+					if(typeof dfp_options.afterAllAdsLoaded === 'function' && rendered === count) {
+						dfp_options.afterAllAdsLoaded.call(this,adunit);
+					}
 
 				};
 
