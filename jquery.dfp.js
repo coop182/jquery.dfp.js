@@ -3,117 +3,133 @@
 
 	"use strict";
 
+	// Save Scope
+	var dfpScript = this;
+
 	// DFP account ID
-	var dfp_id = '';
+	var dfpID = '';
 
 	// Count of ads
-	var count = 0,
-		rendered = 0;
+	var count = 0;
+
+	// Count of rendered ads
+	var rendered = 0;
 
 	// Default DFP jQuery selector
-	var dfp_selector = '.adunit';
+	var dfpSelector = '.adunit';
 
 	// Init function sets required params and loads googles dfp script
 	var init = function(id,selector,options) {
 
-		dfp_id = id || dfp_id;
-		dfp_selector = selector || dfp_selector;
+		dfpID = id || dfpID;
+		dfpSelector = selector || dfpSelector;
 		options = options || {};
-		inject_dfp();
-		$(function(){create_ads(options);});
+		dfpLoader();
+		$(function(){createAds(options);});
 
 	};
 
 	// Main function to find and create all ads
-	var create_ads = function(options) {
+	var createAds = function(options) {
 
 		// Default DFP options
-		var target_paths = get_targetpaths();
-		var dfp_options = {
+		var targetPaths = getTargetpaths();
+		var dfpOptions = {
 			'setTargeting':{
-				'PageURI':target_paths
-			}
+				'inURL':targetPaths,
+				'URLIs':targetPaths[0],
+				'Domain':window.location.host
+			},
+			'enableSingleRequest':true,
+			'collapseEmptyDivs':'original'
 		};
 
 		// Make sure the default setTargetting is not lost in the object merge
-		if(typeof options.setTargeting !== 'undefined' && typeof dfp_options.setTargeting !== 'undefined') {
-			options.setTargeting = $.extend(options.setTargeting, dfp_options.setTargeting);
+		if(typeof options.setTargeting !== 'undefined' && typeof dfpOptions.setTargeting !== 'undefined') {
+			options.setTargeting = $.extend(options.setTargeting, dfpOptions.setTargeting);
 		}
 
 		// Merge options objects
-		dfp_options = $.extend(dfp_options, options);
+		dfpOptions = $.extend(dfpOptions, options);
 
 		// Push DFP config options
 		window.googletag.cmd.push(function() {
 
-			window.googletag.pubads().enableSingleRequest();
-			$.each(dfp_options.setTargeting, function(k,v) {
-				//window.console.log(k,v);
+			if(dfpOptions.enableSingleRequest === true) {
+				window.googletag.pubads().enableSingleRequest();
+			}
+			$.each(dfpOptions.setTargeting, function(k,v) {
 				window.googletag.pubads().setTargeting(k,v);
 			});
-			window.googletag.pubads().collapseEmptyDivs();
+			if(dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
+				window.googletag.pubads().collapseEmptyDivs();
+			}
 			window.googletag.enableServices();
 
 		});
 
-		// Loops through on page adunits and gets ads for them.
-		$(dfp_selector).each(function() {
+		// Loops through on page Ad units and gets ads for them.
+		$(dfpSelector).each(function() {
 
-			var adunit = this;
+			var adUnit = this;
 
 			count++;
 
-			// Adunit name
-			var adunit_name = get_name(adunit);
+			// adUnit name
+			var adUnitName = getName(adUnit);
 
-			// Adunit id - this will use an existing id or an auto generated one.
-			var adunit_id = get_id(adunit,adunit_name,count);
+			// adUnit id - this will use an existing id or an auto generated one.
+			var adUnitID = getID(adUnit,adUnitName,count);
 
-			// get dimensions of the adunit
-			var dimensions = get_dimensions(adunit);
+			// get dimensions of the adUnit
+			var dimensions = getDimensions(adUnit);
 
 			// get existing content
-			var $existing_content = $(adunit).html();
+			var $existingContent = $(adUnit).html();
 
 			// wipe html clean ready for ad
-			$(adunit).html('');
+			$(adUnit).html('');
 
 			// Push commands to DFP to create ads
 			window.googletag.cmd.push(function() {
 
 				// Create the ad
-				var google_adunit = window.googletag.defineSlot('/'+dfp_id+'/'+adunit_name, [dimensions.width, dimensions.height], adunit_id).addService(window.googletag.pubads());
+				var googleAdUnit = window.googletag.defineSlot('/'+dfpID+'/'+adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
 
 				// The following hijacks an internal google method to check if the div has been
 				// collapsed after the ad has been attempted to be loaded.
-				google_adunit.oldRenderEnded = google_adunit.renderEnded;
-				google_adunit.renderEnded = function() {
+				googleAdUnit.oldRenderEnded = googleAdUnit.renderEnded;
+				googleAdUnit.renderEnded = function() {
 
 					rendered++;
 
-					var display = $(adunit).css('display');
-					$(adunit).addClass('display-'+display);
+					var display = $(adUnit).css('display');
+
 					// if the div has been collapsed but there was existing content expand the
 					// div and reinsert the existing content.
-					if(display === 'none' && $existing_content.trim().length > 0) {
-						$(adunit).show().html($existing_content);
+					if(display === 'none' && $existingContent.trim().length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
+						$(adUnit).show().html($existingContent);
+						display = 'original';
 					}
-					google_adunit.oldRenderEnded();
+
+					$(adUnit).addClass('display-'+display);
+
+					googleAdUnit.oldRenderEnded();
 
 					// Excute afterEachAdLoaded
-					if(typeof dfp_options.afterEachAdLoaded === 'function') {
-						dfp_options.afterEachAdLoaded.call(this,adunit);
+					if(typeof dfpOptions.afterEachAdLoaded === 'function') {
+						dfpOptions.afterEachAdLoaded.call(this,adUnit);
 					}
 
 					// Excute afterAllAdsLoaded
-					if(typeof dfp_options.afterAllAdsLoaded === 'function' && rendered === count) {
-						dfp_options.afterAllAdsLoaded.call(this,adunit);
+					if(typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
+						dfpOptions.afterAllAdsLoaded.call(this,adUnit);
 					}
 
 				};
 
 				// Display the ad
-				window.googletag.display(adunit_id);
+				window.googletag.display(adUnitID);
 
 			});
 
@@ -121,33 +137,33 @@
 	};
 
 	// Create an array of paths so that we can target DFP ads to Page URI's
-	var get_targetpaths = function() {
+	var getTargetpaths = function() {
 
 		var paths = window.location.pathname.replace(/\/$/,'');
 		var patt = new RegExp('\/([^\/]*)','ig');
-		var paths_matches = paths.match(patt);
-		var target_paths = ['/'];
-		if(paths !== '/' && paths_matches !== null) {
+		var pathsMatches = paths.match(patt);
+		var targetPaths = ['/'];
+		if(paths !== '/' && pathsMatches !== null) {
 			var target = '';
-			if(paths_matches.length > 0) {
-				$.each(paths_matches,function(k,v){
+			if(pathsMatches.length > 0) {
+				$.each(pathsMatches,function(k,v){
 					target += v;
-					target_paths.push(target);
+					targetPaths.push(target);
 				});
 			}
 		}
 
-		return target_paths.reverse();
+		return targetPaths.reverse();
 
 	};
 
-	// Get the id of the adunit div or generate a unique one.
-	var get_id = function (adunit,adunit_name,count) {
+	// Get the id of the adUnit div or generate a unique one.
+	var getID = function (adUnit,adUnitName,count) {
 
-		var id = adunit.id;
+		var id = adUnit.id;
 		if(id === '')
 		{
-			id = adunit.id = adunit_name + '-auto-gen-id-' + count;
+			id = adUnit.id = adUnitName + '-auto-gen-id-' + count;
 		}
 
 		return id;
@@ -155,13 +171,13 @@
 	};
 
 	// Get the name of the Ad unit, either use the div id or
-	// check for the optional attribute data-adunit
-	var get_name = function(adunit) {
+	// check for the optional attribute data-adUnit
+	var getName = function(adUnit) {
 
-		var name = adunit.id;
-		if(typeof $(adunit).attr('data-adunit') !== 'undefined') {
+		var name = adUnit.id;
+		if(typeof $(adUnit).attr('data-adunit') !== 'undefined') {
 
-			name = $(adunit).attr('data-adunit');
+			name = $(adUnit).attr('data-adunit');
 
 		}
 
@@ -171,15 +187,15 @@
 
 	// Get the dimensions of the ad unit using the cotainer div dimensions or
 	// check for the optional attribute data-dimensions
-	var get_dimensions = function(adunit) {
+	var getDimensions = function(adUnit) {
 
-		var width = $(adunit).width();
-		var height = $(adunit).height();
+		var width = $(adUnit).width();
+		var height = $(adUnit).height();
 
 		// check if dimensions are hardcoded and overide the size
-		if(typeof $(adunit).attr('data-dimensions') !== 'undefined') {
+		if(typeof $(adUnit).attr('data-dimensions') !== 'undefined') {
 
-			var dimensions = $(adunit).attr('data-dimensions').split('x');
+			var dimensions = $(adUnit).attr('data-dimensions').split('x');
 			width = parseInt(dimensions[0],10);
 			height = parseInt(dimensions[1],10);
 
@@ -190,7 +206,7 @@
 	};
 
 	// Call the google DFP script
-	var inject_dfp = function() {
+	var dfpLoader = function() {
 
 		window.googletag = window.googletag || {};
 		window.googletag.cmd = window.googletag.cmd || [];
@@ -198,11 +214,58 @@
 		var gads = document.createElement('script');
 		gads.async = true;
 		gads.type = 'text/javascript';
+		gads.onerror = function() { dfpBlocked(); };
 		var useSSL = 'https:' === document.location.protocol;
 		gads.src = (useSSL ? 'https:' : 'http:') +
 		'//www.googletagservices.com/tag/js/gpt.js';
 		var node = document.getElementsByTagName('script')[0];
 		node.parentNode.insertBefore(gads, node);
+
+		if(gads.style.display === 'none') {
+			dfpBlocked();
+		}
+
+	};
+
+	// This function gets called if DFP has been blocked
+	var dfpBlocked = function() {
+
+		var commands = window.googletag.cmd;
+
+		setTimeout(function(){
+
+			window.googletag = {
+				'cmd': {
+					'push': function(callback){
+						callback.call(dfpScript);
+					}
+				},
+				'ads':[],
+				'pubads':function() {return this;},
+				'enableSingleRequest':function() {return this;},
+				'setTargeting':function() {return this;},
+				'collapseEmptyDivs':function() {return this;},
+				'enableServices':function() {return this;},
+				'defineSlot':function(name,dimensions,id) {
+					window.googletag.ads.push(id);
+					window.googletag.ads[id] = {
+						'renderEnded':function(){},
+						'addService':function() {return this;}
+					};
+					return window.googletag.ads[id];
+				},
+				'display':function(id) {
+					window.googletag.ads[id].renderEnded.call(dfpScript);
+					return this;
+				}
+
+			};
+
+			$.each(commands,function(k,v){
+				window.googletag.cmd.push(v);
+			});
+
+		},50);
 
 	};
 
@@ -212,25 +275,25 @@
 		options = options || {};
 
 		if(typeof id === 'undefined') {
-			id = dfp_id;
+			id = dfpID;
 		}
 
 		if(typeof id === 'object') {
 			options = id;
-			id = options.dfp_id || dfp_id;
+			id = options.dfpID || dfpID;
 		}
 
 		var selector = this;
 
 		if(typeof this === 'function') {
-			selector = dfp_selector;
+			selector = dfpSelector;
 		}
 
 		init(id,selector,options);
 
 	};
 
-	// Standalone mode - this will run init if the dfp_id is set
-	if(dfp_id !== '') {init();}
+	// Standalone mode - this will run init if the dfpID is set
+	if(dfpID !== '') {init();}
 
 })(window.jQuery,window);
