@@ -32,6 +32,9 @@
 	// Main function to find and create all ads
 	var createAds = function(options) {
 
+		// Array to Store AdUnits
+		var adUnitArray = [];
+
 		// Default DFP options
 		var targetPaths = getTargetpaths();
 		var dfpOptions = {
@@ -51,22 +54,6 @@
 
 		// Merge options objects
 		dfpOptions = $.extend(dfpOptions, options);
-
-		// Push DFP config options
-		window.googletag.cmd.push(function() {
-
-			if(dfpOptions.enableSingleRequest === true) {
-				window.googletag.pubads().enableSingleRequest();
-			}
-			$.each(dfpOptions.setTargeting, function(k,v) {
-				window.googletag.pubads().setTargeting(k,v);
-			});
-			if(dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
-				window.googletag.pubads().collapseEmptyDivs();
-			}
-			window.googletag.enableServices();
-
-		});
 
 		// Loops through on page Ad units and gets ads for them.
 		$(dfpSelector).each(function() {
@@ -90,6 +77,9 @@
 			// wipe html clean ready for ad
 			$(adUnit).html('');
 
+			// Store AdUnits
+			adUnitArray.push(adUnitID);
+
 			// Push commands to DFP to create ads
 			window.googletag.cmd.push(function() {
 
@@ -109,7 +99,7 @@
 					// div and reinsert the existing content.
 					if(display === 'none' && $existingContent.trim().length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
 						$(adUnit).show().html($existingContent);
-						display = 'original';
+						display = 'block display-original';
 					}
 
 					$(adUnit).addClass('display-'+display);
@@ -128,12 +118,33 @@
 
 				};
 
-				// Display the ad
-				window.googletag.display(adUnitID);
-
 			});
 
 		});
+
+		// Push DFP config options
+		window.googletag.cmd.push(function() {
+
+			if(dfpOptions.enableSingleRequest === true) {
+				window.googletag.pubads().enableSingleRequest();
+			}
+			$.each(dfpOptions.setTargeting, function(k,v) {
+				window.googletag.pubads().setTargeting(k,v);
+			});
+			if(dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
+				window.googletag.pubads().collapseEmptyDivs();
+			}
+			window.googletag.enableServices();
+
+		});
+
+		// Display each ad
+		$.each(adUnitArray, function(k,v) {
+
+			window.googletag.cmd.push(function(){window.googletag.display(v);});
+
+		});
+
 	};
 
 	// Create an array of paths so that we can target DFP ads to Page URI's
@@ -205,35 +216,41 @@
 
 	};
 
-	// Call the google DFP script
+	// Call the google DFP script - there is a little bit of error detection in here to detect
+	// if the dfp script has failed to load either through an error or it being blocked by an ad
+	// blocker... if does not load we execute a dummy script to replace the real DFP.
 	var dfpLoader = function() {
 
-		window.googletag = window.googletag || {};
-		window.googletag.cmd = window.googletag.cmd || [];
+		window.googletag=window.googletag||{};
+		window.googletag.cmd=window.googletag.cmd||[];
 
-		var gads = document.createElement('script');
-		gads.async = true;
-		gads.type = 'text/javascript';
-		gads.onerror = function() { dfpBlocked(); };
-		var useSSL = 'https:' === document.location.protocol;
-		gads.src = (useSSL ? 'https:' : 'http:') +
-		'//www.googletagservices.com/tag/js/gpt.js';
-		var node = document.getElementsByTagName('script')[0];
-		node.parentNode.insertBefore(gads, node);
+		var a=$(["<script><","/script>"].join(""));
+		a.attr("type","text/javascript");
+		a.attr("async","async");
+		a.attr("src",document.location.protocol+"//www.googletagservices.com/tag/js/gpt.js");
+		$("head").eq(0).prepend(a);
 
-		if(gads.style.display === 'none') {
-			dfpBlocked();
-		}
+		// Adblock plus seems to hide blocked scripts... so we check for that
+		//if(gads.style.display === 'none') {
+		//	dfpBlocked();
+		//}
 
 	};
 
-	// This function gets called if DFP has been blocked
+	// This function gets called if DFP has been blocked by an adblocker
+	// it basically implements a basic dummy of the dfp object and allows the script to excute its callbacks
+	// regardless of wheather DFP is actually in effect or not... its basically only useful for situations
+	// where you are laying DFP over existing content and need to init things like slide shows after the loading
+	// is completed.
 	var dfpBlocked = function() {
 
+		// Get the stored dfp commands
 		var commands = window.googletag.cmd;
 
+		// SetTimeout is a bit dirty but the script does not execute in the correct order without it
 		setTimeout(function(){
 
+			// overwrite the dfp object - replacing the command array with a function and defining missing functions
 			window.googletag = {
 				'cmd': {
 					'push': function(callback){
@@ -261,6 +278,7 @@
 
 			};
 
+			// Execute any stored commands
 			$.each(commands,function(k,v){
 				window.googletag.cmd.push(v);
 			});
@@ -292,8 +310,5 @@
 		init(id,selector,options);
 
 	};
-
-	// Standalone mode - this will run init if the dfpID is set
-	if(dfpID !== '') {init();}
 
 })(window.jQuery,window);
