@@ -10,17 +10,17 @@ You can add containers to your page in any location that you would like to displ
 
 By default this script will look for ad units with a class of "adunit".
 
-This minimum information required for an ad unit to function is and ID attribute, for example.
+This minimum information required for an ad unit to function is an ID attribute, for example.
 
     <div class="adunit" id="Ad_unit_id"></div>
 
-In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimemsions of the div which could be defined in your CSS.
+In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimensions of the div which could be defined in your CSS.
 
 You can optionally specify the adunit and name and dimensions in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
-This method can be useful for including multiple adunits of the same ID which when part of a DFP placement will pull in as many different ads as possible.
+This method can be useful for including multiple adunits of the same ID which when part of a DFP placement, this will pull in as many different ads as possible.
 
 Example Usage
 -------------
