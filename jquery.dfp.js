@@ -186,9 +186,9 @@
 	var getName = function(adUnit) {
 
 		var name = adUnit.id;
-		if(typeof $(adUnit).attr('data-adunit') !== 'undefined') {
+		if(typeof $(adUnit).data('adunit') !== 'undefined') {
 
-			name = $(adUnit).attr('data-adunit');
+			name = $(adUnit).data('adunit');
 
 		}
 
@@ -204,9 +204,9 @@
 		var height = $(adUnit).height();
 
 		// check if dimensions are hardcoded and overide the size
-		if(typeof $(adUnit).attr('data-dimensions') !== 'undefined') {
+		if(typeof $(adUnit).data('dimensions') !== 'undefined') {
 
-			var dimensions = $(adUnit).attr('data-dimensions').split('x');
+			var dimensions = $(adUnit).data('dimensions').split('x');
 			width = parseInt(dimensions[0],10);
 			height = parseInt(dimensions[1],10);
 
