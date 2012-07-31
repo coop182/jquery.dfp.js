@@ -12,33 +12,31 @@ By default this script will look for ad units with a class of "adunit".
 
 This minimum information required for an ad unit to function is and ID attribute, for example.
 
-<pre><div class="adunit" id="Ad_unit_id"></div></pre>
+    <div class="adunit" id="Ad_unit_id"></div>
 
 In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimemsions of the div which could be defined in your CSS.
 
 You can optionally specify the adunit and name and dimensions in the following way.
 
-<pre><div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div></pre>
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
 This method can be useful for including multiple adunits of the same ID which when part of a DFP placement will pull in as many different ads as possible.
 
 Example Usage
 -------------
 
-<pre>
-<html>
-<head>
-    <title>DFP TEST</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="example-bootstrap.js"></script>
-</head>
-<body>
+    <html>
+    <head>
+        <title>DFP TEST</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="example-bootstrap.js"></script>
+    </head>
+    <body>
 
-    <div class="adunit" id="Middle_Feature" data-dimensions="393x176"></div>
+        <div class="adunit" id="Middle_Feature" data-dimensions="393x176"></div>
 
-</body>
-</html>
-</pre>
+    </body>
+    </html>
 
 Targeting
 ----------
