@@ -1,16 +1,16 @@
 jquery.dfp.js - A jQuery DFP implementation
 ===========================================
 
-This script is a drop in solution for getting DFP working elegantly on your page.
+This script is a drop in solution for getting DFP working on your page.
 
 Setup
 -----
 
 You can add containers to your page in any location that you would like to display an ad.
 
-By default this script will look for ad units with a class of "adunit".
+By default this script will look for ad units with a class of "adunit" but you can of course use jQuery selectors as well.
 
-This minimum information required for an ad unit to function is an ID attribute, for example.
+This minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example.
 
     <div class="adunit" id="Ad_unit_id"></div>
 

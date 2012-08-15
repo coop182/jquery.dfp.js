@@ -1,4 +1,10 @@
-//DFP Adder
+/*!
+ * jQuery DFP v0.9
+ * http://github.com/coop182/jquery.dfp.js
+ *
+ * Copyright 2012 Matt Cooper
+ * Released under the MIT license
+ */
 (function($,window) {
 
 	"use strict";
@@ -18,7 +24,7 @@
 	// Default DFP jQuery selector
 	var dfpSelector = '.adunit';
 
-	// Init function sets required params and loads googles dfp script
+	// Init function sets required params and loads Google's DFP script
 	var init = function(id,selector,options) {
 
 		dfpID = id || dfpID;
@@ -29,7 +35,7 @@
 
 	};
 
-	// Main function to find and create all ads
+	// Main function to find and create all Ads
 	var createAds = function(options) {
 
 		// Array to Store AdUnits
@@ -47,7 +53,7 @@
 			'collapseEmptyDivs':'original'
 		};
 
-		// Make sure the default setTargetting is not lost in the object merge
+		// Make sure the default setTargeting is not lost in the object merge
 		if(typeof options.setTargeting !== 'undefined' && typeof dfpOptions.setTargeting !== 'undefined') {
 			options.setTargeting = $.extend(options.setTargeting, dfpOptions.setTargeting);
 		}
@@ -218,23 +224,27 @@
 
 	// Call the google DFP script - there is a little bit of error detection in here to detect
 	// if the dfp script has failed to load either through an error or it being blocked by an ad
-	// blocker... if does not load we execute a dummy script to replace the real DFP.
+	// blocker... if it does not load we execute a dummy script to replace the real DFP.
 	var dfpLoader = function() {
 
-		window.googletag=window.googletag||{};
-		window.googletag.cmd=window.googletag.cmd||[];
+		window.googletag = window.googletag || {};
+		window.googletag.cmd = window.googletag.cmd || [];
 
-		var a=$(["<script><","/script>"].join(""));
-		a.attr("type","text/javascript");
-		//a.error(function(){window.alert('here');dfpBlocked();});
-		a.attr("async","async");
-		a.attr("src",document.location.protocol+"//www.googletagservices.com/tag/js/gpt.js");
-		$("head").eq(0).prepend(a);
+		var gads = document.createElement('script');
+		gads.async = true;
+		gads.type = 'text/javascript';
+		// Adblock blocks the load of Ad scripts... so we check for that
+		gads.onerror = function() { dfpBlocked(); };
+		var useSSL = 'https:' === document.location.protocol;
+		gads.src = (useSSL ? 'https:' : 'http:') +
+		'//www.googletagservices.com/tag/js/gpt.js';
+		var node = document.getElementsByTagName('script')[0];
+		node.parentNode.insertBefore(gads, node);
 
 		// Adblock plus seems to hide blocked scripts... so we check for that
-		//if(a.css('display') === 'none') {
-		//	dfpBlocked();
-		//}
+		if(gads.style.display === 'none') {
+			dfpBlocked();
+		}
 
 	};
 
