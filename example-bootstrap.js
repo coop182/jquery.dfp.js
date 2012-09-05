@@ -10,14 +10,14 @@
 			'dfpID':'xxxxxxxx',
 
 			// Callback which is run after the render of each ad.
-			'afterEachAdLoaded':function(adUnit) {
+			afterEachAdLoaded:function(adUnit) {
 
 				// Do something after each ad is loaded.
 
 			},
 
 			// Callback which is run after the render of all ads.
-			'afterAllAdsLoaded':function() {
+			afterAllAdsLoaded:function() {
 
 				// Do something after all ads are loaded.
 
