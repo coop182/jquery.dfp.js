@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v0.9.1
+ * jQuery DFP v0.9.2
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2012 Matt Cooper
@@ -111,7 +111,7 @@
 
                     // if the div has been collapsed but there was existing content expand the
                     // div and reinsert the existing content.
-                    if(display === 'none' && $existingContent.trim().length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
+                    if(display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
                         $(adUnit).show().html($existingContent);
                         display = 'block display-original';
                     }
