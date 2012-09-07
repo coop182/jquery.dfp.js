@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v0.9.2
+ * jQuery DFP v0.9.3
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2012 Matt Cooper
@@ -88,8 +88,8 @@
             // get existing content
             var $existingContent = $(adUnit).html();
 
-            // wipe html clean ready for ad
-            $(adUnit).html('');
+            // wipe html clean ready for ad and set the default display class.
+            $(adUnit).html('').addClass('display-none');
 
             // Store AdUnits
             adUnitArray.push(adUnitID);
@@ -116,7 +116,7 @@
                         display = 'block display-original';
                     }
 
-                    $(adUnit).addClass('display-'+display);
+                    $(adUnit).removeClass('display-none').addClass('display-'+display);
 
                     googleAdUnit.oldRenderEnded();
 
