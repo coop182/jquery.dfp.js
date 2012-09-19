@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v0.9.3
+ * jQuery DFP v0.9.4
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2012 Matt Cooper
@@ -171,14 +171,25 @@
         var patt = new RegExp('\/([^\/]*)','ig');
         var pathsMatches = paths.match(patt);
         var targetPaths = ['/'];
+        var longestpath = '';
         if(paths !== '/' && pathsMatches !== null) {
             var target = '';
-            if(pathsMatches.length > 0) {
-                $.each(pathsMatches,function(k,v){
-                    target += v;
+            var size = pathsMatches.length;
+            if(size > 0) {
+                for(var i = 0; i < size; i++) {
+                    target = pathsMatches[i];
                     targetPaths.push(target);
-                });
+                    for(var j = i+1; j < size; j++) {
+                        target += pathsMatches[j];
+                        targetPaths.push(target);
+                    }
+                    if(i===0) {
+                        targetPaths.splice(-1,1);
+                        longestpath = target;
+                    }
+                }
             }
+            targetPaths.push(longestpath);
         }
 
         return targetPaths.reverse();
