@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v0.9.5
+ * jQuery DFP v0.9.6
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2012 Matt Cooper
@@ -129,7 +129,7 @@
 
                     // Excute afterAllAdsLoaded
                     if(typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
-                        dfpOptions.afterAllAdsLoaded.call(this,adUnit);
+                        dfpOptions.afterAllAdsLoaded.call(this,$(dfpSelector));
                     }
 
                 };

@@ -38,6 +38,18 @@ Example Usage
     </body>
     </html>
 
+Callbacks
+---------
+
+This script provides two callbacks which you can use to make working with DFP a little easier.
+
+<uL>
+    <li>afterEachAdLoaded - this fires after each ad has finished rendering, it is passed one argument which is the ad unit object.</li>
+    <li>afterAllAdsLoaded - this fires after all ads have finished rendering, it is passed the jQuery selector object with all ad units included.</li>
+</uL>
+
+Please see the example-bootstrap.js file for an example of how to use these.
+
 Targeting
 ----------
 
