@@ -230,7 +230,7 @@
 
     /**
      * Get the name of the Ad unit, either use the div id or
-     * check for the optional attribute data-adUnit
+     * check for the optional attribute data-adunit
      * @param  Object adUnit The adunit to work with
      * @return String        The name of the adunit, will be the same as inside DFP
      */
