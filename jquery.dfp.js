@@ -102,6 +102,11 @@
                 // Create the ad
                 var googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
 
+                // Sets custom targeting for just THIS ad unit
+                $.each($(adUnit).data("targeting"), function(k,v){
+                  googleAdUnit.setTargeting(k, v);
+                });
+
                 // The following hijacks an internal google method to check if the div has been
                 // collapsed after the ad has been attempted to be loaded.
                 googleAdUnit.oldRenderEnded = googleAdUnit.renderEnded;

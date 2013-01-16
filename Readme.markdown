@@ -22,6 +22,10 @@ You can optionally specify the adunit and name and dimensions in the following w
 
 This method can be useful for including multiple adunits of the same ID which when part of a DFP placement, this will pull in as many different ads as possible.
 
+Also you can optionally specify custom targeting on a per ad unit basis basis in the following way.
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+
 Example Usage
 -------------
 
@@ -33,7 +37,7 @@ Example Usage
     </head>
     <body>
 
-        <div class="adunit" id="Middle_Feature" data-dimensions="393x176"></div>
+        <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
     </body>
     </html>
@@ -50,7 +54,7 @@ This script provides two callbacks which you can use to make working with DFP a 
 
 Please see the example-bootstrap.js file for an example of how to use these.
 
-Targeting
+Default Targeting
 ----------
 
 The following targeting options are built into this script and should be setup in your DFP account (within Inventory/Custom Targeting) to make full use of them:
