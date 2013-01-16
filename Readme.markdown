@@ -8,7 +8,7 @@ Setup
 
 You can add containers to your page in any location that you would like to display an ad.
 
-By default this script will look for ad units with a class of "adunit" but you can of course use jQuery selectors as well.
+By default this script will look for ad units with a class of `adunit` but you can of course use jQuery selectors as well.
 
 This minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example.
 
@@ -16,13 +16,13 @@ This minimum information required for an ad unit to function is having the ad un
 
 In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimensions of the div which could be defined in your CSS.
 
-You can optionally specify the adunit and name and dimensions in the following way.
+You can optionally specify the adunit name and dimensions in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
-This method can be useful for including multiple adunits of the same ID which when part of a DFP placement, this will pull in as many different ads as possible.
+This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
-Also you can optionally specify custom targeting on a per ad unit basis basis in the following way.
+Also you can optionally specify custom targeting on a per ad unit basis in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
@@ -32,7 +32,7 @@ Example Usage
     <html>
     <head>
         <title>DFP TEST</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <script src="example-bootstrap.js"></script>
     </head>
     <body>
@@ -48,8 +48,8 @@ Callbacks
 This script provides two callbacks which you can use to make working with DFP a little easier.
 
 <uL>
-    <li>afterEachAdLoaded - this fires after each ad has finished rendering, it is passed one argument which is the ad unit object.</li>
-    <li>afterAllAdsLoaded - this fires after all ads have finished rendering, it is passed the jQuery selector object with all ad units included.</li>
+    <li>afterEachAdLoaded - this fires after each ad unit has finished rendering, it is passed one argument which is the ad unit object.</li>
+    <li>afterAllAdsLoaded - this fires after all ad units have finished rendering, it is passed the jQuery selector object which will contain all selected ad units on the current page.</li>
 </uL>
 
 Please see the example-bootstrap.js file for an example of how to use these.
