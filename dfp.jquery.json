@@ -25,5 +25,5 @@
   "dependencies": {
     "jquery": ">= 1.6"
   },
-  "keywords": ["DFP", "google"]
+  "keywords": ["DFP", "google", "ads", "advertising"]
 }
