@@ -2,7 +2,7 @@
   "name": "dfp",
   "title": "jquery.dfp.js",
   "description": "A jQuery implementation for Google DoubleClick for Publishers (DFP)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/coop182/jquery.dfp.js",
   "author": {
     "name": "Matt Cooper",
@@ -25,5 +25,5 @@
   "dependencies": {
     "jquery": ">= 1.6"
   },
-  "keywords": ["DFP", "jquery", "plugin", "google"]
+  "keywords": ["DFP", "google"]
 }
