@@ -4,7 +4,9 @@
     "description": "A jQuery implementation for Google DoubleClick for Publishers (DFP)",
     "keywords": [
         "DFP",
-        "google"
+        "google",
+        "ads",
+        "advertising"
     ],
     "version": "1.0.3",
     "author": {
