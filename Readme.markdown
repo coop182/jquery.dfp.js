@@ -1,5 +1,5 @@
-jquery.dfp.js - A jQuery DFP implementation
-===========================================
+jquery.dfp.js - A jQuery implementation for Google DFP
+======================================================
 
 This script is a drop in solution for getting DFP working on your page.
 
