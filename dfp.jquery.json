@@ -25,5 +25,5 @@
   "dependencies": {
     "jquery": ">= 1.6"
   },
-  "keywords": ["DFP", "DoubleClick for Publishers", "jquery", "plugin", "google"]
+  "keywords": ["DFP", "jquery", "plugin", "google"]
 }
