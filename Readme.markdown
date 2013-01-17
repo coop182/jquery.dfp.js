@@ -55,7 +55,7 @@ This script provides two callbacks which you can use to make working with DFP a 
 Please see the example-bootstrap.js file for an example of how to use these.
 
 Default Targeting
-----------
+-----------------
 
 The following targeting options are built into this script and should be setup in your DFP account (within Inventory/Custom Targeting) to make full use of them:
 
