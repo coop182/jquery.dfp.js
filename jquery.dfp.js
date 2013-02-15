@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.3
+ * jQuery DFP v1.0.4
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -102,10 +102,12 @@
                 // Create the ad
                 var googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
 
-                // Sets custom targeting for just THIS ad unit
-                $.each($(adUnit).data("targeting"), function (k, v) {
-                    googleAdUnit.setTargeting(k, v);
-                });
+                // Sets custom targeting for just THIS ad unit if it has been specified
+                if (typeof $(adUnit).data("targeting") === 'object') {
+                    $.each($(adUnit).data("targeting"), function (k, v) {
+                        googleAdUnit.setTargeting(k, v);
+                    });
+                }
 
                 // The following hijacks an internal google method to check if the div has been
                 // collapsed after the ad has been attempted to be loaded.
