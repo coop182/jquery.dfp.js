@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <script src="https://raw.github.com/coop182/jquery.dfp.js/master/jquery.dfp.min.js"></script>
+</head>
+<body>
+
+<div data-role="page" id="main" data-theme="a">
+
+    <div data-role="header">
+        <h1>jQuery DFP Mobile test</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+
+        <ul data-role="listview" data-inset="true" data-theme="b">
+            <li><a href="#one">Page 1 (same page)</a></li>
+            <li><a href="page2.html">Page 2 (different page)</a></li>
+        </ul>
+
+        <div class="adunit" data-adunit="Button" data-dimensions="160x180"  data-targeting='{"city_id":"1"}'></div>
+
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h1>Footer</h1>
+    </div><!-- /header -->
+
+</div><!-- /page -->
+
+<div data-role="page" id="one" data-add-back-btn="true" data-theme="a">
+
+    <div data-role="header">
+        <h1>Page 1</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+
+        <p>This is the content of page 1</p>
+
+        <div class="adunit" data-adunit="Button" data-dimensions="160x180"></div>
+
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h1>Footer</h1>
+    </div><!-- /header -->
+
+</div><!-- /page -->
+
+<script>
+$(document).on('pageinit', function () {
+    $('.adunit:not(".display-block")').dfp({
+        dfpID: '15572793',
+        enableSingleRequest: false
+    });
+});
+</script>
+
+</body>
+</html>
