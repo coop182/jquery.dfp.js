@@ -318,7 +318,7 @@
     /**
      * This function gets called if DFP has been blocked by an adblocker
      * it implements a dummy version of the dfp object and allows the script to excute its callbacks
-     * regardless of wheather DFP is actually loaded or not... it is basically only useful for situations
+     * regardless of whether DFP is actually loaded or not... it is basically only useful for situations
      * where you are laying DFP over existing content and need to init things like slide shows after the loading
      * is completed.
      */
@@ -344,6 +344,14 @@
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
                 defineSlot: function (name, dimensions, id) {
+                    window.googletag.ads.push(id);
+                    window.googletag.ads[id] = {
+                        renderEnded: function () {},
+                        addService: function () { return this; }
+                    };
+                    return window.googletag.ads[id];
+                },
+                defineOutOfPageSlot: function (name, id) {
                     window.googletag.ads.push(id);
                     window.googletag.ads[id] = {
                         renderEnded: function () {},
