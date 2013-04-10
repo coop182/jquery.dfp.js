@@ -49,10 +49,32 @@ Callbacks
 
 This script provides two callbacks which you can use to make working with DFP a little easier.
 
-<uL>
-    <li>afterEachAdLoaded - this fires after each ad unit has finished rendering, it is passed one argument which is the ad unit object.</li>
-    <li>afterAllAdsLoaded - this fires after all ad units have finished rendering, it is passed the jQuery selector object which will contain all selected ad units on the current page.</li>
-</uL>
+<table>
+    <thead>
+        <tr>
+            <th>Callback</th>
+            <th>Parameters</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>afterEachAdLoaded(adUnit, googleSlot)</td>
+            <td>
+                adUnit - jQuery Object - the jQuery object
+                googleSlot - Object - the Google DFP defined ad slot
+            </td>
+            <td>This is called after each ad unit has finished rendering.</td>
+        </tr>
+        <tr>
+            <td>afterAllAdsLoaded(adUnits)</td>
+            <td>
+                adUnits - jQuery Object - the jQuery object containing all selected ad units
+            </td>
+            <td>This is called after all ad units have finished rendering.</td>
+        </tr>
+    </tbody>
+</table>
 
 Please see the example-bootstrap.js file for an example of how to use these.
 
