@@ -99,8 +99,13 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                // Create the ad
-                var googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                // Create the ad - normal or out of page
+                var googleAdUnit;
+                if (typeof $(adUnit).data('outofpage') !== 'undefined') {
+                    googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+                } else {
+                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
                 if (typeof $(adUnit).data("targeting") === 'object') {
@@ -313,7 +318,7 @@
     /**
      * This function gets called if DFP has been blocked by an adblocker
      * it implements a dummy version of the dfp object and allows the script to excute its callbacks
-     * regardless of wheather DFP is actually loaded or not... it is basically only useful for situations
+     * regardless of whether DFP is actually loaded or not... it is basically only useful for situations
      * where you are laying DFP over existing content and need to init things like slide shows after the loading
      * is completed.
      */
@@ -339,6 +344,14 @@
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
                 defineSlot: function (name, dimensions, id) {
+                    window.googletag.ads.push(id);
+                    window.googletag.ads[id] = {
+                        renderEnded: function () {},
+                        addService: function () { return this; }
+                    };
+                    return window.googletag.ads[id];
+                },
+                defineOutOfPageSlot: function (name, id) {
                     window.googletag.ads.push(id);
                     window.googletag.ads[id] = {
                         renderEnded: function () {},
