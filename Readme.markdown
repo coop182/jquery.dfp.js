@@ -22,6 +22,10 @@ You can optionally specify the adunit name and dimensions in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
+You can also specify multiple dimensions sets:
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176,450x500"></div>
+
 This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
 Also you can optionally specify custom targeting on a per ad unit basis in the following way.
