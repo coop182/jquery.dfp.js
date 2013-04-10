@@ -28,6 +28,10 @@ Also you can optionally specify custom targeting on a per ad unit basis in the f
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
+To create an out of page ad unit set the data-outofpage property on the ad unit.
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
+
 Example Usage
 -------------
 

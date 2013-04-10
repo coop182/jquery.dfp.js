@@ -99,8 +99,13 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                // Create the ad
-                var googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                // Create the ad - normal or out of page
+                var googleAdUnit;
+                if (typeof $(adUnit).data('outofpage') !== 'undefined') {
+                    googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+                } else {
+                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
                 if (typeof $(adUnit).data("targeting") === 'object') {
