@@ -107,7 +107,7 @@
                 if (typeof $(adUnit).data('outofpage') !== 'undefined') {
                     googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
                 } else {
-                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
@@ -280,7 +280,7 @@
             $.each(dimension_groups, function (k, v) {
 
                 var dimension_set = v.split('x');
-                dimensions.push([parseInt(dimensions[0], 10), parseInt(dimensions[1], 10)]);
+                dimensions.push([parseInt(dimension_set[0], 10), parseInt(dimension_set[1], 10)]);
 
             });
 
@@ -302,7 +302,7 @@
     var dfpLoader = function () {
 
         // make sure we don't load gpt.js multiple times
-        var dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
+        dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
         if (dfpIsLoaded) {
             return;
         }
