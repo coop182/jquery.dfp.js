@@ -24,6 +24,9 @@
     // Default DFP jQuery selector
     var dfpSelector = '.adunit';
 
+    // Keep track of if we've already tried to load gpt.js before
+    var dfpIsLoaded = false;
+
     /**
      * Init function sets required params and loads Google's DFP script
      * @param  String id       The DFP account ID
@@ -284,6 +287,12 @@
      * blocker... if it does not load we execute a dummy script to replace the real DFP.
      */
     var dfpLoader = function () {
+
+        // make sure we don't load gpt.js multiple times
+        dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
+        if (dfpIsLoaded){
+            return;
+        }
 
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
