@@ -89,3 +89,11 @@ The following targeting options are built into this script and should be setup i
     <li>URLIs - this allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2</li>
     <li>Query - this allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</li>
 </uL>
+
+Contributors
+------------
+
+Thanks to:
+
+@crccheck
+@MikeSilvis
