@@ -1,7 +1,7 @@
 jQuery DFP - A jQuery implementation for Google DFP
 ======================================================
 
-This script is a drop in solution for getting DFP working on your page. By including this script on your page and then initiating it in the ways described below you should find it very easy to get DFP working.
+This script is a drop in solution for getting Double Click for Publishers (DFP) by Google working on your page. By including this script on your page and then initiating it in the ways described below you should find it very easy to get DFP working.
 
 Do not include any of the generated DFP script tags from the DFP admin on your page, this script replaces them.
 
@@ -12,7 +12,7 @@ You can add containers to your page in any location that you would like to displ
 
 By default this script will look for ad units with a class of `adunit` but you can of course use jQuery selectors as well.
 
-This minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example.
+The minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example.
 
     <div class="adunit" id="Ad_unit_id"></div>
 
@@ -22,17 +22,17 @@ You can optionally specify the adunit name and dimensions in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
+This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
+
 You can also specify multiple dimensions sets:
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176,450x500"></div>
-
-This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
 Also you can optionally specify custom targeting on a per ad unit basis in the following way.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
-To create an out of page ad unit set the data-outofpage property on the ad unit.
+To create an out of page ad unit set the data-outofpage property on the ad unit, dimension.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
 
