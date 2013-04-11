@@ -1,7 +1,7 @@
 jQuery DFP - A jQuery implementation for Google DFP
 ======================================================
 
-This script is a drop in solution for getting DFP working on your page. By including this script on your page and then initiating it in the ways described below you should find it very easy to get DFP working.
+This script is a drop in solution for getting Double Click for Publishers (DFP) by Google working on your page. By including this script on your page and then initiating it in the ways described below you should find it very easy to get DFP working.
 
 Do not include any of the generated DFP script tags from the DFP admin on your page, this script replaces them.
 
@@ -12,21 +12,29 @@ You can add containers to your page in any location that you would like to displ
 
 By default this script will look for ad units with a class of `adunit` but you can of course use jQuery selectors as well.
 
-This minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example.
+The minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example:
 
     <div class="adunit" id="Ad_unit_id"></div>
 
 In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimensions of the div which could be defined in your CSS.
 
-You can optionally specify the adunit name and dimensions in the following way.
+You can optionally specify the adunit name and dimensions in the following way:
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
 This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
-Also you can optionally specify custom targeting on a per ad unit basis in the following way.
+You can also specify multiple dimensions sets:
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176,450x500"></div>
+
+Also you can optionally specify custom targeting on a per ad unit basis in the following way:
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+
+To create an out of page ad unit set the data-outofpage property on the ad unit, dimension.
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
 
 Usage
 -----
@@ -103,11 +111,11 @@ Available Options
     </tr>
     <tr>
         <td>enableSingleRequest</td>
-        <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading adunits into the page after the initial load.</td>
+        <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading ad units into the page after the initial load.</td>
     </tr>
     <tr>
         <td>collapseEmptyDivs</td>
-        <td>This can be set to true, false or 'original'. If its set to true the divs will be set to display:none if no line item is found. False means that the ad unit div will stay visible no matter what. Setting this to 'original' (the default option) means that the ad unit div will be hidden if no line items are found UNLESS there is some exisiting content inside the adunit div tags. This allows you to have fall back content in the ad unit in the event that no ads are found.</td>
+        <td>This can be set to true, false or 'original'. If its set to true the divs will be set to display:none if no line item is found. False means that the ad unit div will stay visible no matter what. Setting this to 'original' (the default option) means that the ad unit div will be hidden if no line items are found UNLESS there is some existing content inside the ad unit div tags. This allows you to have fall back content in the ad unit in the event that no ads are found.</td>
     </tr>
     <tr>
         <td>afterEachAdLoaded</td>

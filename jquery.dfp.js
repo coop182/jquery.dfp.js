@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.6
+ * jQuery DFP v1.0.7
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -23,6 +23,9 @@
 
     // Default DFP jQuery selector
     var dfpSelector = '.adunit';
+
+    // Keep track of if we've already tried to load gpt.js before
+    var dfpIsLoaded = false;
 
     /**
      * Init function sets required params and loads Google's DFP script
@@ -99,8 +102,13 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                // Create the ad
-                var googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, [dimensions.width, dimensions.height], adUnitID).addService(window.googletag.pubads());
+                // Create the ad - out of page or normal
+                var googleAdUnit;
+                if (typeof $(adUnit).data('outofpage') !== 'undefined') {
+                    googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+                } else {
+                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
+                }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
                 if (typeof $(adUnit).data("targeting") === 'object') {
@@ -255,26 +263,34 @@
     };
 
     /**
-     * Get the dimensions of the ad unit using the cotainer div dimensions or
+     * Get the dimensions of the ad unit using the container div dimensions or
      * check for the optional attribute data-dimensions
      * @param  Object adUnit The adunit to work with
      * @return Array         The dimensions of the adunit (width, height)
      */
     var getDimensions = function (adUnit) {
 
-        var width = $(adUnit).width();
-        var height = $(adUnit).height();
+        var dimensions = [];
 
-        // check if dimensions are hardcoded and overide the size
+        // check if data-dimensions are specified if not use the dimensions of the ad unit div
         if (typeof $(adUnit).data('dimensions') !== 'undefined') {
 
-            var dimensions = $(adUnit).data('dimensions').split('x');
-            width = parseInt(dimensions[0], 10);
-            height = parseInt(dimensions[1], 10);
+            var dimension_groups = $(adUnit).data('dimensions').split(',');
+
+            $.each(dimension_groups, function (k, v) {
+
+                var dimension_set = v.split('x');
+                dimensions.push([parseInt(dimension_set[0], 10), parseInt(dimension_set[1], 10)]);
+
+            });
+
+        } else {
+
+            dimensions.push([$(adUnit).width(), $(adUnit).height()]);
 
         }
 
-        return {width: width, height: height};
+        return dimensions;
 
     };
 
@@ -284,6 +300,12 @@
      * blocker... if it does not load we execute a dummy script to replace the real DFP.
      */
     var dfpLoader = function () {
+
+        // make sure we don't load gpt.js multiple times
+        dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
+        if (dfpIsLoaded) {
+            return;
+        }
 
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
@@ -313,7 +335,7 @@
     /**
      * This function gets called if DFP has been blocked by an adblocker
      * it implements a dummy version of the dfp object and allows the script to excute its callbacks
-     * regardless of wheather DFP is actually loaded or not... it is basically only useful for situations
+     * regardless of whether DFP is actually loaded or not... it is basically only useful for situations
      * where you are laying DFP over existing content and need to init things like slide shows after the loading
      * is completed.
      */
@@ -339,6 +361,14 @@
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
                 defineSlot: function (name, dimensions, id) {
+                    window.googletag.ads.push(id);
+                    window.googletag.ads[id] = {
+                        renderEnded: function () {},
+                        addService: function () { return this; }
+                    };
+                    return window.googletag.ads[id];
+                },
+                defineOutOfPageSlot: function (name, id) {
                     window.googletag.ads.push(id);
                     window.googletag.ads[id] = {
                         renderEnded: function () {},
