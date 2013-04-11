@@ -28,8 +28,33 @@ Also you can optionally specify custom targeting on a per ad unit basis in the f
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
-Example Usage
--------------
+Usage
+-----
+
+Calling the script:
+
+    <html>
+    <head>
+        <title>DFP TEST</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="jquery.dfp.min.js"></script>
+    </head>
+    <body>
+
+        <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+
+        <script>
+
+            $.dfp({
+                dfpID: 'xxxxxxxxx'
+            });
+
+        </script>
+
+    </body>
+    </html>
+
+Using a bootstrap file (take a look at [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js)):
 
     <html>
     <head>
@@ -44,36 +69,85 @@ Example Usage
     </body>
     </html>
 
+You can init the script in the following ways:
+
+<pre>
+$.dfp('xxxxxxxxx');
+</pre>
+<pre>
+$.dfp({
+    dfpID:'xxxxxxxxx'
+});
+</pre>
+<pre>
+$('selector').dfp({
+    dfpID:'xxxxxxxxx'
+});
+</pre>
+
+Available Options
+-----------------
+
+<table>
+    <tr>
+        <th>Option</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>dfpID</td>
+        <td>This string is your unique DFP account ID.</td>
+    </tr>
+    <tr>
+        <td>setTargeting</td>
+        <td>This object is where you set custom targeting key value pairs. Also see the Default Targeting options that are set further down the page.</td>
+    </tr>
+    <tr>
+        <td>enableSingleRequest</td>
+        <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading adunits into the page after the initial load.</td>
+    </tr>
+    <tr>
+        <td>collapseEmptyDivs</td>
+        <td>This can be set to true, false or 'original'. If its set to true the divs will be set to display:none if no line item is found. False means that the ad unit div will stay visible no matter what. Setting this to 'original' (the default option) means that the ad unit div will be hidden if no line items are found UNLESS there is some exisiting content inside the adunit div tags. This allows you to have fall back content in the ad unit in the event that no ads are found.</td>
+    </tr>
+    <tr>
+        <td>afterEachAdLoaded</td>
+        <td>This is a call back function, see below for more information.</td>
+    </tr>
+    <tr>
+        <td>afterAllAdsLoaded</td>
+        <td>This is a call back function, see below for more information.</td>
+    </tr>
+</table>
+
 Callbacks
 ---------
 
 This script provides two callbacks which you can use to make working with DFP a little easier.
 
 <table>
-    <thead>
-        <tr>
-            <th>Callback</th>
-            <th>Parameters</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>afterEachAdLoaded(adUnit, googleSlot)</td>
-            <td>
-                adUnit - jQuery Object - the jQuery object
-                googleSlot - Object - the Google DFP defined ad slot
-            </td>
-            <td>This is called after each ad unit has finished rendering.</td>
-        </tr>
-        <tr>
-            <td>afterAllAdsLoaded(adUnits)</td>
-            <td>
-                adUnits - jQuery Object - the jQuery object containing all selected ad units
-            </td>
-            <td>This is called after all ad units have finished rendering.</td>
-        </tr>
-    </tbody>
+    <tr>
+        <th>Callback</th>
+        <th>Parameters</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>afterEachAdLoaded(adUnit)</td>
+        <td>
+            <ul>
+                <li>adUnit - jQuery Object - the jQuery object</li>
+            </ul>
+        </td>
+        <td>This is called after each ad unit has finished rendering.</td>
+    </tr>
+    <tr>
+        <td>afterAllAdsLoaded(adUnits)</td>
+        <td>
+            <ul>
+                <li>adUnits - jQuery Object - the jQuery object containing all selected ad units</li>
+            </ul>
+        </td>
+        <td>This is called after all ad units have finished rendering.</td>
+    </tr>
 </table>
 
 Please see the example-bootstrap.js file for an example of how to use these.
@@ -83,17 +157,35 @@ Default Targeting
 
 The following targeting options are built into this script and should be setup in your DFP account (within Inventory/Custom Targeting) to make full use of them:
 
-<uL>
-    <li>Domain - this allows you to target different domains, for example you could test your ads on your staging environment before pushing them live by specifying a domain of staging.yourdomain.com within DFP, this script will take care of the rest.</li>
-    <li>inURL - this allows you to target URLs containing the segment you specify in DFP, for example you could set inURL to '/page1' on the targeting options of the DFP line item and it would then allow ads to show on any page that contains /page1 in its URL. e.g. http://www.yourdomain.com/page1 or http://www.yourdomain.com/page1/segment2 or http://www.yourdomain.com/section/page1</li>
-    <li>URLIs - this allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2</li>
-    <li>Query - this allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</li>
-</uL>
+<table>
+    <tr>
+        <th>Key</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Domain</td>
+        <td>This allows you to target different domains, for example you could test your ads on your staging environment before pushing them live by specifying a domain of staging.yourdomain.com within DFP, this script will take care of the rest.</td>
+    </tr>
+    <tr>
+        <td>inURL</td>
+        <td>This allows you to target URLs containing the segment you specify in DFP, for example you could set inURL to '/page1' on the targeting options of the DFP line item and it would then allow ads to show on any page that contains /page1 in its URL. e.g. http://www.yourdomain.com/page1 or http://www.yourdomain.com/page1/segment2 or http://www.yourdomain.com/section/page1</td>
+    </tr>
+    <tr>
+        <td>URLIs</td>
+        <td>This allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2</td>
+    </tr>
+    <tr>
+        <td>Query</td>
+        <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</td>
+    </tr>
+</table>
 
 Contributors
 ------------
 
 Thanks to:
 
-@crccheck
-@MikeSilvis
+<ul>
+    <li>@crccheck - https://github.com/crccheck</li>
+    <li>@MikeSilvis - https://github.com/MikeSilvis</li>
+</ul>
