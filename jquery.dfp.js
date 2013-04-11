@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.6
+ * jQuery DFP v1.0.7
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -99,7 +99,7 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                // Create the ad - normal or out of page
+                // Create the ad - out of page or normal
                 var googleAdUnit;
                 if (typeof $(adUnit).data('outofpage') !== 'undefined') {
                     googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
@@ -260,26 +260,34 @@
     };
 
     /**
-     * Get the dimensions of the ad unit using the cotainer div dimensions or
+     * Get the dimensions of the ad unit using the container div dimensions or
      * check for the optional attribute data-dimensions
      * @param  Object adUnit The adunit to work with
      * @return Array         The dimensions of the adunit (width, height)
      */
     var getDimensions = function (adUnit) {
 
-        var width = $(adUnit).width();
-        var height = $(adUnit).height();
+        var dimensions = [];
 
-        // check if dimensions are hardcoded and overide the size
+        // check if data-dimensions are specified if not use the dimensions of the ad unit div
         if (typeof $(adUnit).data('dimensions') !== 'undefined') {
 
-            var dimensions = $(adUnit).data('dimensions').split('x');
-            width = parseInt(dimensions[0], 10);
-            height = parseInt(dimensions[1], 10);
+            var dimension_groups = $(adUnit).data('dimensions').split(',');
+
+            $.each(dimension_groups, function (k, v) {
+
+                var dimension_set = v.split('x');
+                dimensions.push([parseInt(dimensions[0], 10), parseInt(dimensions[1], 10)]);
+
+            });
+
+        } else {
+
+            dimensions.push([$(adUnit).width(), $(adUnit).height()]);
 
         }
 
-        return {width: width, height: height};
+        return dimensions;
 
     };
 
