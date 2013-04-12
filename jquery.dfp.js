@@ -270,23 +270,25 @@
      */
     var getDimensions = function (adUnit) {
 
-        var dimensions = [];
+        var dimensions = [],
+            $adUnit = $(adUnit),
+            dimensionsData = $adUnit.data('dimensions');
 
-        // check if data-dimensions are specified if not use the dimensions of the ad unit div
-        if (typeof $(adUnit).data('dimensions') !== 'undefined') {
+        // Check if data-dimensions are specified. If they aren't, use the dimensions of the ad unit div.
+        if (typeof dimensionsData !== 'undefined') {
 
-            var dimension_groups = $(adUnit).data('dimensions').split(',');
+            var dimensionGroups = dimensionsData.split(',');
 
-            $.each(dimension_groups, function (k, v) {
+            $.each(dimensionGroups, function (k, v) {
 
-                var dimension_set = v.split('x');
-                dimensions.push([parseInt(dimension_set[0], 10), parseInt(dimension_set[1], 10)]);
+                var dimensionSet = v.split('x');
+                dimensions.push([parseInt(dimensionSet[0], 10), parseInt(dimensionSet[1], 10)]);
 
             });
 
         } else {
 
-            dimensions.push([$(adUnit).width(), $(adUnit).height()]);
+            dimensions.push([$adUnit.width(), $adUnit.height()]);
 
         }
 
