@@ -270,12 +270,13 @@
      */
     var getDimensions = function (adUnit) {
 
-        var dimensions = [];
+        var dimensions = [],
+            $adUnit = $(adUnit);
 
         // check if data-dimensions are specified if not use the dimensions of the ad unit div
-        if (typeof $(adUnit).data('dimensions') !== 'undefined') {
+        if (typeof $adUnit.data('dimensions') !== 'undefined') {
 
-            var dimension_groups = $(adUnit).data('dimensions').split(',');
+            var dimension_groups = $adUnit.data('dimensions').split(',');
 
             $.each(dimension_groups, function (k, v) {
 
@@ -286,7 +287,7 @@
 
         } else {
 
-            dimensions.push([$(adUnit).width(), $(adUnit).height()]);
+            dimensions.push([$adUnit.width(), $adUnit.height()]);
 
         }
 
