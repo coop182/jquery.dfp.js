@@ -74,6 +74,13 @@
         // Merge options objects
         dfpOptions = $.extend(dfpOptions, options);
 
+        // If a custom googletag is specified, use it.
+        if (dfpOptions.googletag) {
+            window.googletag.cmd.push(function () {
+                $.extend(window.googletag, dfpOptions.googletag);
+            });
+        }
+
         // Loops through on page Ad units and gets ads for them.
         $(dfpSelector).each(function () {
 
