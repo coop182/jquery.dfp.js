@@ -420,6 +420,8 @@
 
         init(id, selector, options);
 
+        return this;
+
     };
 
 })(window.jQuery, window);
