@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>My Page</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://reed.github.io/turbolinks-compatibility/javascripts/turbolinks.js"></script>
+    <script src="https://raw.github.com/coop182/jquery.dfp.js/master/jquery.dfp.js"></script>
+
+    <script>
+        function ads () {
+            console.log("ads");
+            $('.adunit:not(".display-block")').dfp({
+                dfpID: '15572793',
+                enableSingleRequest: false
+            });
+        }
+
+        $(document)
+            .on('page:load', function () {
+                ads();
+            })
+            .ready(function () {
+                ads();
+            });
+    </script>
+
+</head>
+<body>
+
+<h1>jQuery DFP Mobile test Page 1</h1>
+<div class="adunit" data-adunit="Leader" data-dimensions="728x90"></div>
+
+<a href='demo2.html'>page2</a>
+
+</body>
+</html>
