@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="jquery.dfp.js"></script>
+
+    <style>
+        .notfound {
+            margin:10px;
+            padding:30px;
+            background: #ffffcc;
+            border: 1px solid #999;
+        }
+    </style>
+
+</head>
+<body>
+
+Test DFP Ads.
+
+<div class="adunit" data-adunit="Leader" data-dimensions="728x90"><div class="notfound">Ad not found</div></div>
+<div class="adunit" data-adunit="Leader-Does-not-exist" data-dimensions="728x90"><div class="notfound">Ad not found</div></div>
+<div class="adunit" data-adunit="Leader" data-dimensions="728x90"><div class="notfound">Ad not found</div></div>
+<div class="adunit" data-adunit="Button" data-dimensions="160x180"></div>
+<div class="adunit" data-adunit="Button-Does-not-exist" data-dimensions="160x180"></div>
+<div class="adunit" data-adunit="Button" data-dimensions="160x180"></div>
+
+<script>
+$.dfp({
+    dfpID: '15572793',
+    afterEachAdLoaded: function (adUnit) {
+        if($(adUnit).hasClass('display-none')) {
+            $(adUnit).html('').show().append('<div class="notfound">Ad not found here either</div>');
+        }
+    }
+});
+</script>
+
+</body>
+</html>
