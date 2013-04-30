@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.8
+ * jQuery DFP v1.0.9
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -66,13 +66,8 @@
             'collapseEmptyDivs': 'original'
         };
 
-        // Make sure the default setTargeting is not lost in the object merge
-        if (typeof options.setTargeting !== 'undefined' && typeof dfpOptions.setTargeting !== 'undefined') {
-            options.setTargeting = $.extend(options.setTargeting, dfpOptions.setTargeting);
-        }
-
         // Merge options objects
-        dfpOptions = $.extend(dfpOptions, options);
+        $.extend(true, dfpOptions, options);
 
         // If a custom googletag is specified, use it.
         if (dfpOptions.googletag) {
