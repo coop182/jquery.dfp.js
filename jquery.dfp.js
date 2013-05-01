@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.9
+ * jQuery DFP v1.0.10
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -24,6 +24,9 @@
     // Default DFP jQuery selector
     var dfpSelector = '.adunit';
 
+    // DFP options object
+    var dfpOptions = {};
+
     // Keep track of if we've already tried to load gpt.js before
     var dfpIsLoaded = false;
 
@@ -38,24 +41,28 @@
         dfpID = id || dfpID;
         dfpSelector = selector || dfpSelector;
         options = options || {};
+
+        setOptions(options);
         dfpLoader();
-        $(function () { createAds(options); });
+
+        $(function () {
+            var ads = createAds(options);
+            displayAds(ads);
+        });
 
     };
 
     /**
-     * Main function to find and create all Ads
+     * Set the options for DFP
      * @param Object options Custom options to apply
      */
-    var createAds = function (options) {
+    var setOptions = function (options) {
 
-        // Array to Store AdUnits
-        var adUnitArray = [];
-
-        // Default DFP options
+        // Get URL Targeting
         var URLTargets = getURLTargets();
 
-        var dfpOptions = {
+        // Set default options
+        dfpOptions = {
             'setTargeting': {
                 'inURL': URLTargets.inURL,
                 'URLIs': URLTargets.URLIs,
@@ -63,7 +70,9 @@
                 'Domain': window.location.host
             },
             'enableSingleRequest': true,
-            'collapseEmptyDivs': 'original'
+            'collapseEmptyDivs': 'original',
+            'targetPlatform': 'web',
+            'enableSyncRendering': false
         };
 
         // Merge options objects
@@ -75,6 +84,18 @@
                 $.extend(window.googletag, dfpOptions.googletag);
             });
         }
+
+    };
+
+    /**
+     * Find and create all Ads
+     * @param Object options Custom options to apply
+     * @return Array an array of ad units that have been created.
+     */
+    var createAds = function (options) {
+
+        // Array to Store AdUnits
+        var adUnitArray = [];
 
         // Loops through on page Ad units and gets ads for them.
         $(dfpSelector).each(function () {
@@ -170,6 +191,16 @@
             window.googletag.enableServices();
 
         });
+
+        return adUnitArray;
+
+    };
+
+    /**
+     * Display all created Ads
+     * @param Array adUnitArray an array of created ads
+     */
+    var displayAds = function (adUnitArray) {
 
         // Display each ad
         $.each(adUnitArray, function (k, v) {
