@@ -222,8 +222,6 @@
 
             var $v = $('#' + v);
 
-            window.console.log(dfpOptions.refreshExisting, typeof $v.data('googleAdUnit'), $v.hasClass('display-block'))
-
             if (dfpOptions.refreshExisting && typeof $v.data('googleAdUnit') !== 'undefined' && $v.hasClass('display-block')) {
 
                 window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$v.data('googleAdUnit')]); });
