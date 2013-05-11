@@ -302,14 +302,7 @@
      */
     var getName = function ($adUnit) {
 
-        var name = $adUnit.attr('id');
-        if (typeof $adUnit.data('adunit') !== 'undefined') {
-
-            name = $adUnit.data('adunit');
-
-        }
-
-        return name;
+        return $adUnit.data('adunit') || $adUnit.attr('id');
 
     };
 
