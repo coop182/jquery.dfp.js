@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.10
+ * jQuery DFP v1.0.11
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -72,7 +72,8 @@
             'enableSingleRequest': true,
             'collapseEmptyDivs': 'original',
             'targetPlatform': 'web',
-            'enableSyncRendering': false
+            'enableSyncRendering': false,
+            'refreshExisting': true
         };
 
         // Merge options objects
@@ -100,7 +101,8 @@
         // Loops through on page Ad units and gets ads for them.
         $(dfpSelector).each(function () {
 
-            var adUnit = this;
+            var adUnit = this,
+               $adUnit = $(this);
 
             count++;
 
@@ -114,10 +116,10 @@
             var dimensions = getDimensions(adUnit);
 
             // get existing content
-            var $existingContent = $(adUnit).html();
+            var $existingContent = $adUnit.html();
 
             // wipe html clean ready for ad and set the default display class.
-            $(adUnit).html('').addClass('display-none');
+            $adUnit.html('').addClass('display-none');
 
             // Store AdUnits
             adUnitArray.push(adUnitID);
@@ -125,44 +127,54 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                // Create the ad - out of page or normal
                 var googleAdUnit;
-                if (typeof $(adUnit).data('outofpage') !== 'undefined') {
-                    googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+
+                if (typeof $adUnit.data('googleAdUnit') === 'undefined') {
+
+                    // Create the ad - out of page or normal
+                    if (typeof $adUnit.data('outofpage') !== 'undefined') {
+                        googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+                    } else {
+                        googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
+                    }
+
                 } else {
-                    googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
+
+                    // Get existing ad unit
+                    googleAdUnit = $adUnit.data('googleAdUnit');
+
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                if (typeof $(adUnit).data("targeting") === 'object') {
-                    $.each($(adUnit).data("targeting"), function (k, v) {
+                if (typeof $adUnit.data("targeting") === 'object') {
+                    $.each($adUnit.data("targeting"), function (k, v) {
                         googleAdUnit.setTargeting(k, v);
                     });
                 }
 
                 // The following hijacks an internal google method to check if the div has been
                 // collapsed after the ad has been attempted to be loaded.
-                googleAdUnit.oldRenderEnded = googleAdUnit.renderEnded;
+                googleAdUnit.oldRenderEnded = googleAdUnit.oldRenderEnded || googleAdUnit.renderEnded;
                 googleAdUnit.renderEnded = function () {
 
                     rendered++;
 
-                    var display = $(adUnit).css('display');
+                    var display = $adUnit.css('display');
 
                     // if the div has been collapsed but there was existing content expand the
                     // div and reinsert the existing content.
                     if (display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
-                        $(adUnit).show().html($existingContent);
+                        $adUnit.show().html($existingContent);
                         display = 'block display-original';
                     }
 
-                    $(adUnit).removeClass('display-none').addClass('display-' + display);
+                    $adUnit.removeClass('display-none').addClass('display-' + display);
 
                     googleAdUnit.oldRenderEnded();
 
                     // Excute afterEachAdLoaded callback if provided
                     if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                        dfpOptions.afterEachAdLoaded.call(this, adUnit);
+                        dfpOptions.afterEachAdLoaded.call(this, $adUnit);
                     }
 
                     // Excute afterAllAdsLoaded callback if provided
@@ -171,6 +183,9 @@
                     }
 
                 };
+
+                // Store googleAdUnit reference
+                $adUnit.data('googleAdUnit', googleAdUnit);
 
             });
 
@@ -205,7 +220,19 @@
         // Display each ad
         $.each(adUnitArray, function (k, v) {
 
-            window.googletag.cmd.push(function () { window.googletag.display(v); });
+            var $v = $('#' + v);
+
+            window.console.log(dfpOptions.refreshExisting, typeof $v.data('googleAdUnit'), $v.hasClass('display-block'))
+
+            if (dfpOptions.refreshExisting && typeof $v.data('googleAdUnit') !== 'undefined' && $v.hasClass('display-block')) {
+
+                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$v.data('googleAdUnit')]); });
+
+            } else {
+
+                window.googletag.cmd.push(function () { window.googletag.display(v); });
+
+            }
 
         });
 
