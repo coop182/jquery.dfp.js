@@ -163,7 +163,7 @@ Please see the example-bootstrap.js file for an example of how to use these.
 Default Targeting
 -----------------
 
-The following targeting options are built into this script and should be setup in your DFP account (within Inventory/Custom Targeting) to make full use of them:
+The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting][Custom targeting]) to make full use of them:
 
 <table>
     <tr>
@@ -187,6 +187,8 @@ The following targeting options are built into this script and should be setup i
         <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</td>
     </tr>
 </table>
+
+[Custom targeting]: https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838
 
 Contributors
 ------------
