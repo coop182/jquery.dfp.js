@@ -46,8 +46,8 @@
         dfpID = id;
         $adCollection = $(selector);
 
-        setOptions(options);
         dfpLoader();
+        setOptions(options);
 
         $(function () {
             createAds();
@@ -236,14 +236,15 @@
     getURLTargets = function () {
 
         // Get the paths for targeting against
-        var paths = window.location.pathname.replace(/\/$/, '');
-        var patt = new RegExp('\/([^\/]*)', 'ig');
-        var pathsMatches = paths.match(patt);
-        var targetPaths = ['/'];
-        var longestpath = '';
-        if (paths !== '/' && pathsMatches !== null) {
-            var target = '';
-            var size = pathsMatches.length;
+        var paths = window.location.pathname.replace(/\/$/, ''),
+            patt = new RegExp('\/([^\/]*)', 'ig'),
+            pathsMatches = paths.match(patt),
+            targetPaths = ['/'],
+            longestpath = '';
+
+        if (pathsMatches && paths !== '/') {
+            var target = '',
+                size = pathsMatches.length;
             if (size > 0) {
                 for (var i = 0; i < size; i++) {
                     target = pathsMatches[i];
@@ -264,8 +265,8 @@
         targetPaths = targetPaths.reverse();
 
         // Get the query params for targeting against
-        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/);
-        var params = RegExp.$1.split("&");
+        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
+            params = RegExp.$1.split("&");
 
         return {
             'inURL': targetPaths,
@@ -461,4 +462,4 @@
 
     };
 
-})(window.jQuery, window);
+})(jQuery, window);
