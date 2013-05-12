@@ -118,6 +118,10 @@ Available Options
         <td>This can be set to true, false or 'original'. If its set to true the divs will be set to display:none if no line item is found. False means that the ad unit div will stay visible no matter what. Setting this to 'original' (the default option) means that the ad unit div will be hidden if no line items are found UNLESS there is some existing content inside the ad unit div tags. This allows you to have fall back content in the ad unit in the event that no ads are found.</td>
     </tr>
     <tr>
+        <td>refreshExisting</td>
+        <td>This boolean controls what happens when dfp is called multiple times on ad units. By default it is set to true which means that if an already initialised ad is initialised again it will instead be refreshed.</td>
+    </tr>
+    <tr>
         <td>afterEachAdLoaded</td>
         <td>This is a call back function, see below for more information.</td>
     </tr>
@@ -163,7 +167,7 @@ Please see the example-bootstrap.js file for an example of how to use these.
 Default Targeting
 -----------------
 
-The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting][Custom targeting]) to make full use of them:
+The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them:
 
 <table>
     <tr>
@@ -187,8 +191,6 @@ The following targeting options are built into this script and should be setup i
         <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</td>
     </tr>
 </table>
-
-[Custom targeting]: https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838
 
 Contributors
 ------------
