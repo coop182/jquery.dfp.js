@@ -5,7 +5,7 @@
  * Copyright 2013 Matt Cooper
  * Released under the MIT license
  */
-(function ($, window) {
+(function ($, window, undefined) {
 
     "use strict";
 
@@ -125,24 +125,24 @@
 
                 var googleAdUnit;
 
-                if (typeof $adUnit.data('googleAdUnit') === 'undefined') {
+                if ($adUnit.data('googleAdUnit')) {
+
+                    // Get existing ad unit
+                    googleAdUnit = $adUnit.data('googleAdUnit');
+
+                } else {
 
                     // Create the ad - out of page or normal
-                    if (typeof $adUnit.data('outofpage') !== 'undefined') {
+                    if ($adUnit.data('outofpage')) {
                         googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
                     } else {
                         googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
                     }
 
-                } else {
-
-                    // Get existing ad unit
-                    googleAdUnit = $adUnit.data('googleAdUnit');
-
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                if (typeof $adUnit.data("targeting") === 'object') {
+                if ($adUnit.data("targeting")) {
                     $.each($adUnit.data("targeting"), function (k, v) {
                         googleAdUnit.setTargeting(k, v);
                     });
@@ -215,7 +215,7 @@
 
             var $adUnit = $(this);
 
-            if (dfpOptions.refreshExisting && typeof $adUnit.data('googleAdUnit') !== 'undefined' && $adUnit.hasClass('display-block')) {
+            if (dfpOptions.refreshExisting && $adUnit.data('googleAdUnit') && $adUnit.hasClass('display-block')) {
 
                 window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnit.data('googleAdUnit')]); });
 
@@ -312,7 +312,7 @@
             dimensionsData = $adUnit.data('dimensions');
 
         // Check if data-dimensions are specified. If they aren't, use the dimensions of the ad unit div.
-        if (typeof dimensionsData !== 'undefined') {
+        if (dimensionsData) {
 
             var dimensionGroups = dimensionsData.split(',');
 
@@ -440,7 +440,7 @@
 
         options = options || {};
 
-        if (typeof id === 'undefined') {
+        if (id === undefined) {
             id = dfpID;
         }
 
