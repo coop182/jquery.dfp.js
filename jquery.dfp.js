@@ -346,16 +346,14 @@
      */
     dfpLoader = function () {
 
-        window.googletag = window.googletag || {};
-        window.googletag.cmd = window.googletag.cmd || [];
-
-        window.console.log(typeof window.googletag.cmd.push);
-
         // make sure we don't load gpt.js multiple times
         dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
         if (dfpIsLoaded) {
             return;
         }
+
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
 
         var gads = document.createElement('script');
         gads.async = true;
