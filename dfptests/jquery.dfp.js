@@ -1,34 +1,42 @@
 /**
- * jQuery DFP v1.0.11
+ * jQuery DFP v1.0.13
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
  * Released under the MIT license
  */
-(function ($, window) {
+(function ($, window, undefined) {
 
     "use strict";
 
+    var
+
     // Save Scope
-    var dfpScript = this;
+    dfpScript = this,
 
     // DFP account ID
-    var dfpID = '';
+    dfpID = '',
 
     // Count of ads
-    var count = 0;
+    count = 0,
 
     // Count of rendered ads
-    var rendered = 0;
+    rendered = 0,
 
-    // Default DFP jQuery selector
-    var dfpSelector = '.adunit';
+    // Default DFP selector
+    dfpSelector = '.adunit',
 
     // DFP options object
-    var dfpOptions = {};
+    dfpOptions = {},
 
     // Keep track of if we've already tried to load gpt.js before
-    var dfpIsLoaded = false;
+    dfpIsLoaded = false,
+
+    // Collection of ads
+    $adCollection,
+
+    // Store adunit on div as:
+    storeAs = 'googleAdUnit',
 
     /**
      * Init function sets required params and loads Google's DFP script
@@ -36,27 +44,26 @@
      * @param  String selector The adunit selector
      * @param  Object options  Custom options to apply
      */
-    var init = function (id, selector, options) {
+    init = function (id, selector, options) {
 
-        dfpID = id || dfpID;
-        dfpSelector = selector || dfpSelector;
-        options = options || {};
+        dfpID = id;
+        $adCollection = $(selector);
 
-        setOptions(options);
         dfpLoader();
+        setOptions(options);
 
         $(function () {
-            var ads = createAds(options);
-            displayAds(ads);
+            createAds();
+            displayAds();
         });
 
-    };
+    },
 
     /**
      * Set the options for DFP
      * @param Object options Custom options to apply
      */
-    var setOptions = function (options) {
+    setOptions = function (options) {
 
         // Get URL Targeting
         var URLTargets = getURLTargets();
@@ -86,20 +93,16 @@
             });
         }
 
-    };
+    },
 
     /**
      * Find and create all Ads
-     * @param Object options Custom options to apply
      * @return Array an array of ad units that have been created.
      */
-    var createAds = function (options) {
-
-        // Array to Store AdUnits
-        var adUnitArray = [];
+    createAds = function () {
 
         // Loops through on page Ad units and gets ads for them.
-        $(dfpSelector).each(function () {
+        $adCollection.each(function () {
 
             var $adUnit = $(this);
 
@@ -120,32 +123,30 @@
             // wipe html clean ready for ad and set the default display class.
             $adUnit.html('').addClass('display-none');
 
-            // Store AdUnits
-            adUnitArray.push(adUnitID);
-
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                var googleAdUnit;
+                var googleAdUnit,
+                    $adUnitData = $adUnit.data(storeAs);
 
-                if (typeof $adUnit.data('googleAdUnit') === 'undefined') {
+                if ($adUnitData) {
+
+                    // Get existing ad unit
+                    googleAdUnit = $adUnitData;
+
+                } else {
 
                     // Create the ad - out of page or normal
-                    if (typeof $adUnit.data('outofpage') !== 'undefined') {
+                    if ($adUnit.data('outofpage')) {
                         googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
                     } else {
                         googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
                     }
 
-                } else {
-
-                    // Get existing ad unit
-                    googleAdUnit = $adUnit.data('googleAdUnit');
-
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                if (typeof $adUnit.data("targeting") === 'object') {
+                if ($adUnit.data("targeting")) {
                     $.each($adUnit.data("targeting"), function (k, v) {
                         googleAdUnit.setTargeting(k, v);
                     });
@@ -178,13 +179,13 @@
 
                     // Excute afterAllAdsLoaded callback if provided
                     if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
-                        dfpOptions.afterAllAdsLoaded.call(this, $(dfpSelector));
+                        dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
                     }
 
                 };
 
                 // Store googleAdUnit reference
-                $adUnit.data('googleAdUnit', googleAdUnit);
+                $adUnit.data(storeAs, googleAdUnit);
 
             });
 
@@ -206,50 +207,49 @@
 
         });
 
-        return adUnitArray;
-
-    };
+    },
 
     /**
      * Display all created Ads
-     * @param Array adUnitArray an array of created ads
      */
-    var displayAds = function (adUnitArray) {
+    displayAds = function () {
 
         // Display each ad
-        $.each(adUnitArray, function (key, adUnitID) {
+        $adCollection.each(function () {
 
-            var $adUnit = $('#' + adUnitID);
+            var $adUnit = $(this),
+                $adUnitData = $adUnit.data(storeAs);
 
-            if (dfpOptions.refreshExisting && typeof $adUnit.data('googleAdUnit') !== 'undefined' && $adUnit.hasClass('display-block')) {
+            if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
-                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnit.data('googleAdUnit')]); });
+                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnitData]); });
 
             } else {
 
-                window.googletag.cmd.push(function () { window.googletag.display(adUnitID); });
+                window.googletag.cmd.push(function () { window.googletag.display($adUnit.attr('id')); });
 
             }
 
         });
 
-    };
+    },
 
     /**
      * Create an array of paths so that we can target DFP ads to Page URI's
      * @return Array an array of URL parts that can be targeted.
      */
-    var getURLTargets = function () {
+    getURLTargets = function () {
 
         // Get the paths for targeting against
-        var paths = window.location.pathname.replace(/\/$/, '');
-        var patt = new RegExp('\/([^\/]*)', 'ig');
-        var pathsMatches = paths.match(patt);
-        var targetPaths = ['/'];
-        var longestpath = '';
-        if (paths !== '/' && pathsMatches !== null) {
-            var target = '';
-            var size = pathsMatches.length;
+        var paths = window.location.pathname.replace(/\/$/, ''),
+            patt = new RegExp('\/([^\/]*)', 'ig'),
+            pathsMatches = paths.match(patt),
+            targetPaths = ['/'],
+            longestpath = '';
+
+        if (pathsMatches && paths !== '/') {
+            var target = '',
+                size = pathsMatches.length;
             if (size > 0) {
                 for (var i = 0; i < size; i++) {
                     target = pathsMatches[i];
@@ -270,8 +270,8 @@
         targetPaths = targetPaths.reverse();
 
         // Get the query params for targeting against
-        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/);
-        var params = RegExp.$1.split("&");
+        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
+            params = RegExp.$1.split("&");
 
         return {
             'inURL': targetPaths,
@@ -279,7 +279,7 @@
             'Query': params
         };
 
-    };
+    },
 
     /**
      * Get the id of the adUnit div or generate a unique one.
@@ -288,11 +288,11 @@
      * @param  Integer count     The current count of adunit, for uniqueness
      * @return String             The ID of the adunit or a unique autogenerated ID
      */
-    var getID = function ($adUnit, adUnitName, count) {
+    getID = function ($adUnit, adUnitName, count) {
 
         return $adUnit.attr('id') || $adUnit.attr('id', adUnitName + '-auto-gen-id-' + count).attr('id');
 
-    };
+    },
 
     /**
      * Get the name of the Ad unit, either use the div id or
@@ -300,11 +300,11 @@
      * @param  Object $adUnit The adunit to work with
      * @return String        The name of the adunit, will be the same as inside DFP
      */
-    var getName = function ($adUnit) {
+    getName = function ($adUnit) {
 
         return $adUnit.data('adunit') || $adUnit.attr('id');
 
-    };
+    },
 
     /**
      * Get the dimensions of the ad unit using the container div dimensions or
@@ -312,13 +312,13 @@
      * @param  Object $adUnit The adunit to work with
      * @return Array         The dimensions of the adunit (width, height)
      */
-    var getDimensions = function ($adUnit) {
+    getDimensions = function ($adUnit) {
 
         var dimensions = [],
             dimensionsData = $adUnit.data('dimensions');
 
         // Check if data-dimensions are specified. If they aren't, use the dimensions of the ad unit div.
-        if (typeof dimensionsData !== 'undefined') {
+        if (dimensionsData) {
 
             var dimensionGroups = dimensionsData.split(',');
 
@@ -337,14 +337,14 @@
 
         return dimensions;
 
-    };
+    },
 
     /**
      * Call the google DFP script - there is a little bit of error detection in here to detect
      * if the dfp script has failed to load either through an error or it being blocked by an ad
      * blocker... if it does not load we execute a dummy script to replace the real DFP.
      */
-    var dfpLoader = function () {
+    dfpLoader = function () {
 
         // make sure we don't load gpt.js multiple times
         dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
@@ -375,7 +375,7 @@
             dfpBlocked();
         }
 
-    };
+    },
 
     /**
      * This function gets called if DFP has been blocked by an adblocker
@@ -384,7 +384,7 @@
      * where you are laying DFP over existing content and need to init things like slide shows after the loading
      * is completed.
      */
-    var dfpBlocked = function () {
+    dfpBlocked = function () {
 
         // Get the stored dfp commands
         var commands = window.googletag.cmd;
@@ -438,7 +438,7 @@
     };
 
     /**
-     * Add function to the jQuery namespace
+     * Add function to the jQuery / Zepto / tire namespace
      * @param  String id      (Optional) The DFP account ID
      * @param  Object options (Optional) Custom options to apply
      */
@@ -446,7 +446,7 @@
 
         options = options || {};
 
-        if (typeof id === 'undefined') {
+        if (id === undefined) {
             id = dfpID;
         }
 
@@ -467,4 +467,4 @@
 
     };
 
-})(window.jQuery, window);
+})(window.jQuery || window.Zepto || window.tire, window);
