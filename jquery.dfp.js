@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.12
+ * jQuery DFP v1.0.13
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -23,7 +23,7 @@
     // Count of rendered ads
     rendered = 0,
 
-    // Default DFP jQuery selector
+    // Default DFP selector
     dfpSelector = '.adunit',
 
     // DFP options object
@@ -32,8 +32,11 @@
     // Keep track of if we've already tried to load gpt.js before
     dfpIsLoaded = false,
 
-    // jQuery collection of ads
+    // Collection of ads
     $adCollection,
+
+    // Store adunit on div as:
+    storeAs = 'googleAdUnit',
 
     /**
      * Init function sets required params and loads Google's DFP script
@@ -123,12 +126,13 @@
             // Push commands to DFP to create ads
             window.googletag.cmd.push(function () {
 
-                var googleAdUnit;
+                var googleAdUnit,
+                    $adUnitData = $adUnit.data(storeAs);
 
-                if ($adUnit.data('googleAdUnit')) {
+                if ($adUnitData) {
 
                     // Get existing ad unit
-                    googleAdUnit = $adUnit.data('googleAdUnit');
+                    googleAdUnit = $adUnitData;
 
                 } else {
 
@@ -181,7 +185,7 @@
                 };
 
                 // Store googleAdUnit reference
-                $adUnit.data('googleAdUnit', googleAdUnit);
+                $adUnit.data(storeAs, googleAdUnit);
 
             });
 
@@ -213,11 +217,12 @@
         // Display each ad
         $adCollection.each(function () {
 
-            var $adUnit = $(this);
+            var $adUnit = $(this),
+                $adUnitData = $adUnit.data(storeAs);
 
-            if (dfpOptions.refreshExisting && $adUnit.data('googleAdUnit') && $adUnit.hasClass('display-block')) {
+            if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
-                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnit.data('googleAdUnit')]); });
+                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnitData]); });
 
             } else {
 
@@ -341,14 +346,16 @@
      */
     dfpLoader = function () {
 
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
+
+        window.console.log(typeof window.googletag.cmd.push);
+
         // make sure we don't load gpt.js multiple times
         dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
         if (dfpIsLoaded) {
             return;
         }
-
-        window.googletag = window.googletag || {};
-        window.googletag.cmd = window.googletag.cmd || [];
 
         var gads = document.createElement('script');
         gads.async = true;
@@ -433,7 +440,7 @@
     };
 
     /**
-     * Add function to the jQuery namespace
+     * Add function to the jQuery / Zepto / tire namespace
      * @param  String id      (Optional) The DFP account ID
      * @param  Object options (Optional) Custom options to apply
      */
@@ -462,4 +469,4 @@
 
     };
 
-})(jQuery, window);
+})(window.jQuery || window.Zepto || window.tire, window);
