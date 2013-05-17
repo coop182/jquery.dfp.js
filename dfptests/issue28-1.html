@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>DFP TEST</title>
+
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="jquery.dfp.js"></script>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+    $.ajax({
+         dataType : "HTML",
+         url : "issue28-2.html",
+         success : function (response) {
+              $("#content-page").html(response);
+         }
+    });
+
+    setTimeout(function () {
+        $.ajax({
+             dataType : "HTML",
+             url : "issue28-2.html",
+             success : function (response) {
+                  $("#content-page").html(response);
+             }
+        });
+    }, 3000);
+
+</script>
+
+<div id="content-page"></div>
+
+</body>
+</html>
