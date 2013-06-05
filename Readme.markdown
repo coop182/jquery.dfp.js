@@ -198,7 +198,7 @@ The following targeting options are built into this script and should be setup i
 
 One common issue that you may run into with using the above targeting is that URL paths that you might want to target can easily be above the 40 character limit. To get around this you can specify multiple inURL rules. For example if you are wanting to target a URL like http://www.yourdomain.com/this/url/is/much/too/long/to/fit-into/the-dfp-targeting-value-box you can break it up into multiple inURL AND rules.
 
-![URL Targeting](../blob/master/img/url-targeting.png?raw=true)
+![URL Targeting](https://raw.github.com/coop182/jquery.dfp.js/master/img/url-targetting.png)
 
 Contributors
 ------------
