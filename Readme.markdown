@@ -1,7 +1,7 @@
 jQuery DFP - A jQuery implementation for Google DFP
 ======================================================
 
-This script is a drop in solution for getting Double Click for Publishers (DFP) by Google working on your page. By including this script on your page and then initiating it in the ways described below you should find it very easy to get DFP working.
+This script is a drop in solution for getting Double Click for Publishers (DFP) by Google working on your page. By including this script on your page and then initialising it in the ways described below you should find it very easy to get DFP working.
 
 Do not include any of the generated DFP script tags from the DFP admin on your page, this script replaces them.
 
@@ -10,7 +10,7 @@ This script also works with [Zepto.js](http://zeptojs.com/) and [Tire.js](http:/
 Setup
 -----
 
-You can add containers to your page in any location that you would like to display an ad.
+You can add ad units to your page in any location that you would like to display an ad.
 
 By default this script will look for ad units with a class of `adunit` but you can of course use jQuery selectors as well.
 
@@ -24,7 +24,7 @@ You can optionally specify the adunit name and dimensions in the following way:
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
 
-This method can be useful for including multiple ad units of the same name which when part of a DFP placement will then pull in as many different creatives as possible.
+This method can be useful for including multiple copies of an ad unit with the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
 You can also specify multiple dimensions sets:
 
@@ -34,7 +34,7 @@ Also you can optionally specify custom targeting on a per ad unit basis in the f
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
-To create an out of page ad unit set the data-outofpage property on the ad unit, dimension.
+To create an out of page ad unit set the data-outofpage property on the ad unit. Dimensions are not required for out of page ad units.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
 
@@ -164,12 +164,14 @@ This script provides two callbacks which you can use to make working with DFP a 
     </tr>
 </table>
 
-Please see the example-bootstrap.js file for an example of how to use these.
+Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js) file for an example of how to use these.
 
 Default Targeting
 -----------------
 
-The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them:
+The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them.
+
+**Beware: The Targeting string has a 40 character limit!**
 
 <table>
     <tr>
@@ -186,13 +188,17 @@ The following targeting options are built into this script and should be setup i
     </tr>
     <tr>
         <td>URLIs</td>
-        <td>This allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2</td>
+        <td>This allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2.</td>
     </tr>
     <tr>
         <td>Query</td>
         <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</td>
     </tr>
 </table>
+
+One common issue that you may run into with using the above targeting is that URL paths that you might want to target can easily be above the 40 character limit. To get around this you can specify multiple inURL rules. For example if you are wanting to target a URL like http://www.yourdomain.com/this/url/is/much/too/long/to/fit-into/the-dfp-targeting-value-box you can break it up into multiple inURL AND rules.
+
+![URL Targeting](../blob/master/img/url-targeting.png?raw=true)
 
 Contributors
 ------------
