@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="jquery.dfp.js"></script>
+</head>
+<body>
+
+<form method="get">
+    <input type="hidden" name="google_console" value="1">
+    <label>Network ID:</label><br />
+    <input type="text" id="networkID" name="networkID"><br />
+    <label>Ad Unit:</label><br />
+    <input type="text" id="adunitID" name="adunitID"><br />
+    <label>Dimensions:</label><br />
+    <input type="text" id="dimensions" name="dimensions"><br />
+    <input type="submit" />
+</form>
+
+<div id="output"></div>
+<div id="debug"></div>
+
+<script>
+
+window.googletag = window.googletag || {};
+window.googletag.cmd = window.googletag.cmd || [];
+
+googletag.cmd.push(function () {
+    googletag.debug_log.log = function(level,message,service,slot,reference){
+        $('#debug').append('<div>' + message + '</div>');
+    };
+});
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var networkID = getParameterByName('networkID');
+$('#networkID').val(networkID);
+
+var adunitID = getParameterByName('adunitID');
+$('#adunitID').val(adunitID);
+
+var dimensions = getParameterByName('dimensions');
+$('#dimensions').val(dimensions);
+
+if (networkID != '' && adunitID != '' && dimensions != '') {
+
+    $('#output').append('<div class="adunit" data-adunit="'+adunitID+'" data-dimensions="'+dimensions+'">Ad could not be loaded.</div>');
+
+    $.dfp(networkID);
+}
+
+</script>
+
+</body>
+</html>
