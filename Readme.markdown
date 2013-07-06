@@ -7,6 +7,13 @@ Do not include any of the generated DFP script tags from the DFP admin on your p
 
 This script also works with [Zepto.js](http://zeptojs.com/) and [Tire.js](http://tirejs.com/)
 
+Demo / Ad unit tester
+---------------------
+
+You can use [this page](http://coop182.github.io/jquery.dfp.js/dfptests/test.html?google_console=1&networkID=15572793&adunitID=Leader&dimensions=728x90) to test your DFP ads using the jquery.dfp.js script. There is some debug code included to help debug the ad delivery.
+
+You can also use the [Google Console](https://support.google.com/dfp_sb/answer/181070?hl=en-GB) to debug your ad units by pressing CTRL + F5.
+
 Setup
 -----
 
