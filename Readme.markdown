@@ -41,6 +41,10 @@ Also you can optionally specify custom targeting on a per ad unit basis in the f
 
     <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
+Also you can optionally specify custom exclusion category on a per ad unit basis in the following way:
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-exclusions="firstcategory,secondcategory"></div>
+
 To create an out of page ad unit set the data-outofpage property on the ad unit. Dimensions are not required for out of page ad units.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
