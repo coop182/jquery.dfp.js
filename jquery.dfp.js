@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.13
+ * jQuery DFP v1.0.14
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -146,8 +146,9 @@
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                if ($adUnit.data("targeting")) {
-                    $.each($adUnit.data("targeting"), function (k, v) {
+                var targeting = $adUnit.data("targeting");
+                if (targeting) {
+                    $.each(targeting, function (k, v) {
                         googleAdUnit.setTargeting(k, v);
                     });
                 }
