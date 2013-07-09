@@ -152,6 +152,15 @@
                     });
                 }
 
+                // Sets custom exclusions for just THIS ad unit if it has been specified
+                var exclusions = $adUnit.data("exclusions");
+                if (exclusions) {
+                    var exclusionsGroup = exclusions.split(',');
+                    $.each(exclusionsGroup, function (k, v) {
+                        googleAdUnit.setCategoryExclusion(v.trim());
+                    });
+                }
+
                 // The following hijacks an internal google method to check if the div has been
                 // collapsed after the ad has been attempted to be loaded.
                 googleAdUnit.oldRenderEnded = googleAdUnit.oldRenderEnded || googleAdUnit.renderEnded;
