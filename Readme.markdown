@@ -129,7 +129,7 @@ Available Options
         <td>This object is where you set custom targeting key value pairs. Also see the Default Targeting options that are set further down the page.</td>
     </tr>
     <tr>
-        <td>setExclusionCategory</td>
+        <td>setCategoryExclusion</td>
         <td>This comma separated list sets category exclusions globally (page level).</td>
     </tr>
     <tr>
