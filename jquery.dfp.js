@@ -76,6 +76,7 @@
                 'Query': URLTargets.Query,
                 'Domain': window.location.host
             },
+            'setCategoryExclusion': '',
             'enableSingleRequest': true,
             'collapseEmptyDivs': 'original',
             'targetPlatform': 'web',
@@ -157,8 +158,12 @@
                 var exclusions = $adUnit.data("exclusions");
                 if (exclusions) {
                     var exclusionsGroup = exclusions.split(',');
+                    var valueTrimmed;
                     $.each(exclusionsGroup, function (k, v) {
-                        googleAdUnit.setCategoryExclusion(v.trim());
+                        valueTrimmed = v.trim();
+                        if(valueTrimmed.length > 0) { 
+                            googleAdUnit.setCategoryExclusion(v.trim());
+                        }
                     });
                 }
 
@@ -210,6 +215,16 @@
             $.each(dfpOptions.setTargeting, function (k, v) {
                 window.googletag.pubads().setTargeting(k, v);
             });
+            if (dfpOptions.setCategoryExclusion.length > 0) {
+                var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
+                var valueTrimmed;
+                $.each(exclusionsGroup, function (k, v) {
+                    valueTrimmed = v.trim();
+                    if(valueTrimmed.length > 0) { 
+                        window.googletag.pubads().setCategoryExclusion(v.trim());
+                    }
+                });
+            }
             if (dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
                 window.googletag.pubads().collapseEmptyDivs();
             }
