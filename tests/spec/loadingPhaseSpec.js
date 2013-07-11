@@ -2,6 +2,7 @@ describe('Loading Phase', function () {
 
     beforeEach(function () {
         $('.adunit').remove();
+        $('#testdiv').remove();
         $('script[src*="googletagservices.com/tag/js/gpt.js"]').remove();
         window.googletag = null;
         delete window.googletag;
@@ -47,4 +48,96 @@ describe('Loading Phase', function () {
 
     });
 
+    it('dfpSelector default option', function () {
+
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+        dummyTag.defineSlot = function() {};
+        spyOn(dummyTag, "enableServices").andCallThrough();
+        spyOn(dummyTag, "defineSlot").andCallThrough();
+
+
+        $("body").append("<div id='testdiv'>" + 
+                "<div class='adunit'></div>" + 
+                "<div class='adunit'></div>" + 
+            "</div>");
+
+        waitsFor(function() {
+
+            if($("#testdiv").length === 1) {
+                return true; 
+            } else {
+                return false;
+            }
+        }, "div#testdiv not created", 5000);
+        
+
+        runs(function () {
+            $.dfp({
+                dfpID: 'xxxxxxx', 
+                googletag: dummyTag
+            });
+        }); 
+
+        waitsFor(function () {
+
+            if(dummyTag.enableServices.calls.length === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Method enablesServices never got called", 5000);
+       
+        runs(function () {
+            expect(1).toEqual(1);
+            expect(dummyTag.defineSlot.calls.length).toEqual(2);
+        });
+    });
+
+    it('Override dfpSelector', function () {
+
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+        dummyTag.defineSlot = function() {};
+        spyOn(dummyTag, "enableServices").andCallThrough();
+        spyOn(dummyTag, "defineSlot").andCallThrough();
+
+
+        $("body").append("<div id='testdiv'>" + 
+                "<div class='otherselector'></div>" + 
+                "<div class='otherselector'></div>" + 
+            "</div>");
+
+        waitsFor(function() {
+
+            if($("#testdiv").length === 1) {
+                return true; 
+            } else {
+                return false;
+            }
+        }, "div#testdiv not created", 5000);
+        
+
+        runs(function () {
+            $.dfp({
+                dfpID: 'xxxxxxx', 
+                dfpSelector: '.otherselector',
+                googletag: dummyTag
+            });
+        }); 
+
+        waitsFor(function () {
+
+            if(dummyTag.enableServices.calls.length === 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }, "Method enablesServices never got called", 5000);
+       
+        runs(function () {
+            expect(1).toEqual(1);
+            expect(dummyTag.defineSlot.calls.length).toEqual(2);
+        });
+    });
 });
