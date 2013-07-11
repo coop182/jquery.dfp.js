@@ -105,7 +105,12 @@ $('selector').dfp({
     dfpID:'xxxxxxxxx'
 });
 </pre>
-
+<pre>
+$('selector').dfp({
+    dfpID:'xxxxxxxxx',
+    dfpSelector: '.otherselector'
+});
+</pre>
 <pre>
 $('selector').dfp({
     dfpID:'xxxxxxxxx',

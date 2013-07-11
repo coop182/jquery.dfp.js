@@ -475,15 +475,11 @@
             id = dfpID;
         }
 
+        var selector;
         if (typeof id === 'object') {
             options = id;
             id = options.dfpID || dfpID;
-        }
-
-        var selector = this;
-
-        if (typeof this === 'function') {
-            selector = dfpSelector;
+            selector = options.dfpSelector || dfpSelector;
         }
 
         init(id, selector, options);
