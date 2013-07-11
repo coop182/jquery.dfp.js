@@ -70,18 +70,18 @@
 
         // Set default options
         dfpOptions = {
-            'setTargeting': {
-                'inURL': URLTargets.inURL,
-                'URLIs': URLTargets.URLIs,
-                'Query': URLTargets.Query,
-                'Domain': window.location.host
+            setTargeting: {
+                inURL: URLTargets.inURL,
+                URLIs: URLTargets.URLIs,
+                Query: URLTargets.Query,
+                Domain: window.location.host
             },
-            'setCategoryExclusion': '',
-            'enableSingleRequest': true,
-            'collapseEmptyDivs': 'original',
-            'targetPlatform': 'web',
-            'enableSyncRendering': false,
-            'refreshExisting': true
+            setCategoryExclusion: '',
+            enableSingleRequest: true,
+            collapseEmptyDivs: 'original',
+            targetPlatform: 'web',
+            enableSyncRendering: false,
+            refreshExisting: true
         };
 
         // Merge options objects
@@ -90,7 +90,7 @@
         // If a custom googletag is specified, use it.
         if (dfpOptions.googletag) {
             window.googletag.cmd.push(function () {
-                $.extend(window.googletag, dfpOptions.googletag);
+                $.extend(true, window.googletag, dfpOptions.googletag);
             });
         }
 
@@ -299,9 +299,9 @@
             params = RegExp.$1.split("&");
 
         return {
-            'inURL': targetPaths,
-            'URLIs': targetPaths[0],
-            'Query': params
+            inURL: targetPaths,
+            URLIs: targetPaths[0],
+            Query: params
         };
 
     },

@@ -1,11 +1,13 @@
 describe("Category Exclusion", function () {
 
-    beforeEach(function () {
+    var cleanup = function () {
         $('.adunit').remove();
-        $('script[src*="googletagservices.com/tag/js/gpt.js"]').remove();
+        $('script[src*="gpt.js"]').remove();
         window.googletag = null;
         delete window.googletag;
-    });
+    };
+    beforeEach(cleanup);
+    afterEach(cleanup);
 
     it("Gets called correctly (ad unit)", function () {
         var mockAdunit = {

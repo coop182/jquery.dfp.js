@@ -1,11 +1,13 @@
 describe('Loading Phase', function () {
 
-    beforeEach(function () {
+    var cleanup = function () {
         $('.adunit').remove();
-        $('script[src*="googletagservices.com/tag/js/gpt.js"]').remove();
+        $('script[src*="gpt.js"]').remove();
         window.googletag = null;
         delete window.googletag;
-    });
+    };
+    beforeEach(cleanup);
+    afterEach(cleanup);
 
     it('Script Appended', function () {
 
