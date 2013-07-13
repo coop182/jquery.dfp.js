@@ -3,8 +3,8 @@ describe('Ad units', function () {
     beforeEach(function () {
         $('.adunit').remove();
         $('script[src*="googletagservices.com/tag/js/gpt.js"]').remove();
-        window.googletag = null;
-        delete window.googletag;
+        window.googletag = undefined;
+        
     });
 
     it("Auto generate an ID for the ad unit if no ID provided", function () {
