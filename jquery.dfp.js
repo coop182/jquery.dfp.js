@@ -160,9 +160,9 @@
                     var exclusionsGroup = exclusions.split(',');
                     var valueTrimmed;
                     $.each(exclusionsGroup, function (k, v) {
-                        valueTrimmed = v.trim();
+                        valueTrimmed = $.trim(v);
                         if (valueTrimmed.length > 0) {
-                            googleAdUnit.setCategoryExclusion(v.trim());
+                            googleAdUnit.setCategoryExclusion(valueTrimmed);
                         }
                     });
                 }
@@ -219,9 +219,9 @@
                 var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
                 var valueTrimmed;
                 $.each(exclusionsGroup, function (k, v) {
-                    valueTrimmed = v.trim();
+                    valueTrimmed = $.trim(v);
                     if (valueTrimmed.length > 0) {
-                        window.googletag.pubads().setCategoryExclusion(v.trim());
+                        window.googletag.pubads().setCategoryExclusion(valueTrimmed);
                     }
                 });
             }
