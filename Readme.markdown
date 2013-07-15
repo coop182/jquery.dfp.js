@@ -221,10 +221,18 @@ One common issue that you may run into with using the above targeting is that UR
 
 ![URL Targeting](https://raw.github.com/coop182/jquery.dfp.js/master/img/url-targetting.png)
 
-Contributors
+Contributing
 ------------
 
-Thanks to:
+We use Grunt to enable a smooth contributing and build process.
+
+Please install it using: `npm install -g grunt-cli`
+
+Once install run `npm install` from inside the cloned repo directory.
+
+You should now be able to make your changes to jquery.dfp.js and once you are finished simply run `grunt` if there are no errors then you can make a pull request and your feature/bug fix will be merged as soon as possible.
+
+Thanks a lot to these contributors:
 
 <ul>
     <li>@crccheck - https://github.com/crccheck</li>
