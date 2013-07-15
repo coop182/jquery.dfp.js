@@ -1,0 +1,13 @@
+{
+	"name": "jQuery DFP",
+	"version": "0.1.16",
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-contrib-jshint": "~0.6.0",
+		"grunt-contrib-jasmine": "~0.5.1",
+		"grunt-contrib-uglify": "~0.2.2"
+	},
+	"scripts": {
+		"test": "grunt travis --verbose"
+	}
+}
