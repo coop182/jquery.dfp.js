@@ -224,13 +224,19 @@ One common issue that you may run into with using the above targeting is that UR
 Contributing
 ------------
 
-We use Grunt to enable a smooth contributing and build process.
+Any and all contributions will be greatly appreciated.
 
-Please install it using: `npm install -g grunt-cli`
+If you wish to you can use [Grunt](http://gruntjs.com/) to enable a smooth contributing and build process.
 
-Once install run `npm install` from inside the cloned repo directory.
+Install Node.js by running `sudo apt-get install nodejs`
 
-You should now be able to make your changes to jquery.dfp.js and once you are finished simply run `grunt` if there are no errors then you can make a pull request and your feature/bug fix will be merged as soon as possible.
+Install Grunt using: `npm install -g grunt-cli`
+
+Once installed run `npm install` from inside the cloned repo directory.
+
+You should now be able to make your changes to `jquery.dfp.js` and once you are finished simply run `grunt` if there are no errors then you can commit your changes and make a pull request and your feature/bug fix will be merged as soon as possible.
+
+Please feel free to write tests which will test your new code, [Travis CI](https://travis-ci.org/) is used to test the code automatically once a pull request is generated.
 
 Thanks a lot to these contributors:
 
