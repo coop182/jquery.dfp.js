@@ -3,8 +3,7 @@ describe("Category Exclusion", function () {
     var cleanup = function () {
         $('.adunit').remove();
         $('script[src*="gpt.js"]').remove();
-        window.googletag = null;
-        delete window.googletag;
+        window.googletag = undefined;
     };
     beforeEach(cleanup);
     afterEach(cleanup);

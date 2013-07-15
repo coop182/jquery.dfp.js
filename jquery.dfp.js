@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.15
+ * jQuery DFP v1.0.16
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -160,9 +160,9 @@
                     var exclusionsGroup = exclusions.split(',');
                     var valueTrimmed;
                     $.each(exclusionsGroup, function (k, v) {
-                        valueTrimmed = v.trim();
+                        valueTrimmed = $.trim(v);
                         if (valueTrimmed.length > 0) {
-                            googleAdUnit.setCategoryExclusion(v.trim());
+                            googleAdUnit.setCategoryExclusion(valueTrimmed);
                         }
                     });
                 }
@@ -219,9 +219,9 @@
                 var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
                 var valueTrimmed;
                 $.each(exclusionsGroup, function (k, v) {
-                    valueTrimmed = v.trim();
+                    valueTrimmed = $.trim(v);
                     if (valueTrimmed.length > 0) {
-                        window.googletag.pubads().setCategoryExclusion(v.trim());
+                        window.googletag.pubads().setCategoryExclusion(valueTrimmed);
                     }
                 });
             }
