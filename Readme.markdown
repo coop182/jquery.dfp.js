@@ -1,6 +1,8 @@
 jQuery DFP - A jQuery implementation for Google DFP
 ======================================================
 
+[![Build Status](https://travis-ci.org/coop182/jquery.dfp.js.png?branch=master)](https://travis-ci.org/coop182/jquery.dfp.js)
+
 This script is a drop in solution for getting Double Click for Publishers (DFP) by Google working on your page. By including this script on your page and then initialising it in the ways described below you should find it very easy to get DFP working.
 
 Do not include any of the generated DFP script tags from the DFP admin on your page, this script replaces them.
