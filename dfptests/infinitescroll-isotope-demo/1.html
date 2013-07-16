@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  
+  <meta charset="utf-8" />
+  <title>Infinite Scroll &middot; Isotope Demo</title>
+  
+  <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="stylesheet" href="style.css" />
+  
+</head>
+<body class="demos ">
+  
+  <nav id="site-nav">
+    <h1><a href="../index.html">Isotope</a></h1>
+
+    <h2>Docs</h2>
+    
+    <ul>
+      
+        
+          <li><a href="../docs/introduction.html">Introduction</a>
+        
+      
+        
+          <li><a href="../docs/options.html">Options</a>
+        
+      
+        
+          <li><a href="../docs/methods.html">Methods</a>
+        
+      
+        
+          <li><a href="../docs/layout-modes.html">Layout modes</a>
+        
+      
+        
+          <li><a href="../docs/filtering.html">Filtering</a>
+        
+      
+        
+          <li><a href="../docs/sorting.html">Sorting</a>
+        
+      
+        
+          <li><a href="../docs/animating.html">Animating</a>
+        
+      
+        
+          <li><a href="../docs/adding-items.html">Adding items</a>
+        
+      
+        
+          <li><a href="../docs/extending-isotope.html">Extending Isotope</a>
+        
+      
+        
+          <li><a href="../docs/hash-history-jquery-bbq.html">Hash history with jQuery BBQ</a>
+        
+      
+        
+          <li><a href="../docs/help.html">Help</a>
+        
+      
+        
+          <li><a href="../docs/license.html">License</a>
+        
+      
+    </ul>
+    
+    <h2>Demos</h2>
+    
+    <ul>
+      
+        
+          <li><a href="../demos/basic.html">Basic</a>
+        
+      
+        
+          <li><a href="../demos/elements-complete.html">Elements Complete</a>
+        
+      
+        
+          <li><a href="../demos/elements-partial.html">Elements Partial</a>
+        
+      
+        
+          <li><a href="../demos/layout-modes.html">Layout modes</a>
+        
+      
+        
+          <li><a href="../demos/filtering.html">Filtering</a>
+        
+      
+        
+          <li><a href="../demos/sorting.html">Sorting</a>
+        
+      
+        
+          <li><a href="../demos/relayout.html">reLayout</a>
+        
+      
+        
+          <li><a href="../demos/adding-items.html">Adding items</a>
+        
+      
+        
+          <li class="current"><a href="#content">Infinite Scroll</a></li>
+        
+      
+        
+          <li><a href="../demos/images.html">Images</a>
+        
+      
+        
+          <li><a href="../demos/combination-filters.html">Combination filters</a>
+        
+      
+        
+          <li><a href="../demos/hash-history.html">Hash history</a>
+        
+      
+        
+          <li><a href="../demos/fluid-responsive.html">Fluid / responsive</a>
+        
+      
+        
+          <li><a href="../demos/removing.html">Removing</a>
+        
+      
+    </ul>
+    
+    <h2>Custom layout modes</h2>
+    
+    <ul>
+      
+        
+          <li><a href="../custom-layout-modes/centered-masonry.html">Centered Masonry</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/category-rows.html">Category rows</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/masonry-corner-stamp.html">Masonry corner stamp</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/masonry-gutters.html">Masonry gutters</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/spine-align.html">Spine align</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/big-graph.html">BIG Graph</a>
+        
+      
+        
+          <li><a href="../custom-layout-modes/masonry-column-shift.html">Masonry Column Shift</a>
+        
+      
+    </ul>
+    
+    <h2><a href="../tests/index.html">Tests</a></h2>
+    
+  </nav> <!-- #site-nav -->
+  
+  <section id="content">
+    
+      <h1>Infinite Scroll</h1>
+    
+
+      <section id="copy">
+    <p>Isotope is interoperable with <a href="http://www.infinite-scroll.com/">Infinite Scroll</a> by Paul Irish. Use the <a href="../docs/methods.html#appended"><code>appended</code></a> method to add new items to the Isotope layout. CSS transitions have been disabled on the container element to avoid triggering AJAX call prematurely.</p>
+  </section>
+
+  <div id="container" class="variable-sizes clearfix infinite-scrolling">
+
+          
+    <div class="element other nonmetal adunit width2 height2  " data-symbol="H" data-category="other" data-adunit="Button" data-dimensions="160x180">
+      <p class="number">1</p>
+      <h3 class="symbol">H</h3>
+      <h2 class="name">Hydrogen</h2>
+      <p class="weight">1.00794</p>
+    </div>
+    
+          
+    <div class="element noble-gas nonmetal   width2 height2  " data-symbol="He" data-category="noble-gas">
+      <p class="number">2</p>
+      <h3 class="symbol">He</h3>
+      <h2 class="name">Helium</h2>
+      <p class="weight">4.002602</p>
+    </div>
+    
+          
+    <div class="element alkali metal   width2 height2  " data-symbol="Li" data-category="alkali">
+      <p class="number">3</p>
+      <h3 class="symbol">Li</h3>
+      <h2 class="name">Lithium</h2>
+      <p class="weight">6.941</p>
+    </div>
+    
+          
+    <div class="element alkaline-earth metal   width2 height2  " data-symbol="Be" data-category="alkaline-earth">
+      <p class="number">4</p>
+      <h3 class="symbol">Be</h3>
+      <h2 class="name">Beryllium</h2>
+      <p class="weight">9.012182</p>
+    </div>
+    
+          
+    <div class="element metalloid   width2 height2  " data-symbol="B" data-category="metalloid">
+      <p class="number">5</p>
+      <h3 class="symbol">B</h3>
+      <h2 class="name">Boron</h2>
+      <p class="weight">10.811</p>
+    </div>
+    
+          
+    <div class="element other nonmetal   width2 height2  " data-symbol="C" data-category="other">
+      <p class="number">6</p>
+      <h3 class="symbol">C</h3>
+      <h2 class="name">Carbon</h2>
+      <p class="weight">12.0107</p>
+    </div>
+    
+          
+    <div class="element other nonmetal   width2 height2  " data-symbol="N" data-category="other">
+      <p class="number">7</p>
+      <h3 class="symbol">N</h3>
+      <h2 class="name">Nitrogen</h2>
+      <p class="weight">14.0067</p>
+    </div>
+    
+          
+    <div class="element other nonmetal   width2 height2  " data-symbol="O" data-category="other">
+      <p class="number">8</p>
+      <h3 class="symbol">O</h3>
+      <h2 class="name">Oxygen</h2>
+      <p class="weight">15.9994</p>
+    </div>
+    
+          
+    <div class="element halogen nonmetal   width2 height2  " data-symbol="F" data-category="halogen">
+      <p class="number">9</p>
+      <h3 class="symbol">F</h3>
+      <h2 class="name">Fluorine</h2>
+      <p class="weight">18.9984032</p>
+    </div>
+    
+          
+    <div class="element noble-gas nonmetal   width2 height2  " data-symbol="Ne" data-category="noble-gas">
+      <p class="number">10</p>
+      <h3 class="symbol">Ne</h3>
+      <h2 class="name">Neon</h2>
+      <p class="weight">20.1797</p>
+    </div>
+    
+          
+    <div class="element alkali metal   width2 height2  " data-symbol="Na" data-category="alkali">
+      <p class="number">11</p>
+      <h3 class="symbol">Na</h3>
+      <h2 class="name">Sodium</h2>
+      <p class="weight">22.98976928</p>
+    </div>
+    
+          
+    <div class="element alkaline-earth metal   width2 height2  " data-symbol="Mg" data-category="alkaline-earth">
+      <p class="number">12</p>
+      <h3 class="symbol">Mg</h3>
+      <h2 class="name">Magnesium</h2>
+      <p class="weight">24.305</p>
+    </div>
+    
+          
+    <div class="element post-transition metal   width2 height2  " data-symbol="Al" data-category="post-transition">
+      <p class="number">13</p>
+      <h3 class="symbol">Al</h3>
+      <h2 class="name">Aluminium</h2>
+      <p class="weight">26.9815386</p>
+    </div>
+    
+          
+    <div class="element metalloid   width2 height2  " data-symbol="Si" data-category="metalloid">
+      <p class="number">14</p>
+      <h3 class="symbol">Si</h3>
+      <h2 class="name">Silicon</h2>
+      <p class="weight">28.0855</p>
+    </div>
+    
+          
+    <div class="element other nonmetal   width2 height2  " data-symbol="P" data-category="other">
+      <p class="number">15</p>
+      <h3 class="symbol">P</h3>
+      <h2 class="name">Phosphorus</h2>
+      <p class="weight">30.973762</p>
+    </div>
+    
+          
+    <div class="element other nonmetal   width2 height2  " data-symbol="S" data-category="other">
+      <p class="number">16</p>
+      <h3 class="symbol">S</h3>
+      <h2 class="name">Sulfur</h2>
+      <p class="weight">32.065</p>
+    </div>
+    
+          
+    <div class="element halogen nonmetal   width2 height2  " data-symbol="Cl" data-category="halogen">
+      <p class="number">17</p>
+      <h3 class="symbol">Cl</h3>
+      <h2 class="name">Chlorine</h2>
+      <p class="weight">35.453</p>
+    </div>
+    
+          
+    <div class="element noble-gas nonmetal   width2 height2  " data-symbol="Ar" data-category="noble-gas">
+      <p class="number">18</p>
+      <h3 class="symbol">Ar</h3>
+      <h2 class="name">Argon</h2>
+      <p class="weight">39.948</p>
+    </div>
+    
+          
+    <div class="element alkali metal   width2 height2  " data-symbol="K" data-category="alkali">
+      <p class="number">19</p>
+      <h3 class="symbol">K</h3>
+      <h2 class="name">Potassium</h2>
+      <p class="weight">39.0983</p>
+    </div>
+    
+          
+    <div class="element alkaline-earth metal   width2 height2  " data-symbol="Ca" data-category="alkaline-earth">
+      <p class="number">20</p>
+      <h3 class="symbol">Ca</h3>
+      <h2 class="name">Calcium</h2>
+      <p class="weight">40.078</p>
+    </div>
+    
+  </div> <!-- #container -->
+  
+  <nav id="page_nav">
+    <a href="2.html"></a>
+  </nav>
+
+  <script src="jquery-1.7.1.min.js"></script>
+  <script src="jquery.isotope.min.js"></script>
+  <script src="jquery.infinitescroll.min.js"></script>
+  <script src="jquery.dfp.min.js"></script>
+  <script>
+    $(function(){
+
+      var $container = $('#container');
+    
+      $container.isotope({
+        itemSelector : '.element'
+      });
+      
+      $container.infinitescroll({
+        navSelector  : '#page_nav',    // selector for the paged navigation 
+        nextSelector : '#page_nav a',  // selector for the NEXT link (to page 2)
+        itemSelector : '.element',     // selector for all items you'll retrieve
+        loading: {
+            finishedMsg: 'No more pages to load.',
+            img: 'http://i.imgur.com/qkKy8.gif'
+          }
+        },
+        // call Isotope as a callback
+        function( newElements ) {
+          $container.isotope( 'appended', $( newElements ) );
+          $('.adunit:not(".display-block")').dfp({
+            dfpID: '15572793',
+            enableSingleRequest: false
+          });
+        }
+      );
+
+      $.dfp({
+        dfpID: '15572793',
+        enableSingleRequest: false
+      });
+    
+    });
+  </script>
+    
+    <footer>
+      Isotope by <a href="http://desandro.com">David DeSandro</a> / <a href="http://metafizzy.co">Metafizzy</a>
+    </footer>
+    
+  </section> <!-- #content -->
+
+</body>
+</html>
