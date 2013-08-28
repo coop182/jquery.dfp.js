@@ -50,4 +50,42 @@ describe("Targeting", function () {
 
     });
 
+    it("URL Targeting options are not set (page)", function () {
+
+        var mock = {};
+        mock.setTargeting = function (param) { };
+
+        var dummyTag = {};
+        dummyTag.pubads = function () {
+            return {
+                enableSingleRequest: function () { },
+                setTargeting: mock.setTargeting,
+                collapseEmptyDivs: function () { }
+            };
+        };
+
+        spyOn(mock, "setTargeting").andCallThrough();
+
+        runs(function () {
+            jQuery.dfp({
+                dfpID: 'xxxxxxxxx',
+                setUrlTargeting: false,
+                googletag: dummyTag
+            });
+        }, "Kick off loader");
+
+        waitsFor(function () {
+            if (typeof window.googletag.getVersion === 'function') {
+                return true;
+            } else {
+                return false;
+            }
+        }, "getVersion function to exist", 5000);
+
+        runs(function () {
+            expect(mock.setTargeting).not.toHaveBeenCalled();
+        });
+
+    });
+
 });
