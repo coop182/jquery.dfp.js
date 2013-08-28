@@ -65,24 +65,24 @@
      */
     setOptions = function (options) {
 
-        // Get URL Targeting
-        var URLTargets = getURLTargets();
-
         // Set default options
         dfpOptions = {
-            setTargeting: {
-                inURL: URLTargets.inURL,
-                URLIs: URLTargets.URLIs,
-                Query: URLTargets.Query,
-                Domain: window.location.host
-            },
+            setTargeting: {},
             setCategoryExclusion: '',
             enableSingleRequest: true,
             collapseEmptyDivs: 'original',
-            targetPlatform: 'web',
-            enableSyncRendering: false,
-            refreshExisting: true
+            refreshExisting: true,
+            disablePublisherConsole: false,
+            disableInitialLoad: false,
+            noFetch: false,
         };
+
+        if (typeof (options.setUrlTargeting) == 'undefined' || options.setUrlTargeting)
+        {
+            // Get URL Targeting
+            var urlTargeting = getUrlTargeting();
+            $.extend(true, dfpOptions.setTargeting, { inURL: urlTargeting.inURL, URLIs: urlTargeting.URLIs, Query: urlTargeting.Query, Domain: window.location.host });
+        }
 
         // Merge options objects
         $.extend(true, dfpOptions, options);
@@ -93,7 +93,6 @@
                 $.extend(true, window.googletag, dfpOptions.googletag);
             });
         }
-
     },
 
     /**
@@ -228,6 +227,19 @@
             if (dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
                 window.googletag.pubads().collapseEmptyDivs();
             }
+
+            if (dfpOptions.disablePublisherConsole === true) {
+                window.googletag.pubads().disablePublisherConsole();
+            }
+
+            if (dfpOptions.disableInitialLoad === true) {
+                window.googletag.pubads().disableInitialLoad();
+            }
+
+            if (dfpOptions.noFetch === true) {
+                window.googletag.pubads().noFetch();
+            }
+
             window.googletag.enableServices();
 
         });
@@ -263,7 +275,7 @@
      * Create an array of paths so that we can target DFP ads to Page URI's
      * @return Array an array of URL parts that can be targeted.
      */
-    getURLTargets = function () {
+    getUrlTargeting = function () {
 
         // Get the paths for targeting against
         var paths = window.location.pathname.replace(/\/$/, ''),
@@ -417,6 +429,15 @@
         // SetTimeout is a bit dirty but the script does not execute in the correct order without it
         setTimeout(function () {
 
+            var _defineSlot = function(name, dimensions, id, oop) {
+                window.googletag.ads.push(id);
+                window.googletag.ads[id] = {
+                    renderEnded: function() { },
+                    addService: function() { return this; }
+                };
+                return window.googletag.ads[id];
+            };
+
             // overwrite the dfp object - replacing the command array with a function and defining missing functions
             window.googletag = {
                 cmd: {
@@ -426,25 +447,18 @@
                 },
                 ads: [],
                 pubads: function () { return this; },
+                noFetch:function () { return this; },
+                disableInitialLoad: function () { return this; },
+                disablePublisherConsole: function () { return this; },
                 enableSingleRequest: function () { return this; },
                 setTargeting: function () { return this; },
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
-                defineSlot: function (name, dimensions, id) {
-                    window.googletag.ads.push(id);
-                    window.googletag.ads[id] = {
-                        renderEnded: function () {},
-                        addService: function () { return this; }
-                    };
-                    return window.googletag.ads[id];
+                defineSlot: function(name, dimensions, id) {
+                    return _defineSlot(name, dimensions, id, false);
                 },
                 defineOutOfPageSlot: function (name, id) {
-                    window.googletag.ads.push(id);
-                    window.googletag.ads[id] = {
-                        renderEnded: function () {},
-                        addService: function () { return this; }
-                    };
-                    return window.googletag.ads[id];
+                    return _defineSlot(name, [], id, true);
                 },
                 display: function (id) {
                     window.googletag.ads[id].renderEnded.call(dfpScript);
