@@ -45,7 +45,7 @@ describe('Ad units', function () {
         }, "getVersion function to exist", 5000);
 
         runs(function () {
-            expect($('.adunit').data('googleAdUnit').A).toEqual('/xxxxxxx/Leader');
+            expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/Leader');
         });
 
     });
