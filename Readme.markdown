@@ -131,6 +131,10 @@ Available Options
         <td>This object is where you set custom targeting key value pairs. Also see the Default Targeting options that are set further down the page.</td>
     </tr>
     <tr>
+        <td>setUrlTargeting</td>
+        <td>This boolean specifies wheter the targeting should include information found in the url of the current page. The default value of this option is true.</td>
+    </tr>
+    <tr>
         <td>setCategoryExclusion</td>
         <td>This comma separated list sets category exclusions globally (page level).</td>
     </tr>
@@ -189,10 +193,10 @@ This script provides two callbacks which you can use to make working with DFP a 
 
 Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js) file for an example of how to use these.
 
-Default Targeting
------------------
+Default URL Targeting
+---------------------
 
-The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them.
+The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them. These targeting-parameters can be turned on/off with the setUrlTargeting-property in the options.
 
 **Beware: The Targeting string has a 40 character limit!**
 
