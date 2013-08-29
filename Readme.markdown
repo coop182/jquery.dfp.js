@@ -246,4 +246,5 @@ Thanks a lot to these contributors:
     <li>@crccheck - https://github.com/crccheck</li>
     <li>@larryaubstore - https://github.com/larryaubstore</li>
     <li>@MikeSilvis - https://github.com/MikeSilvis</li>
+    <li>@soreng - https://github.com/soreng</li>
 </ul>

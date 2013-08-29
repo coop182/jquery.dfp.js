@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.16
+ * jQuery DFP v1.0.17
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -74,7 +74,7 @@
             refreshExisting: true,
             disablePublisherConsole: false,
             disableInitialLoad: false,
-            noFetch: false,
+            noFetch: false
         };
 
         if (typeof (options.setUrlTargeting) == 'undefined' || options.setUrlTargeting)
