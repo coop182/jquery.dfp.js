@@ -132,7 +132,7 @@ Available Options
     </tr>
     <tr>
         <td>setUrlTargeting</td>
-        <td>This boolean specifies wheter the targeting should include information found in the url of the current page. The default value of this option is true.</td>
+        <td>This boolean specifies whether the targeting should include information found in the url of the current page. The default value of this option is true.</td>
     </tr>
     <tr>
         <td>setCategoryExclusion</td>
