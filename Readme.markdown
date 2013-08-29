@@ -196,7 +196,7 @@ Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/b
 Default URL Targeting
 ---------------------
 
-The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them. These targeting-parameters can be turned on/off with the setUrlTargeting-property in the options.
+The following targeting options are built into this script and should be setup in your DFP account ([within Inventory/Custom Targeting](https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=2983838)) to make full use of them. These targeting-parameters can be turned on/off with the setUrlTargeting option.
 
 **Beware: The Targeting string has a 40 character limit!**
 
