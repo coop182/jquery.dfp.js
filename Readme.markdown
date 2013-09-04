@@ -114,6 +114,13 @@ $('selector').dfp({
     setCategoryExclusion: 'firstcategory, secondcategory'
 });
 </pre>
+<pre>
+$('selector').dfp({
+    dfpID:'xxxxxxxxx',
+    setLocation: { latitude: 34, longitude: -45.12, precision: 1000 } 
+});
+</pre>
+
 Available Options
 -----------------
 
@@ -138,6 +145,11 @@ Available Options
         <td>setCategoryExclusion</td>
         <td>This comma separated list sets category exclusions globally (page level).</td>
     </tr>
+    <tr>
+        <td>setLocation</td>
+        <td>This array sets geolocalization. String values are not valid. </td>
+    </tr>
+
     <tr>
         <td>enableSingleRequest</td>
         <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading ad units into the page after the initial load.</td>

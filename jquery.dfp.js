@@ -69,6 +69,7 @@
         dfpOptions = {
             setTargeting: {},
             setCategoryExclusion: '',
+            setLocation: '',
             enableSingleRequest: true,
             collapseEmptyDivs: 'original',
             refreshExisting: true,
@@ -214,6 +215,15 @@
             $.each(dfpOptions.setTargeting, function (k, v) {
                 window.googletag.pubads().setTargeting(k, v);
             });
+
+            if( typeof(dfpOptions.setLocation) === "object") {
+                if( typeof(dfpOptions.setLocation.latitude) === "number" && typeof(dfpOptions.setLocation.longitude) === "number" && typeof(dfpOptions.setLocation.precision) === "number") {
+                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude, dfpOptions.setLocation.precision);
+                } else if ( typeof(dfpOptions.setLocation.latitude) === "number" && typeof(dfpOptions.setLocation.longitude) === "number") {
+                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude);
+                }
+            }
+
             if (dfpOptions.setCategoryExclusion.length > 0) {
                 var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
                 var valueTrimmed;
