@@ -147,7 +147,7 @@ Available Options
     </tr>
     <tr>
         <td>setLocation</td>
-        <td>This array sets geolocalization. String values are not valid. </td>
+        <td>This object sets geolocalization. String values are not valid. </td>
     </tr>
 
     <tr>
