@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    <title>My Page</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://coop182.github.io/jquery.dfp.js/jquery.dfp.js"></script>
+
+    <script>
+        function ads () {
+            $('#ads').append('<div class="adunit" data-adunit="Leader" data-dimensions="728x90"></div>');
+            $('.adunit:not(".display-block")').dfp({
+                dfpID: '15572793',
+                enableSingleRequest: false
+            });
+        }
+    </script>
+
+</head>
+<body>
+
+<div id ="ads"></div>
+
+<input type="button" value="Create Ad" id="create" />
+<input type="button" value="Refresh" id="refresh" style="display:none;" />
+
+<script>
+$("#create").click(function(){
+    ads();
+    $('#refresh').show();
+});
+
+$("#refresh").click(function(){
+    $.dfp();
+});
+</script>
+
+</body>
+</html>
