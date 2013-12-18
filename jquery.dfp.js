@@ -7,7 +7,7 @@
  */
 (function ($, window, undefined) {
 
-    "use strict";
+    'use strict';
 
     var
 
@@ -78,7 +78,7 @@
             noFetch: false
         };
 
-        if (typeof (options.setUrlTargeting) == 'undefined' || options.setUrlTargeting)
+        if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting)
         {
             // Get URL Targeting
             var urlTargeting = getUrlTargeting();
@@ -147,7 +147,7 @@
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                var targeting = $adUnit.data("targeting");
+                var targeting = $adUnit.data('targeting');
                 if (targeting) {
                     $.each(targeting, function (k, v) {
                         googleAdUnit.setTargeting(k, v);
@@ -155,7 +155,7 @@
                 }
 
                 // Sets custom exclusions for just THIS ad unit if it has been specified
-                var exclusions = $adUnit.data("exclusions");
+                var exclusions = $adUnit.data('exclusions');
                 if (exclusions) {
                     var exclusionsGroup = exclusions.split(',');
                     var valueTrimmed;
@@ -209,17 +209,17 @@
         // Push DFP config options
         window.googletag.cmd.push(function () {
 
-            if (dfpOptions.enableSingleRequest === true) {
+            if (dfpOptions.enableSingleRequest) {
                 window.googletag.pubads().enableSingleRequest();
             }
             $.each(dfpOptions.setTargeting, function (k, v) {
                 window.googletag.pubads().setTargeting(k, v);
             });
 
-            if( typeof(dfpOptions.setLocation) === "object") {
-                if( typeof(dfpOptions.setLocation.latitude) === "number" && typeof(dfpOptions.setLocation.longitude) === "number" && typeof(dfpOptions.setLocation.precision) === "number") {
+            if (typeof dfpOptions.setLocation === 'object') {
+                if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number' && typeof dfpOptions.setLocation.precision === 'number') {
                     window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude, dfpOptions.setLocation.precision);
-                } else if ( typeof(dfpOptions.setLocation.latitude) === "number" && typeof(dfpOptions.setLocation.longitude) === "number") {
+                } else if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number') {
                     window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude);
                 }
             }
@@ -234,19 +234,19 @@
                     }
                 });
             }
-            if (dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
+            if (dfpOptions.collapseEmptyDivs) {
                 window.googletag.pubads().collapseEmptyDivs();
             }
 
-            if (dfpOptions.disablePublisherConsole === true) {
+            if (dfpOptions.disablePublisherConsole) {
                 window.googletag.pubads().disablePublisherConsole();
             }
 
-            if (dfpOptions.disableInitialLoad === true) {
+            if (dfpOptions.disableInitialLoad) {
                 window.googletag.pubads().disableInitialLoad();
             }
 
-            if (dfpOptions.noFetch === true) {
+            if (dfpOptions.noFetch) {
                 window.googletag.pubads().noFetch();
             }
 
@@ -318,7 +318,7 @@
 
         // Get the query params for targeting against
         var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
-            params = RegExp.$1.split("&");
+            params = RegExp.$1.split('&');
 
         return {
             inURL: targetPaths,
@@ -439,11 +439,11 @@
         // SetTimeout is a bit dirty but the script does not execute in the correct order without it
         setTimeout(function () {
 
-            var _defineSlot = function(name, dimensions, id, oop) {
+            var _defineSlot = function (name, dimensions, id, oop) {
                 window.googletag.ads.push(id);
                 window.googletag.ads[id] = {
-                    renderEnded: function() { },
-                    addService: function() { return this; }
+                    renderEnded: function () { },
+                    addService: function () { return this; }
                 };
                 return window.googletag.ads[id];
             };
@@ -464,7 +464,7 @@
                 setTargeting: function () { return this; },
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
-                defineSlot: function(name, dimensions, id) {
+                defineSlot: function (name, dimensions, id) {
                     return _defineSlot(name, dimensions, id, false);
                 },
                 defineOutOfPageSlot: function (name, id) {
