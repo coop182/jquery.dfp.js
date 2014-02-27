@@ -1,7 +1,6 @@
 describe('Loading Phase', function () {
 
     var cleanup = function () {
-        $('.adunit').remove();
         $('script[src*="gpt.js"]').remove();
         $('#testdiv').remove();
         window.googletag = undefined;
@@ -62,15 +61,6 @@ describe('Loading Phase', function () {
                 "<div class='adunit'></div>" +
             "</div>");
 
-        waitsFor(function() {
-
-            if($("#testdiv").length === 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }, "div#testdiv not created", 5000);
-
         runs(function () {
             $.dfp({
                 dfpID: 'xxxxxxx',
@@ -104,16 +94,6 @@ describe('Loading Phase', function () {
                 "<div class='otherselector'></div>" +
                 "<div class='otherselector'></div>" +
             "</div>");
-
-        waitsFor(function() {
-
-            if($("#testdiv").length === 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }, "div#testdiv not created", 5000);
-
 
         runs(function () {
             $('.otherselector').dfp({
