@@ -75,7 +75,8 @@
             refreshExisting: true,
             disablePublisherConsole: false,
             disableInitialLoad: false,
-            noFetch: false
+            noFetch: false,
+            namespace: undefined
         };
 
         if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting)
@@ -349,7 +350,7 @@
      */
     getName = function ($adUnit) {
 
-        return $adUnit.data('adunit') || $adUnit.attr('id');
+        return $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id');
 
     },
 
