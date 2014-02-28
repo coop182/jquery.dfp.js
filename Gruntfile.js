@@ -19,7 +19,7 @@ grunt.initConfig({
 		components: {
 			src: ['jquery.dfp.js'],
 			options: {
-				vendor: ['http://code.jquery.com/jquery-1.7.2.js'],
+				vendor: ['http://code.jquery.com/jquery-1.11.0.js'],
 				specs: 'tests/spec/*Spec.js'
 			}
 		}
