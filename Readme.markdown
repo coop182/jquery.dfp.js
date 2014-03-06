@@ -122,6 +122,20 @@ $('selector').dfp({
     setLocation: { latitude: 34, longitude: -45.12, precision: 1000 } 
 });
 </pre>
+<pre>
+$('selector').dfp({
+    dfpID:'xxxxxxxxx',
+    sizeMapping: {
+        'my-default': [
+        	{browser: [1024, 768], ad_sizes: [980, 185]},
+	        {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
+	        {browser: [   0,   0], ad_sizes: [88, 31]}
+        ],
+    }
+});
+
+eg  <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-size-mapping='my-default'></div>
+</pre>
 
 Available Options
 -----------------
@@ -163,6 +177,10 @@ Available Options
     <tr>
         <td>refreshExisting</td>
         <td>This boolean controls what happens when dfp is called multiple times on ad units. By default it is set to true which means that if an already initialised ad is initialised again it will instead be refreshed.</td>
+    </tr>
+    <tr>
+        <td>sizeMapping</td>
+        <td>Defines named size maps that can be used with in combination with the data-size-mapping attribute to enable responsive ad sizing (https://support.google.com/dfp_premium/answer/3423562?hl=en).</td>
     </tr>
     <tr>
         <td>afterEachAdLoaded</td>
