@@ -76,7 +76,8 @@
             disablePublisherConsole: false,
             disableInitialLoad: false,
             noFetch: false,
-            namespace: undefined
+            namespace: undefined,
+            sizeMapping: {}
         };
 
         if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting)
@@ -166,6 +167,17 @@
                             googleAdUnit.setCategoryExclusion(valueTrimmed);
                         }
                     });
+                }
+
+                // Sets responsive size mapping for just THIS ad unit if it has been specified
+                var mapping = $adUnit.data('size-mapping');
+                if (mapping && dfpOptions.sizeMapping[mapping]) {
+                    // Convert verbose to DFP format
+                    var map = window.googletag.sizeMapping();
+                    $.each(dfpOptions.sizeMapping[mapping], function(k, v) {
+                        map.addSize(v.browser, v.ad_sizes);
+                    });
+                    googleAdUnit.defineSizeMapping(map.build());
                 }
 
                 // The following hijacks an internal google method to check if the div has been
