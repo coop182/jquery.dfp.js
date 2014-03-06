@@ -133,8 +133,6 @@ $('selector').dfp({
         ],
     }
 });
-
-eg  <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-size-mapping='my-default'></div>
 </pre>
 
 Available Options
