@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.19
+ * jQuery DFP v1.0.20
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper

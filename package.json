@@ -1,6 +1,6 @@
 {
 	"name": "jquery.dfp",
-	"version": "1.0.19",
+	"version": "1.0.20",
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-contrib-jshint": "~0.6.0",

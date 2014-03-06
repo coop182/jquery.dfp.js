@@ -281,4 +281,6 @@ Thanks a lot to these contributors:
     <li>@larryaubstore - https://github.com/larryaubstore</li>
     <li>@MikeSilvis - https://github.com/MikeSilvis</li>
     <li>@soreng - https://github.com/soreng</li>
+    <li>@i-like-robots - https://github.com/i-like-robots</li>
+    <li>@pdbreen - https://github.com/pdbreen</li>
 </ul>
