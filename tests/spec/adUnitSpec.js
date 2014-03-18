@@ -72,4 +72,30 @@ describe('Ad units', function () {
 
     });
 
+    it("Alter the ad unit name using callback", function () {
+
+      runs(function () {
+        $('body').append('<div class="adunit" data-adunit="Bike" id="leader-123" data-model="BMX"></div>');
+        $.dfp({
+          dfpID: 'xxxxxxx',
+          alterAdUnitName: function(adUnitName,adUnit) {
+            return "PREFIX_" + $(adUnit).data('model') + "_" + adUnitName + "_SUFFIX";
+          }
+        });
+      }, "Kick off loader");
+
+      waitsFor(function () {
+        if (typeof window.googletag.getVersion === 'function') {
+          return true;
+        } else {
+          return false;
+        }
+      }, "getVersion function to exist", 5000);
+
+      runs(function () {
+        expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/PREFIX_BMX_Bike_SUFFIX');
+      });
+
+    });
+
 });
