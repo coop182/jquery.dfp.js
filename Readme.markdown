@@ -217,6 +217,16 @@ This script provides two callbacks which you can use to make working with DFP a 
         </td>
         <td>This is called after all ad units have finished rendering.</td>
     </tr>
+    <tr>
+        <td>alterAdUnitName(adUnitName,adUnit)</td>
+        <td>
+            <ul>
+                <li>adUnitName - String - the default ad unit name</li>
+                <li>adUnit - jQuery Object - the jQuery object</li>
+            </ul>
+        </td>
+        <td>Return the modified or overrided ad unit name.  This function is called once per ad unit.</td>
+    </tr>
 </table>
 
 Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js) file for an example of how to use these.
