@@ -215,6 +215,10 @@
                 // Store googleAdUnit reference
                 $adUnit.data(storeAs, googleAdUnit);
 
+                // Allow altering of the ad slot before ad load
+                if (typeof dfpOptions.beforeEachAdLoaded === 'function') {
+                    dfpOptions.beforeEachAdLoaded.call(this, $adUnit);
+                }
             });
 
         });
@@ -530,6 +534,36 @@
         init(id, selector, options);
 
         return this;
+
+    };
+
+    /**
+     * Refresh all created ads
+     */
+    $.dfpRefresh = $.fn.dfpRefresh = function() {
+
+        if (typeof $adCollection == 'undefined') {
+            return;
+        }
+
+        //Get all ad slot data
+        var slots = [];
+        $adCollection.each(function() {
+            // Allow altering of the ad slot before ad load
+            if (typeof dfpOptions.beforeEachAdLoaded === 'function') {
+                dfpOptions.beforeEachAdLoaded.call(window.googletag.cmd, $(this));
+            }
+
+            var $adUnitData = $(this).data(storeAs);
+            if ($adUnitData) {
+                slots[slots.length] = $adUnitData;
+            }
+        });
+
+        //Refresh the ad slots
+        window.googletag.cmd.push(function() {
+            window.googletag.pubads().refresh(slots);
+        });
 
     };
 
