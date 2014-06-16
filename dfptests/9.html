@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="../jquery.dfp.js"></script>
+
+</head>
+<body>
+
+Test DFP Ads.
+
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+<div class="adunit" data-adunit="TopOffers_Home" data-dimensions="540x110"></div>
+
+<script>
+
+    $.dfp({
+        dfpID:'15572793',
+        afterEachAdLoaded: function () {
+            console.log('afterEachAdLoaded');
+        },
+        afterAllAdsLoaded: function () {
+            console.log('afterAllAdLoaded');
+        }
+    });
+
+</script>
+
+<a href="#" onclick="$.dfp('15572793');">Refresh</a>
+
+</body>
+</html>

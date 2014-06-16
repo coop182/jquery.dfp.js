@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.15
+ * jQuery DFP v1.0.23
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -7,7 +7,7 @@
  */
 (function ($, window, undefined) {
 
-    "use strict";
+    'use strict';
 
     var
 
@@ -65,24 +65,27 @@
      */
     setOptions = function (options) {
 
-        // Get URL Targeting
-        var URLTargets = getURLTargets();
-
         // Set default options
         dfpOptions = {
-            'setTargeting': {
-                'inURL': URLTargets.inURL,
-                'URLIs': URLTargets.URLIs,
-                'Query': URLTargets.Query,
-                'Domain': window.location.host
-            },
-            'setCategoryExclusion': '',
-            'enableSingleRequest': true,
-            'collapseEmptyDivs': 'original',
-            'targetPlatform': 'web',
-            'enableSyncRendering': false,
-            'refreshExisting': true
+            setTargeting: {},
+            setCategoryExclusion: '',
+            setLocation: '',
+            enableSingleRequest: true,
+            collapseEmptyDivs: 'original',
+            refreshExisting: true,
+            disablePublisherConsole: false,
+            disableInitialLoad: false,
+            noFetch: false,
+            namespace: undefined,
+            sizeMapping: {}
         };
+
+        if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting)
+        {
+            // Get URL Targeting
+            var urlTargeting = getUrlTargeting();
+            $.extend(true, dfpOptions.setTargeting, { inURL: urlTargeting.inURL, URLIs: urlTargeting.URLIs, Query: urlTargeting.Query, Domain: window.location.host });
+        }
 
         // Merge options objects
         $.extend(true, dfpOptions, options);
@@ -90,10 +93,9 @@
         // If a custom googletag is specified, use it.
         if (dfpOptions.googletag) {
             window.googletag.cmd.push(function () {
-                $.extend(window.googletag, dfpOptions.googletag);
+                $.extend(true, window.googletag, dfpOptions.googletag);
             });
         }
-
     },
 
     /**
@@ -147,7 +149,7 @@
                 }
 
                 // Sets custom targeting for just THIS ad unit if it has been specified
-                var targeting = $adUnit.data("targeting");
+                var targeting = $adUnit.data('targeting');
                 if (targeting) {
                     $.each(targeting, function (k, v) {
                         googleAdUnit.setTargeting(k, v);
@@ -155,16 +157,27 @@
                 }
 
                 // Sets custom exclusions for just THIS ad unit if it has been specified
-                var exclusions = $adUnit.data("exclusions");
+                var exclusions = $adUnit.data('exclusions');
                 if (exclusions) {
                     var exclusionsGroup = exclusions.split(',');
                     var valueTrimmed;
                     $.each(exclusionsGroup, function (k, v) {
-                        valueTrimmed = v.trim();
+                        valueTrimmed = $.trim(v);
                         if (valueTrimmed.length > 0) {
-                            googleAdUnit.setCategoryExclusion(v.trim());
+                            googleAdUnit.setCategoryExclusion(valueTrimmed);
                         }
                     });
+                }
+
+                // Sets responsive size mapping for just THIS ad unit if it has been specified
+                var mapping = $adUnit.data('size-mapping');
+                if (mapping && dfpOptions.sizeMapping[mapping]) {
+                    // Convert verbose to DFP format
+                    var map = window.googletag.sizeMapping();
+                    $.each(dfpOptions.sizeMapping[mapping], function(k, v) {
+                        map.addSize(v.browser, v.ad_sizes);
+                    });
+                    googleAdUnit.defineSizeMapping(map.build());
                 }
 
                 // The following hijacks an internal google method to check if the div has been
@@ -173,6 +186,8 @@
                 googleAdUnit.renderEnded = function () {
 
                     rendered++;
+
+                    console.log(rendered,count);
 
                     var display = $adUnit.css('display');
 
@@ -185,8 +200,6 @@
 
                     $adUnit.removeClass('display-none').addClass('display-' + display);
 
-                    googleAdUnit.oldRenderEnded();
-
                     // Excute afterEachAdLoaded callback if provided
                     if (typeof dfpOptions.afterEachAdLoaded === 'function') {
                         dfpOptions.afterEachAdLoaded.call(this, $adUnit);
@@ -197,11 +210,17 @@
                         dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
                     }
 
+                    googleAdUnit.oldRenderEnded();
+
                 };
 
                 // Store googleAdUnit reference
                 $adUnit.data(storeAs, googleAdUnit);
 
+                // Allow altering of the ad slot before ad load
+                if (typeof dfpOptions.beforeEachAdLoaded === 'function') {
+                    dfpOptions.beforeEachAdLoaded.call(this, $adUnit);
+                }
             });
 
         });
@@ -209,25 +228,47 @@
         // Push DFP config options
         window.googletag.cmd.push(function () {
 
-            if (dfpOptions.enableSingleRequest === true) {
+            if (dfpOptions.enableSingleRequest) {
                 window.googletag.pubads().enableSingleRequest();
             }
             $.each(dfpOptions.setTargeting, function (k, v) {
                 window.googletag.pubads().setTargeting(k, v);
             });
+
+            if (typeof dfpOptions.setLocation === 'object') {
+                if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number' && typeof dfpOptions.setLocation.precision === 'number') {
+                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude, dfpOptions.setLocation.precision);
+                } else if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number') {
+                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude);
+                }
+            }
+
             if (dfpOptions.setCategoryExclusion.length > 0) {
                 var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
                 var valueTrimmed;
                 $.each(exclusionsGroup, function (k, v) {
-                    valueTrimmed = v.trim();
+                    valueTrimmed = $.trim(v);
                     if (valueTrimmed.length > 0) {
-                        window.googletag.pubads().setCategoryExclusion(v.trim());
+                        window.googletag.pubads().setCategoryExclusion(valueTrimmed);
                     }
                 });
             }
-            if (dfpOptions.collapseEmptyDivs === true || dfpOptions.collapseEmptyDivs === 'original') {
+            if (dfpOptions.collapseEmptyDivs) {
                 window.googletag.pubads().collapseEmptyDivs();
             }
+
+            if (dfpOptions.disablePublisherConsole) {
+                window.googletag.pubads().disablePublisherConsole();
+            }
+
+            if (dfpOptions.disableInitialLoad) {
+                window.googletag.pubads().disableInitialLoad();
+            }
+
+            if (dfpOptions.noFetch) {
+                window.googletag.pubads().noFetch();
+            }
+
             window.googletag.enableServices();
 
         });
@@ -263,7 +304,7 @@
      * Create an array of paths so that we can target DFP ads to Page URI's
      * @return Array an array of URL parts that can be targeted.
      */
-    getURLTargets = function () {
+    getUrlTargeting = function () {
 
         // Get the paths for targeting against
         var paths = window.location.pathname.replace(/\/$/, ''),
@@ -296,12 +337,12 @@
 
         // Get the query params for targeting against
         var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
-            params = RegExp.$1.split("&");
+            params = RegExp.$1.split('&');
 
         return {
-            'inURL': targetPaths,
-            'URLIs': targetPaths[0],
-            'Query': params
+            inURL: targetPaths,
+            URLIs: targetPaths[0],
+            Query: params
         };
 
     },
@@ -327,7 +368,11 @@
      */
     getName = function ($adUnit) {
 
-        return $adUnit.data('adunit') || $adUnit.attr('id');
+        var adUnitName = $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id');
+        if (typeof dfpOptions.alterAdUnitName === 'function') {
+          adUnitName = dfpOptions.alterAdUnitName.call(this, adUnitName, $adUnit);
+        }
+        return adUnitName;
 
     },
 
@@ -417,6 +462,15 @@
         // SetTimeout is a bit dirty but the script does not execute in the correct order without it
         setTimeout(function () {
 
+            var _defineSlot = function (name, dimensions, id, oop) {
+                window.googletag.ads.push(id);
+                window.googletag.ads[id] = {
+                    renderEnded: function () { },
+                    addService: function () { return this; }
+                };
+                return window.googletag.ads[id];
+            };
+
             // overwrite the dfp object - replacing the command array with a function and defining missing functions
             window.googletag = {
                 cmd: {
@@ -426,25 +480,18 @@
                 },
                 ads: [],
                 pubads: function () { return this; },
+                noFetch:function () { return this; },
+                disableInitialLoad: function () { return this; },
+                disablePublisherConsole: function () { return this; },
                 enableSingleRequest: function () { return this; },
                 setTargeting: function () { return this; },
                 collapseEmptyDivs: function () { return this; },
                 enableServices: function () { return this; },
                 defineSlot: function (name, dimensions, id) {
-                    window.googletag.ads.push(id);
-                    window.googletag.ads[id] = {
-                        renderEnded: function () {},
-                        addService: function () { return this; }
-                    };
-                    return window.googletag.ads[id];
+                    return _defineSlot(name, dimensions, id, false);
                 },
                 defineOutOfPageSlot: function (name, id) {
-                    window.googletag.ads.push(id);
-                    window.googletag.ads[id] = {
-                        renderEnded: function () {},
-                        addService: function () { return this; }
-                    };
-                    return window.googletag.ads[id];
+                    return _defineSlot(name, [], id, true);
                 },
                 display: function (id) {
                     window.googletag.ads[id].renderEnded.call(dfpScript);
