@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.22
+ * jQuery DFP v1.0.23
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -198,8 +198,6 @@
 
                     $adUnit.removeClass('display-none').addClass('display-' + display);
 
-                    googleAdUnit.oldRenderEnded();
-
                     // Excute afterEachAdLoaded callback if provided
                     if (typeof dfpOptions.afterEachAdLoaded === 'function') {
                         dfpOptions.afterEachAdLoaded.call(this, $adUnit);
@@ -209,6 +207,8 @@
                     if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
                         dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
                     }
+
+                    googleAdUnit.oldRenderEnded();
 
                 };
 
