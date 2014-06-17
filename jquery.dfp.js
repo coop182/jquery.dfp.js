@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.0.23
+ * jQuery DFP v1.1.0
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2013 Matt Cooper
@@ -120,8 +120,8 @@
             // get dimensions of the adUnit
             var dimensions = getDimensions($adUnit);
 
-            // get existing content
-            var $existingContent = $adUnit.html();
+            // set existing content
+            $adUnit.data('existingContent', $adUnit.html());
 
             // wipe html clean ready for ad and set the default display class.
             $adUnit.html('').addClass('display-none');
@@ -180,40 +180,6 @@
                     googleAdUnit.defineSizeMapping(map.build());
                 }
 
-                // The following hijacks an internal google method to check if the div has been
-                // collapsed after the ad has been attempted to be loaded.
-                googleAdUnit.oldRenderEnded = googleAdUnit.oldRenderEnded || googleAdUnit.renderEnded;
-                googleAdUnit.renderEnded = function () {
-
-                    rendered++;
-
-                    console.log(rendered,count);
-
-                    var display = $adUnit.css('display');
-
-                    // if the div has been collapsed but there was existing content expand the
-                    // div and reinsert the existing content.
-                    if (display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
-                        $adUnit.show().html($existingContent);
-                        display = 'block display-original';
-                    }
-
-                    $adUnit.removeClass('display-none').addClass('display-' + display);
-
-                    // Excute afterEachAdLoaded callback if provided
-                    if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                        dfpOptions.afterEachAdLoaded.call(this, $adUnit);
-                    }
-
-                    // Excute afterAllAdsLoaded callback if provided
-                    if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
-                        dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
-                    }
-
-                    googleAdUnit.oldRenderEnded();
-
-                };
-
                 // Store googleAdUnit reference
                 $adUnit.data(storeAs, googleAdUnit);
 
@@ -268,6 +234,37 @@
             if (dfpOptions.noFetch) {
                 window.googletag.pubads().noFetch();
             }
+
+            // Setup event listener to listen for renderEnded event and fire callbacks.
+            window.googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+
+                rendered++;
+
+                var $adUnit = $('#' + event.slot.getSlotId().getDomId());
+
+                var display = $adUnit.css('display');
+
+                // if the div has been collapsed but there was existing content expand the
+                // div and reinsert the existing content.
+                var $existingContent = $adUnit.data('existingContent');
+                if (display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
+                    $adUnit.show().html($existingContent);
+                    display = 'block display-original';
+                }
+
+                $adUnit.removeClass('display-none').addClass('display-' + display);
+
+                // Excute afterEachAdLoaded callback if provided
+                if (typeof dfpOptions.afterEachAdLoaded === 'function') {
+                    dfpOptions.afterEachAdLoaded.call(this, $adUnit);
+                }
+
+                // Excute afterAllAdsLoaded callback if provided
+                if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
+                    dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
+                }
+
+            });
 
             window.googletag.enableServices();
 
