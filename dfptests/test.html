@@ -26,12 +26,6 @@
 window.googletag = window.googletag || {};
 window.googletag.cmd = window.googletag.cmd || [];
 
-googletag.cmd.push(function () {
-    googletag.debug_log.log = function(level,message,service,slot,reference){
-        $('#debug').append('<div>' + message + '</div>');
-    };
-});
-
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
