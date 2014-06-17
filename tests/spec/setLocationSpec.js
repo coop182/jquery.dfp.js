@@ -17,6 +17,7 @@ describe("SetLocation", function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setLocation: mock.setLocation
             };
         };
@@ -61,6 +62,7 @@ describe("SetLocation", function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setLocation: mock.setLocation
             };
         };
@@ -106,6 +108,7 @@ describe("SetLocation", function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setLocation: mock.setLocation
             };
         };
@@ -146,6 +149,7 @@ describe("SetLocation", function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setLocation: mock.setLocation
             };
         };
