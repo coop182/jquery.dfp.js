@@ -46,6 +46,10 @@
      */
     init = function (id, selector, options) {
 
+        // Reset counters on each call
+        count = 0;
+        rendered = 0;
+
         dfpID = id;
         $adCollection = $(selector);
 
