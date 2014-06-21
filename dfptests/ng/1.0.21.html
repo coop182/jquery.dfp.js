@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="jquery.dfp-1.0.21.js"></script>
+
+</head>
+<body>
+
+Test DFP Ads.
+
+<div class="adunit ad-header--large" data-dimensions="728x90,970x66,970x250,970x300" data-adunit="ng.home/homepage"></div>
+<div class="ad-header--small" data-dimensions="257x90" data-adunit="ng.home/homepage"></div>
+
+<script>
+
+    $('.adunit:not(".display-block"):not(".no-render")').dfp({
+        dfpID:'2994',
+        enableSingleRequest: false,
+        afterEachAdLoaded: function () {
+            $(".ad-header--small").dfp({enableSingleRequest: false});
+        }
+    });
+
+</script>
+
+</body>
+</html>
