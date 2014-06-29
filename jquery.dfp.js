@@ -1,8 +1,8 @@
 /**
- * jQuery DFP v1.1.1
+ * jQuery DFP v1.1.2
  * http://github.com/coop182/jquery.dfp.js
  *
- * Copyright 2013 Matt Cooper
+ * Copyright 2014 Matt Cooper
  * Released under the MIT license
  */
 (function ($, window, undefined) {
@@ -356,7 +356,7 @@
     getID = function ($adUnit, adUnitName) {
 
         uid++;
-        return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace('/', '_') + '-auto-gen-id-' + uid).attr('id');
+        return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace(/[^A-z0-9]/g, '_') + '-auto-gen-id-' + uid).attr('id');
 
     },
 
