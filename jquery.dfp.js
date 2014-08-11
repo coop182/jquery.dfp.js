@@ -245,7 +245,7 @@
 
                 var $adUnit = $('#' + event.slot.getSlotId().getDomId());
 
-                var display = event.isEmpty() ? 'none' : 'block';
+                var display = event.isEmpty ? 'none' : 'block';
 
                 // if the div has been collapsed but there was existing content expand the
                 // div and reinsert the existing content.

@@ -117,9 +117,7 @@ describe("Callbacks", function () {
                         };
                     }
                 },
-                isEmpty: function () {
-                    return false;
-                }
+                isEmpty: false
             };
 
             mock.slotRenderEnded(dummyEvent);
@@ -218,9 +216,7 @@ describe("Callbacks", function () {
                         };
                     }
                 },
-                isEmpty: function () {
-                    return false;
-                }
+                isEmpty: false
             };
 
             mock.slotRenderEnded(dummyEvent);
