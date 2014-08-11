@@ -116,6 +116,9 @@ describe("Callbacks", function () {
                             }
                         };
                     }
+                },
+                isEmpty: function () {
+                    return false;
                 }
             };
 
@@ -214,6 +217,9 @@ describe("Callbacks", function () {
                             }
                         };
                     }
+                },
+                isEmpty: function () {
+                    return false;
                 }
             };
 
