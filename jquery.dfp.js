@@ -369,6 +369,7 @@
     getName = function ($adUnit) {
 
         var adUnitName = $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id') || '';
+        adUnitName = adUnitName.replace(/\//g, '//');
         if (typeof dfpOptions.alterAdUnitName === 'function') {
           adUnitName = dfpOptions.alterAdUnitName.call(this, adUnitName, $adUnit);
         }
