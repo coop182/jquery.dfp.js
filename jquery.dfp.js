@@ -259,7 +259,7 @@
 
                 // Excute afterEachAdLoaded callback if provided
                 if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                    dfpOptions.afterEachAdLoaded.call(this, $adUnit);
+                    dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
                 }
 
                 // Excute afterAllAdsLoaded callback if provided
