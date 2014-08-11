@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.1.2
+ * jQuery DFP v1.1.3
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2014 Matt Cooper
@@ -245,7 +245,7 @@
 
                 var $adUnit = $('#' + event.slot.getSlotId().getDomId());
 
-                var display = $adUnit.css('display');
+                var display = event.isEmpty ? 'none' : 'block';
 
                 // if the div has been collapsed but there was existing content expand the
                 // div and reinsert the existing content.
@@ -259,7 +259,7 @@
 
                 // Excute afterEachAdLoaded callback if provided
                 if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                    dfpOptions.afterEachAdLoaded.call(this, $adUnit);
+                    dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
                 }
 
                 // Excute afterAllAdsLoaded callback if provided
@@ -369,6 +369,7 @@
     getName = function ($adUnit) {
 
         var adUnitName = $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id') || '';
+        adUnitName = adUnitName.replace(/\//g, '//');
         if (typeof dfpOptions.alterAdUnitName === 'function') {
           adUnitName = dfpOptions.alterAdUnitName.call(this, adUnitName, $adUnit);
         }
