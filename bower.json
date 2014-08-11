@@ -1,6 +1,6 @@
 {
     "name": "jquery.dfp",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "main": "jquery.dfp.js",
     "ignore": [
         "img/",
