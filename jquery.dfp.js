@@ -146,7 +146,13 @@
                     if ($adUnit.data('outofpage')) {
                         googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
                     } else {
-                        googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID).addService(window.googletag.pubads());
+                        if ($adUnit.data('companion')) {
+                            googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
+                            .addService(window.googletag.companionAds()).addService(window.googletag.pubads());
+                        } else {
+                            googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
+                            .addService(window.googletag.pubads());
+                        }
                     }
 
                 }
@@ -229,7 +235,13 @@
             if (dfpOptions.disablePublisherConsole) {
                 window.googletag.pubads().disablePublisherConsole();
             }
+            if (dfpOptions.companionAds) {
+                window.googletag.companionAds().setRefreshUnfilledSlots(true);
 
+                if (!dfpOptions.disableInitialLoad) {
+                    window.googletag.pubads().enableVideoAds();
+                }
+            }
             if (dfpOptions.disableInitialLoad) {
                 window.googletag.pubads().disableInitialLoad();
             }

@@ -51,6 +51,10 @@ To create an out of page ad unit set the data-outofpage property on the ad unit.
 
     <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
 
+In order to identify an add unit on the page that is a video companion ad, set the data-companion attribute on that unit.
+
+    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-companion="true"></div>
+
 Usage
 -----
 
@@ -177,6 +181,14 @@ Available Options
     <tr>
         <td>sizeMapping</td>
         <td>Defines named size maps that can be used with in combination with the data-size-mapping attribute to enable responsive ad sizing (https://support.google.com/dfp_premium/answer/3423562?hl=en).</td>
+    </tr>
+    <tr>
+        <td>companionAds</td>
+        <td>If adding companion ads to accompany videos using the IMA SDK to serve video ads, then pass this parameter as true to identify the units being used for that purpose. (https://support.google.com/dfp_premium/answer/1191131)</td>
+    </tr>
+    <tr>
+        <td>disableInitialLoad</td>
+        <td>This allows for serving companion ad units when the video on the page auto plays.  You'll need to include this setting with companionAds as true to avoid possible double impressions. (https://support.google.com/dfp_premium/answer/1191131)</td>
     </tr>
     <tr>
         <td>afterEachAdLoaded</td>
