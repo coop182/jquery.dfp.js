@@ -307,14 +307,4 @@ You should now be able to make your changes to `jquery.dfp.js` and once you are 
 
 Please feel free to write tests which will test your new code, [Travis CI](https://travis-ci.org/) is used to test the code automatically once a pull request is generated.
 
-Thanks a lot to these contributors:
-
-<ul>
-    <li>@crccheck - https://github.com/crccheck</li>
-    <li>@larryaubstore - https://github.com/larryaubstore</li>
-    <li>@MikeSilvis - https://github.com/MikeSilvis</li>
-    <li>@soreng - https://github.com/soreng</li>
-    <li>@i-like-robots - https://github.com/i-like-robots</li>
-    <li>@pdbreen - https://github.com/pdbreen</li>
-    <li>@yesnoio - https://github.com/yesnoio</li>
-</ul>
+Thanks a lot to these [contributors](https://github.com/coop182/jquery.dfp.js/graphs/contributors).
