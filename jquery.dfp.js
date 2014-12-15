@@ -521,34 +521,56 @@
 
     };
 
+
+
+
     /**
-     * Add function to the jQuery / Zepto / tire namespace
-     * @param  String id      (Optional) The DFP account ID
-     * @param  Object options (Optional) Custom options to apply
+     * Make plugin UMD compatible
+     * Uses CommonJS, AMD or browser globals to create a jQuery plugin.
      */
-    $.dfp = $.fn.dfp = function (id, options) {
-
-        options = options || {};
-
-        if (id === undefined) {
-            id = dfpID;
+    (function (factory) {
+        if (typeof define === 'function' && define.amd) {
+            // AMD. Register as an anonymous module.
+            define(['jquery'], factory);
+        } else if (typeof exports === 'object') {
+            // Node/CommonJS
+            factory(require('jquery'));
+        } else {
+            // Browser globals
+            factory(jQuery);
         }
+    }(function ($) {
+        
+        /**
+         * Add function to the jQuery / Zepto / tire namespace
+         * @param  String id      (Optional) The DFP account ID
+         * @param  Object options (Optional) Custom options to apply
+         */
+        $.dfp = $.fn.dfp = function (id, options) {
 
-        if (typeof id === 'object') {
-            options = id;
-            id = options.dfpID || dfpID;
-        }
+            options = options || {};
 
-        var selector = this;
+            if (id === undefined) {
+                id = dfpID;
+            }
 
-        if (typeof this === 'function') {
-            selector = dfpSelector;
-        }
+            if (typeof id === 'object') {
+                options = id;
+                id = options.dfpID || dfpID;
+            }
 
-        init(id, selector, options);
+            var selector = this;
 
-        return this;
+            if (typeof this === 'function') {
+                selector = dfpSelector;
+            }
 
-    };
+            init(id, selector, options);
+
+            return this;
+
+        };
+        
+    }));
 
 })(window.jQuery || window.Zepto || window.tire, window);

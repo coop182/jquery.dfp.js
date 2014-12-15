@@ -13,5 +13,6 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/coop182/jquery.dfp.js"
-	}
+	},
+	"main" : "jquery.dfp.js"
 }
