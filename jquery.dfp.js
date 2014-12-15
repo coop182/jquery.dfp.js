@@ -521,12 +521,9 @@
 
     };
 
-
-
-
     /**
      * Make plugin UMD compatible
-     * Uses CommonJS, AMD or browser globals to create a jQuery plugin.
+     * Uses CommonJS, AMD or browser globals to create plugin.
      */
     (function (factory) {
         if (typeof define === 'function' && define.amd) {
@@ -537,7 +534,7 @@
             factory(require('jquery'));
         } else {
             // Browser globals
-            factory(jQuery);
+            factory($);
         }
     }(function ($) {
         
