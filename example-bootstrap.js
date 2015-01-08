@@ -27,7 +27,8 @@
 
 				// Do something after all ads are loaded.
 
-			}
+			},
+			
 			alterAdUnitName: function(adUnitName,adUnit) {
 				// Modify add unit name. For example, can add a prefix or suffix
 				return 'PREFIX_' + adUnitName + '_SUFFIX';
