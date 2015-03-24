@@ -83,11 +83,10 @@
             sizeMapping: {}
         };
 
-        if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting)
-        {
+        if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting) {
             // Get URL Targeting
-            var urlTargeting = getUrlTargeting();
-            $.extend(true, dfpOptions.setTargeting, { inURL: urlTargeting.inURL, URLIs: urlTargeting.URLIs, Query: urlTargeting.Query, Domain: window.location.host });
+            var urlTargeting = getUrlTargeting(options.url);
+            $.extend(true, dfpOptions.setTargeting, { inURL: urlTargeting.inURL, URLIs: urlTargeting.URLIs, Query: urlTargeting.Query, Domain: urlTargeting.Domain });
         }
 
         // Merge options objects
@@ -183,7 +182,7 @@
                 if (mapping && dfpOptions.sizeMapping[mapping]) {
                     // Convert verbose to DFP format
                     var map = window.googletag.sizeMapping();
-                    $.each(dfpOptions.sizeMapping[mapping], function(k, v) {
+                    $.each(dfpOptions.sizeMapping[mapping], function (k, v) {
                         map.addSize(v.browser, v.ad_sizes);
                     });
                     googleAdUnit.defineSizeMapping(map.build());
@@ -251,7 +250,7 @@
             }
 
             // Setup event listener to listen for renderEnded event and fire callbacks.
-            window.googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+            window.googletag.pubads().addEventListener('slotRenderEnded', function (event) {
 
                 rendered++;
 
@@ -316,16 +315,20 @@
      * Create an array of paths so that we can target DFP ads to Page URI's
      * @return Array an array of URL parts that can be targeted.
      */
-    getUrlTargeting = function () {
+    getUrlTargeting = function (url) {
 
-        // Get the paths for targeting against
-        var paths = window.location.pathname.replace(/\/$/, ''),
-            patt = new RegExp('\/([^\/]*)', 'ig'),
-            pathsMatches = paths.match(patt),
+        // Get the url and parse it to its component parts using regex from RFC2396 Appendix-B (https://tools.ietf.org/html/rfc2396#appendix-B)
+        var urlMatches = (url || window.location.toString()).match(/^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
+        var parsedAuthority = urlMatches[2] || '';
+        var parsedPath = (urlMatches[5] || '').replace(/\/$/, '');
+        var parsedQuery = urlMatches[7] || '';
+
+        var patt = new RegExp('\/([^\/]*)', 'ig'),
+            pathsMatches = parsedPath.match(patt),
             targetPaths = ['/'],
             longestpath = '';
 
-        if (pathsMatches && paths !== '/') {
+        if (pathsMatches && parsedPath !== '/') {
             var target = '',
                 size = pathsMatches.length;
             if (size > 0) {
@@ -348,10 +351,10 @@
         targetPaths = targetPaths.reverse();
 
         // Get the query params for targeting against
-        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
-            params = RegExp.$1.split('&');
+        var params = parsedQuery.replace(/\=/ig, ':').split('&');
 
         return {
+            Domain: parsedAuthority,
             inURL: targetPaths,
             URLIs: targetPaths[0],
             Query: params
@@ -382,7 +385,7 @@
 
         var adUnitName = $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id') || '';
         if (typeof dfpOptions.alterAdUnitName === 'function') {
-          adUnitName = dfpOptions.alterAdUnitName.call(this, adUnitName, $adUnit);
+            adUnitName = dfpOptions.alterAdUnitName.call(this, adUnitName, $adUnit);
         }
         return adUnitName;
 
@@ -492,7 +495,7 @@
                 },
                 ads: [],
                 pubads: function () { return this; },
-                noFetch:function () { return this; },
+                noFetch: function () { return this; },
                 disableInitialLoad: function () { return this; },
                 disablePublisherConsole: function () { return this; },
                 enableSingleRequest: function () { return this; },
@@ -537,7 +540,7 @@
             factory($);
         }
     }(function ($) {
-        
+
         /**
          * Add function to the jQuery / Zepto / tire namespace
          * @param  String id      (Optional) The DFP account ID
@@ -567,7 +570,7 @@
             return this;
 
         };
-        
+
     }));
 
 })(window.jQuery || window.Zepto || window.tire, window);

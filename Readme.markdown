@@ -154,6 +154,10 @@ Available Options
         <td>This object is where you set custom targeting key value pairs. Also see the Default Targeting options that are set further down the page.</td>
     </tr>
     <tr>
+        <td>url</td>
+        <td>This string is the url used by the URL Targeting feature. The default value of this option is the value found by calling window.location.</td>
+    </tr>
+    <tr>
         <td>setUrlTargeting</td>
         <td>This boolean specifies whether the targeting should include information found in the url of the current page. The default value of this option is true.</td>
     </tr>
@@ -289,6 +293,29 @@ The following targeting options are built into this script and should be setup i
 One common issue that you may run into with using the above targeting is that URL paths that you might want to target can easily be above the 40 character limit. To get around this you can specify multiple inURL rules. For example if you are wanting to target a URL like http://www.yourdomain.com/this/url/is/much/too/long/to/fit-into/the-dfp-targeting-value-box you can break it up into multiple inURL AND rules.
 
 ![URL Targeting](https://raw.github.com/coop182/jquery.dfp.js/master/img/url-targetting.png)
+
+**IMPORTANT: Regarding user-identifiable information in url targeting**
+
+If your url contains user-identifiable information you have to anonymize the url when using URL targeting.
+
+From the [DFP docs](https://support.google.com/dfp_premium/answer/177383):
+
+> You may not pass any user-identifiable data (including names, addresses, or user IDs) in the targeting. Please mask this information using the encoding of your choice, and ensure your ad trafficker knows how to decode the values when setting up a line item.
+
+From the [DFP Terms & Conditions](http://www.google.dk/doubleclick/publishers/small-business/terms.html):
+
+> **2.3 Prohibited Actions.** You will not, and will not allow any third party to: ... (h) utilize any feature or functionality of the Program, or include anything in Program Data or Program Ads, that could be so utilized, to personally identify and/or personally track individual end users or any other persons
+
+Ignoring this rule can result in Google shutting down your network!
+
+You can anonymize the url by providing an anonymized version in the 'url' option. This example shows how to replace email occurances in the url with an empty string:
+
+```javascript
+$('selector').dfp({
+  dfpID: 'xxxxxxxxx',
+  url: window.location.toString().replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/gi, '')
+});
+```
 
 Contributing
 ------------
