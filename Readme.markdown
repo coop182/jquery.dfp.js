@@ -25,106 +25,124 @@ By default this script will look for ad units with a class of `adunit` but you c
 
 The minimum information required for an ad unit to function is having the ad unit specified. To do this you can use the id parameter of the element, for example:
 
-    <div class="adunit" id="Ad_unit_id"></div>
+```html
+<div class="adunit" id="Ad_unit_id"></div>
+```
 
 In the example above the ID of the div element will be used to look up a corresponding ad unit in DFP and the dimensions of the adunit will be set to the same dimensions of the div which could be defined in your CSS.
 
 You can optionally specify the adunit name and dimensions in the following way:
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176"></div>
+```
 
 This method can be useful for including multiple copies of an ad unit with the same name which when part of a DFP placement will then pull in as many different creatives as possible.
 
 You can also specify multiple dimensions sets:
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176,450x500"></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176,450x500"></div>
+```
 
 Also you can optionally specify custom targeting on a per ad unit basis in the following way:
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+```
 
 Also you can optionally specify custom exclusion category on a per ad unit basis in the following way:
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-exclusions="firstcategory,secondcategory"></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-exclusions="firstcategory,secondcategory"></div>
+```
 
 To create an out of page ad unit set the data-outofpage property on the ad unit. Dimensions are not required for out of page ad units.
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
+```
 
 In order to identify an add unit on the page that is a video companion ad, set the data-companion attribute on that unit.
 
-    <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-companion="true"></div>
+```html
+<div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-companion="true"></div>
+```
 
 Usage
 -----
 
 Calling the script:
 
-    <html>
-    <head>
-        <title>DFP TEST</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script src="jquery.dfp.min.js"></script>
-    </head>
-    <body>
+```html
+<html>
+<head>
+    <title>DFP TEST</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="jquery.dfp.min.js"></script>
+</head>
+<body>
 
-        <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+    <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
-        <script>
+    <script>
 
-            $.dfp({
-                dfpID: 'xxxxxxxxx'
-            });
+        $.dfp({
+            dfpID: 'xxxxxxxxx'
+        });
 
-        </script>
+    </script>
 
-    </body>
-    </html>
+</body>
+</html>
+```
 
 Using a bootstrap file (take a look at [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js)):
 
-    <html>
-    <head>
-        <title>DFP TEST</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script src="example-bootstrap.js"></script>
-    </head>
-    <body>
+```html
+<html>
+<head>
+    <title>DFP TEST</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="example-bootstrap.js"></script>
+</head>
+<body>
 
-        <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
+    <div class="adunit" id="Middle_Feature" data-dimensions="393x176" data-targeting='{"city_id":"1"}'></div>
 
-    </body>
-    </html>
+</body>
+</html>
+```
 
 You can init the script in the following ways:
 
-<pre>
+```javascript
 $.dfp('xxxxxxxxx');
-</pre>
-<pre>
+```
+```javascript
 $.dfp({
     dfpID:'xxxxxxxxx'
 });
-</pre>
-<pre>
+```
+```javascript
 $('selector').dfp({
     dfpID:'xxxxxxxxx'
 });
-</pre>
-
-<pre>
+```
+```javascript
 $('selector').dfp({
     dfpID:'xxxxxxxxx',
     setCategoryExclusion: 'firstcategory, secondcategory'
 });
-</pre>
-<pre>
+```
+```javascript
 $('selector').dfp({
     dfpID:'xxxxxxxxx',
     setLocation: { latitude: 34, longitude: -45.12, precision: 1000 }
 });
-</pre>
-<pre>
+```
+
+```javascript
 $('selector').dfp({
     dfpID:'xxxxxxxxx',
     sizeMapping: {
@@ -135,7 +153,7 @@ $('selector').dfp({
         ],
     }
 });
-</pre>
+```
 
 Available Options
 -----------------
