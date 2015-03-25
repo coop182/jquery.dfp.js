@@ -16,6 +16,7 @@ describe("Category Exclusion", function () {
         spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function () {
             return {
                 addService: function () {
@@ -58,6 +59,7 @@ describe("Category Exclusion", function () {
         spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function () {
             return {
                 addService: function () {
@@ -99,6 +101,7 @@ describe("Category Exclusion", function () {
         spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function () {
             return {
                 addService: function () {
@@ -138,6 +141,7 @@ describe("Category Exclusion", function () {
         };
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.pubads = function () {
             return {
                 enableSingleRequest: function () {},
@@ -180,6 +184,7 @@ describe("Category Exclusion", function () {
         };
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.pubads = function () {
             return {
                 enableSingleRequest: function () {},
@@ -220,6 +225,7 @@ describe("Category Exclusion", function () {
         };
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.pubads = function () {
             return {
                 enableSingleRequest: function () {},

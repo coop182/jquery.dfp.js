@@ -10,8 +10,14 @@ describe('Loading Phase', function () {
 
     it('Script Appended', function () {
 
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
         runs(function () {
-            $.dfp({dfpID: 'xxxxxxx'});
+            $.dfp({
+                dfpID: 'xxxxxxx',
+                googletag: dummyTag
+            });
         }, "Kick off loader");
 
         waitsFor(function () {
@@ -20,7 +26,7 @@ describe('Loading Phase', function () {
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
+        }, "getVersion function to exist", 1000);
 
         runs(function () {
             expect($('script[src*="googletagservices.com/tag/js/gpt.js"]').length).toEqual(1);
@@ -30,8 +36,14 @@ describe('Loading Phase', function () {
 
     it('DFP Script Loaded', function () {
 
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
         runs(function () {
-            $.dfp({dfpID: 'xxxxxxx'});
+            $.dfp({
+                dfpID: 'xxxxxxx',
+                googletag: dummyTag
+            });
         }, "Kick off loader");
 
         waitsFor(function () {
