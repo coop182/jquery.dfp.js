@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v1.1.7
+ * jQuery DFP v1.1.8
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2014 Matt Cooper
@@ -319,7 +319,7 @@
 
         // Get the url and parse it to its component parts using regex from RFC2396 Appendix-B (https://tools.ietf.org/html/rfc2396#appendix-B)
         var urlMatches = (url || window.location.toString()).match(/^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
-        var parsedAuthority = urlMatches[2] || '';
+        var parsedAuthority = urlMatches[4] || '';
         var parsedPath = (urlMatches[5] || '').replace(/\/$/, '');
         var parsedQuery = urlMatches[7] || '';
 
@@ -361,6 +361,50 @@
         };
 
     },
+
+    /*getUrlTargeting = function () {
+
+        // Get the paths for targeting against
+        var paths = window.location.pathname.replace(/\/$/, ''),
+            patt = new RegExp('\/([^\/]*)', 'ig'),
+            pathsMatches = paths.match(patt),
+            targetPaths = ['/'],
+            longestpath = '';
+
+        if (pathsMatches && paths !== '/') {
+            var target = '',
+                size = pathsMatches.length;
+            if (size > 0) {
+                for (var i = 0; i < size; i++) {
+                    target = pathsMatches[i];
+                    targetPaths.push(target);
+                    for (var j = i + 1; j < size; j++) {
+                        target += pathsMatches[j];
+                        targetPaths.push(target);
+                    }
+                    if (i === 0) {
+                        targetPaths.splice(-1, 1);
+                        longestpath = target;
+                    }
+                }
+            }
+            targetPaths.push(longestpath);
+        }
+
+        targetPaths = targetPaths.reverse();
+
+        // Get the query params for targeting against
+        var url = window.location.toString().replace(/\=/ig, ':').match(/\?(.+)$/),
+            params = RegExp.$1.split('&');
+
+        return {
+            Domain: window.location.host,
+            inURL: targetPaths,
+            URLIs: targetPaths[0],
+            Query: params
+        };
+
+    },*/
 
     /**
      * Get the id of the adUnit div or generate a unique one.
