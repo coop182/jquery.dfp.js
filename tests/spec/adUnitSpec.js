@@ -10,9 +10,15 @@ describe('Ad units', function () {
 
     it("Auto generate an ID for the ad unit if no ID provided", function () {
 
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
         runs(function () {
             $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $.dfp({dfpID: 'xxxxxxx'});
+            $.dfp({
+                dfpID: 'xxxxxxx',
+                googletag: dummyTag
+            });
         }, "Kick off loader");
 
         waitsFor(function () {
@@ -31,9 +37,15 @@ describe('Ad units', function () {
 
     it("Google ad unit object get attached to the ad unit container", function () {
 
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
         runs(function () {
             $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $.dfp({dfpID: 'xxxxxxx'});
+            $.dfp({
+                dfpID: 'xxxxxxx',
+                googletag: dummyTag
+            });
         }, "Kick off loader");
 
         waitsFor(function () {
@@ -53,9 +65,16 @@ describe('Ad units', function () {
     it("Google ad unit object get attached to the ad unit container (with namespace)", function () {
         var namespace = 'my-long-namespace';
 
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
         runs(function () {
             $('body').append('<div class="adunit"></div>');
-            $.dfp({dfpID: 'xxxxxxx', namespace: namespace});
+            $.dfp({
+                dfpID: 'xxxxxxx',
+                googletag: dummyTag,
+                namespace: namespace
+            });
         }, "Kick off loader");
 
         waitsFor(function () {
