@@ -291,20 +291,16 @@ The following targeting options are built into this script and should be setup i
         <th>Description</th>
     </tr>
     <tr>
-        <td>Domain</td>
-        <td>This allows you to target different domains, for example you could test your ads on your staging environment before pushing them live by specifying a domain of staging.yourdomain.com within DFP, this script will take care of the rest.</td>
+        <td>UrlHost</td>
+        <td>This allows you to target different host names, for example you could test your ads on your staging environment before pushing them live by specifying a host of staging.yourdomain.com within DFP, this script will take care of the rest.</td>
     </tr>
     <tr>
-        <td>inURL</td>
-        <td>This allows you to target URLs containing the segment you specify in DFP, for example you could set inURL to '/page1' on the targeting options of the DFP line item and it would then allow ads to show on any page that contains /page1 in its URL. e.g. http://www.yourdomain.com/page1 or http://www.yourdomain.com/page1/segment2 or http://www.yourdomain.com/section/page1</td>
+        <td>UrlPath</td>
+        <td>This allows you to target the path of the users browser, for example if you set UrlPath to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2.</td>
     </tr>
     <tr>
-        <td>URLIs</td>
-        <td>This allows you to target the exact URL of the users browser, for example if you set URLIs to '/page1' on the targeting options of the DFP line item it would match http://www.yourdomain.com/page1 only and not http://www.yourdomain.com/page1/segment2.</td>
-    </tr>
-    <tr>
-        <td>Query</td>
-        <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a Query targeting string of param1:value1</td>
+        <td>UrlQuery</td>
+        <td>This allows you to target the query parameters of a page. For example if the URL was http://www.yourdomain.com/page1?param1=value1 you could target it with a DFP ad by specifying a UrlQuery targeting string of param1:value1</td>
     </tr>
 </table>
 

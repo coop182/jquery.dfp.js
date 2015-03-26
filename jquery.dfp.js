@@ -86,7 +86,7 @@
         if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting) {
             // Get URL Targeting
             var urlTargeting = getUrlTargeting(options.url);
-            $.extend(true, dfpOptions.setTargeting, { inURL: urlTargeting.inURL, URLIs: urlTargeting.URLIs, Query: urlTargeting.Query, Domain: urlTargeting.Domain });
+            $.extend(true, dfpOptions.setTargeting, { UrlHost: urlTargeting.Host, UrlPath: urlTargeting.Path, UrlQuery: urlTargeting.Query });
         }
 
         // Merge options objects
@@ -319,44 +319,16 @@
 
         // Get the url and parse it to its component parts using regex from RFC2396 Appendix-B (https://tools.ietf.org/html/rfc2396#appendix-B)
         var urlMatches = (url || window.location.toString()).match(/^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
-        var parsedAuthority = urlMatches[4] || '';
-        var parsedPath = (urlMatches[5] || '').replace(/\/$/, '');
-        var parsedQuery = urlMatches[7] || '';
-
-        var patt = new RegExp('\/([^\/]*)', 'ig'),
-            pathsMatches = parsedPath.match(patt),
-            targetPaths = ['/'],
-            longestpath = '';
-
-        if (pathsMatches && parsedPath !== '/') {
-            var target = '',
-                size = pathsMatches.length;
-            if (size > 0) {
-                for (var i = 0; i < size; i++) {
-                    target = pathsMatches[i];
-                    targetPaths.push(target);
-                    for (var j = i + 1; j < size; j++) {
-                        target += pathsMatches[j];
-                        targetPaths.push(target);
-                    }
-                    if (i === 0) {
-                        targetPaths.splice(-1, 1);
-                        longestpath = target;
-                    }
-                }
-            }
-            targetPaths.push(longestpath);
-        }
-
-        targetPaths = targetPaths.reverse();
+        var matchedAuthority = urlMatches[4] || '';
+        var matchedPath = (urlMatches[5] || '').replace(/\/$/, '');
+        var matchedQuery = urlMatches[7] || '';
 
         // Get the query params for targeting against
-        var params = parsedQuery.replace(/\=/ig, ':').split('&');
+        var params = matchedQuery.replace(/\=/ig, ':').split('&');
 
         return {
-            Domain: parsedAuthority,
-            inURL: targetPaths,
-            URLIs: targetPaths[0],
+            Host: matchedAuthority,
+            Path: matchedPath,
             Query: params
         };
 

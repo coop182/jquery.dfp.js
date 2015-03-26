@@ -41,11 +41,10 @@ describe("Targeting", function () {
 
         runs(function () {
             expect(mock.setTargeting).toHaveBeenCalled();
-            expect(mock.setTargeting.callCount).toEqual(4);
-            expect(mock.setTargeting.calls[0].args[0]).toEqual("inURL");
-            expect(mock.setTargeting.calls[1].args[0]).toEqual("URLIs");
-            expect(mock.setTargeting.calls[2].args[0]).toEqual("Query");
-            expect(mock.setTargeting.calls[3].args[0]).toEqual("Domain");
+            expect(mock.setTargeting.callCount).toEqual(3);
+            expect(mock.setTargeting.calls[0].args[0]).toEqual("UrlHost");
+            expect(mock.setTargeting.calls[1].args[0]).toEqual("UrlPath");
+            expect(mock.setTargeting.calls[2].args[0]).toEqual("UrlQuery");
         });
 
     });
@@ -122,14 +121,12 @@ describe("Targeting", function () {
 
         runs(function () {
             expect(mock.setTargeting).toHaveBeenCalled();
-            expect(mock.setTargeting.callCount).toEqual(4);
-            expect(mock.setTargeting.calls[0].args[0]).toEqual('inURL');
-            expect(mock.setTargeting.calls[1].args[0]).toEqual('URLIs');
-            expect(mock.setTargeting.calls[2].args[0]).toEqual('Query');
-            expect(mock.setTargeting.calls[3].args[0]).toEqual('Domain');
-            expect(mock.setTargeting.calls[3].args[1]).toEqual('www.domain.com');
+            expect(mock.setTargeting.callCount).toEqual(3);
+            expect(mock.setTargeting.calls[0].args[0]).toEqual('UrlHost');
+            expect(mock.setTargeting.calls[1].args[0]).toEqual('UrlPath');
+            expect(mock.setTargeting.calls[2].args[0]).toEqual('UrlQuery');
+            expect(mock.setTargeting.calls[0].args[1]).toEqual('www.domain.com');
             expect(mock.setTargeting.calls[1].args[1]).toEqual('/path1/path2');
-            expect(mock.setTargeting.calls[0].args[1]).toEqual(['/path1/path2', '/path2', '/path1', '/']);
             expect(mock.setTargeting.calls[2].args[1]).toEqual(['param1:1', 'param2:2']);
         });
 
