@@ -331,7 +331,7 @@
         // Get the url and parse it to its component parts using regex from RFC2396 Appendix-B (https://tools.ietf.org/html/rfc2396#appendix-B)
         var urlMatches = (url || window.location.toString()).match(/^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
         var matchedAuthority = urlMatches[4] || '';
-        var matchedPath = (urlMatches[5] || '').replace(/\/$/, '');
+        var matchedPath = (urlMatches[5] || '').replace(/(.)\/$/, '$1');
         var matchedQuery = urlMatches[7] || '';
 
         // Get the query params for targeting against
