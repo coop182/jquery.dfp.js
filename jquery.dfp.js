@@ -105,6 +105,7 @@
      * @return Array an array of ad units that have been created.
      */
     createAds = function () {
+        var googletag = window.googletag;
 
         // Loops through on page Ad units and gets ads for them.
         $adCollection.each(function () {
@@ -129,7 +130,7 @@
             $adUnit.html('').addClass('display-none');
 
             // Push commands to DFP to create ads
-            window.googletag.cmd.push(function () {
+            googletag.cmd.push(function () {
 
                 var googleAdUnit,
                     $adUnitData = $adUnit.data(storeAs);
@@ -143,16 +144,17 @@
 
                     // Create the ad - out of page or normal
                     if ($adUnit.data('outofpage')) {
-                        googleAdUnit = window.googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID).addService(window.googletag.pubads());
+                        googleAdUnit = googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID);
                     } else {
                         if ($adUnit.data('companion')) {
-                            googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
-                            .addService(window.googletag.companionAds()).addService(window.googletag.pubads());
+                            googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
+                                .addService(googletag.companionAds());
                         } else {
-                            googleAdUnit = window.googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
-                            .addService(window.googletag.pubads());
+                            googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID);
                         }
                     }
+
+                    googleAdUnit = googleAdUnit.addService(googletag.pubads());
 
                 }
 
@@ -181,7 +183,7 @@
                 var mapping = $adUnit.data('size-mapping');
                 if (mapping && dfpOptions.sizeMapping[mapping]) {
                     // Convert verbose to DFP format
-                    var map = window.googletag.sizeMapping();
+                    var map = googletag.sizeMapping();
                     $.each(dfpOptions.sizeMapping[mapping], function (k, v) {
                         map.addSize(v.browser, v.ad_sizes);
                     });
@@ -200,57 +202,65 @@
         });
 
         // Push DFP config options
-        window.googletag.cmd.push(function () {
+        googletag.cmd.push(function () {
+
+            var pubadsService = googletag.pubads();
 
             if (dfpOptions.enableSingleRequest) {
-                window.googletag.pubads().enableSingleRequest();
+                pubadsService.enableSingleRequest();
             }
+
             $.each(dfpOptions.setTargeting, function (k, v) {
-                window.googletag.pubads().setTargeting(k, v);
+                pubadsService.setTargeting(k, v);
             });
 
-            if (typeof dfpOptions.setLocation === 'object') {
-                if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number' && typeof dfpOptions.setLocation.precision === 'number') {
-                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude, dfpOptions.setLocation.precision);
-                } else if (typeof dfpOptions.setLocation.latitude === 'number' && typeof dfpOptions.setLocation.longitude === 'number') {
-                    window.googletag.pubads().setLocation(dfpOptions.setLocation.latitude, dfpOptions.setLocation.longitude);
+            var setLocation = dfpOptions.setLocation;
+            if (typeof setLocation === 'object') {
+                if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number' && typeof setLocation.precision === 'number') {
+                    pubadsService.setLocation(setLocation.latitude, setLocation.longitude, setLocation.precision);
+                } else if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number') {
+                    pubadsService.setLocation(setLocation.latitude, setLocation.longitude);
                 }
             }
 
             if (dfpOptions.setCategoryExclusion.length > 0) {
                 var exclusionsGroup = dfpOptions.setCategoryExclusion.split(',');
                 var valueTrimmed;
+
                 $.each(exclusionsGroup, function (k, v) {
                     valueTrimmed = $.trim(v);
                     if (valueTrimmed.length > 0) {
-                        window.googletag.pubads().setCategoryExclusion(valueTrimmed);
+                        pubadsService.setCategoryExclusion(valueTrimmed);
                     }
                 });
             }
+
             if (dfpOptions.collapseEmptyDivs) {
-                window.googletag.pubads().collapseEmptyDivs();
+                pubadsService.collapseEmptyDivs();
             }
 
             if (dfpOptions.disablePublisherConsole) {
-                window.googletag.pubads().disablePublisherConsole();
+                pubadsService.disablePublisherConsole();
             }
+
             if (dfpOptions.companionAds) {
-                window.googletag.companionAds().setRefreshUnfilledSlots(true);
+                googletag.companionAds().setRefreshUnfilledSlots(true);
 
                 if (!dfpOptions.disableInitialLoad) {
-                    window.googletag.pubads().enableVideoAds();
+                    pubadsService.enableVideoAds();
                 }
             }
+
             if (dfpOptions.disableInitialLoad) {
-                window.googletag.pubads().disableInitialLoad();
+                pubadsService.disableInitialLoad();
             }
 
             if (dfpOptions.noFetch) {
-                window.googletag.pubads().noFetch();
+                pubadsService.noFetch();
             }
 
             // Setup event listener to listen for renderEnded event and fire callbacks.
-            window.googletag.pubads().addEventListener('slotRenderEnded', function (event) {
+            pubadsService.addEventListener('slotRenderEnded', function (event) {
 
                 rendered++;
 
@@ -280,7 +290,7 @@
 
             });
 
-            window.googletag.enableServices();
+            googletag.enableServices();
 
         });
 
@@ -295,15 +305,16 @@
         $adCollection.each(function () {
 
             var $adUnit = $(this),
-                $adUnitData = $adUnit.data(storeAs);
+                $adUnitData = $adUnit.data(storeAs),
+                googletag = window.googletag;
 
             if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
-                window.googletag.cmd.push(function () { window.googletag.pubads().refresh([$adUnitData]); });
+                googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
 
             } else {
 
-                window.googletag.cmd.push(function () { window.googletag.display($adUnit.attr('id')); });
+                googletag.cmd.push(function () { googletag.display($adUnit.attr('id')); });
 
             }
 
@@ -442,24 +453,25 @@
      * is completed.
      */
     dfpBlocked = function () {
+        var googletag = window.googletag;
 
         // Get the stored dfp commands
-        var commands = window.googletag.cmd;
+        var commands = googletag.cmd;
 
         // SetTimeout is a bit dirty but the script does not execute in the correct order without it
         setTimeout(function () {
 
             var _defineSlot = function (name, dimensions, id, oop) {
-                window.googletag.ads.push(id);
-                window.googletag.ads[id] = {
+                googletag.ads.push(id);
+                googletag.ads[id] = {
                     renderEnded: function () { },
                     addService: function () { return this; }
                 };
-                return window.googletag.ads[id];
+                return googletag.ads[id];
             };
 
             // overwrite the dfp object - replacing the command array with a function and defining missing functions
-            window.googletag = {
+            googletag = {
                 cmd: {
                     push: function (callback) {
                         callback.call(dfpScript);
@@ -481,7 +493,7 @@
                     return _defineSlot(name, [], id, true);
                 },
                 display: function (id) {
-                    window.googletag.ads[id].renderEnded.call(dfpScript);
+                    googletag.ads[id].renderEnded.call(dfpScript);
                     return this;
                 }
 
@@ -489,7 +501,7 @@
 
             // Execute any stored commands
             $.each(commands, function (k, v) {
-                window.googletag.cmd.push(v);
+                googletag.cmd.push(v);
             });
 
         }, 50);
