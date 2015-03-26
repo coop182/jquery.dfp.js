@@ -304,7 +304,7 @@ The following targeting options are built into this script and should be setup i
     </tr>
 </table>
 
-One common issue that you may run into with using the above targeting is that URL paths that you might want to target can easily be above the 40 character limit. To get around this you can specify multiple inURL rules. For example if you are wanting to target a URL like http://www.yourdomain.com/this/url/is/much/too/long/to/fit-into/the-dfp-targeting-value-box you can break it up into multiple inURL AND rules.
+DFP now supports both a "begins with" and a "contains" operator when specifying the custom criteria value. Furthermore the value when using free-form-key-value custom criterias, is no longer subject to a 40 character limit. Read more about custom criteria in the [DFP help](https://support.google.com/dfp_premium/answer/188092).
 
 ![URL Targeting](https://raw.github.com/coop182/jquery.dfp.js/master/img/url-targetting.png)
 
