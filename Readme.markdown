@@ -7,7 +7,7 @@ This script is a drop in solution for getting Double Click for Publishers (DFP) 
 
 Do not include any of the generated DFP script tags from the DFP admin on your page, this script replaces them.
 
-This script also works with [Zepto.js](http://zeptojs.com/) and [Tire.js](http://tirejs.com/)
+This script also works with [Zepto.js](http://zeptojs.com/)
 
 Demo / Ad unit tester
 ---------------------

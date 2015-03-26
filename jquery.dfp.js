@@ -526,7 +526,7 @@
     }(function ($) {
 
         /**
-         * Add function to the jQuery / Zepto / tire namespace
+         * Add function to the jQuery / Zepto namespace
          * @param  String id      (Optional) The DFP account ID
          * @param  Object options (Optional) Custom options to apply
          */
@@ -557,4 +557,4 @@
 
     }));
 
-})(window.jQuery || window.Zepto || window.tire, window);
+})(window.jQuery || window.Zepto, window);
