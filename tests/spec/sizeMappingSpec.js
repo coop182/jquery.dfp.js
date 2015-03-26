@@ -16,6 +16,7 @@ describe("SizeMapping", function () {
         spyOn(mockAdunit, "defineSizeMapping").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function () {
             return {
                 addService: function () {
@@ -63,6 +64,7 @@ describe("SizeMapping", function () {
         spyOn(mockAdunit, "defineSizeMapping").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function () {
             return {
                 addService: function () {

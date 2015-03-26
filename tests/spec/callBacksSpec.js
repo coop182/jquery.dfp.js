@@ -58,6 +58,7 @@ describe("Callbacks", function () {
         spyOn(mock, "afterEachAdLoaded").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.display = function () {
             mock.afterEachAdLoaded();
         };
@@ -157,6 +158,7 @@ describe("Callbacks", function () {
         spyOn(mock, "afterAllAdsLoaded").andCallThrough();
 
         var dummyTag = {};
+        dummyTag.enableServices = function() {};
         dummyTag.display = function () {
             mock.afterAllAdsLoaded();
         };
@@ -251,10 +253,14 @@ describe("Callbacks", function () {
 
     it("Alter the ad unit name using callback", function () {
 
+      var dummyTag = {};
+      dummyTag.enableServices = function() {};
+
       runs(function () {
         $('body').append('<div class="adunit" data-adunit="Bike" id="leader-123" data-model="BMX"></div>');
         $.dfp({
           dfpID: 'xxxxxxx',
+          googletag: dummyTag,
           alterAdUnitName: function(adUnitName,adUnit) {
             return "PREFIX_" + $(adUnit).data('model') + "_" + adUnitName + "_SUFFIX";
           }
