@@ -2,7 +2,7 @@
  * jQuery DFP v2.0.0
  * http://github.com/coop182/jquery.dfp.js
  *
- * Copyright 2014 Matt Cooper
+ * Copyright 2015 Matt Cooper
  * Released under the MIT license
  */
 (function ($, window, undefined) {
