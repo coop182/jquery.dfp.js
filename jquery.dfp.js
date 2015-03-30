@@ -146,11 +146,9 @@
                     if ($adUnit.data('outofpage')) {
                         googleAdUnit = googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID);
                     } else {
+                        googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID);
                         if ($adUnit.data('companion')) {
-                            googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID)
-                                .addService(googletag.companionAds());
-                        } else {
-                            googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID);
+                            googleAdUnit = googleAdUnit.addService(googletag.companionAds());
                         }
                     }
 
