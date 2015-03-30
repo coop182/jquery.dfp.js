@@ -8,124 +8,101 @@ describe('Loading Phase', function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it('Script Appended', function () {
+    it('Script Appended', function (done) {
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
 
-        runs(function () {
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 1000);
-
-        runs(function () {
+        }, function () {
             expect($('script[src*="googletagservices.com/tag/js/gpt.js"]').length).toEqual(1);
-        });
-
+            done();
+        }, 1000);
     });
 
-    it('DFP Script Loaded', function () {
+    it('DFP Script Loaded', function (done) {
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
 
-        runs(function () {
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(window.googletag.getVersion()).toBeGreaterThan('23');
-        });
-
+            done();
+        }, 5000);
     });
 
-    it('DFP Selector default option', function () {
+    it('DFP Selector default option', function (done) {
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function() {};
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(dummyTag, "defineSlot").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(dummyTag, 'defineSlot').and.callThrough();
 
-        $("body").append("<div id='testdiv'>" +
-                "<div class='adunit'></div>" +
-                "<div class='adunit'></div>" +
-            "</div>");
+        $('body').append('<div id="testdiv"><div class="adunit"></div><div class="adunit"></div></div>');
 
-        runs(function () {
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
         });
 
-        waitsFor(function () {
-
-            if(dummyTag.enableServices.calls.length === 1) {
+        waitsForAndRuns(function () {
+            if(dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method enablesServices never got called", 5000);
-
-        runs(function () {
-            expect(dummyTag.defineSlot.calls.length).toEqual(2);
-        });
+        }, function () {
+            expect(dummyTag.defineSlot.calls.count()).toEqual(2);
+            done();
+        }, 5000);
     });
 
-    it('Override DFP Selector', function () {
-
+    it('Override DFP Selector', function (done) {
         var dummyTag = {};
         dummyTag.enableServices = function() {};
         dummyTag.defineSlot = function() {};
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(dummyTag, "defineSlot").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(dummyTag, "defineSlot").and.callThrough();
 
-        $("body").append("<div id='testdiv'>" +
-                "<div class='otherselector'></div>" +
-                "<div class='otherselector'></div>" +
-            "</div>");
+        $('body').append('<div id="testdiv"><div class="otherselector"></div><div class="otherselector"></div></div>');
 
-        runs(function () {
-            $('.otherselector').dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
+        $('.otherselector').dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
         });
 
-        waitsFor(function () {
-
-            if(dummyTag.enableServices.calls.length === 1) {
+        waitsForAndRuns(function () {
+            if(dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method enablesServices never got called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(1).toEqual(1);
-            expect(dummyTag.defineSlot.calls.length).toEqual(2);
-        });
+            expect(dummyTag.defineSlot.calls.count()).toEqual(2);
+            done();
+        }, 5000);
     });
 });

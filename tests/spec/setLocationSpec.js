@@ -1,4 +1,4 @@
-describe("SetLocation", function () {
+describe('SetLocation', function () {
 
     var cleanup = function () {
         $('script[src*="gpt.js"]').remove();
@@ -7,7 +7,7 @@ describe("SetLocation", function () {
 
     beforeEach(cleanup);
 
-    it("setLocation method called correctly with latitude and longitude", function () {
+    it('setLocation method called correctly with latitude and longitude', function (done) {
         var mock = {};
         mock.setLocation = function (param) { };
 
@@ -24,35 +24,32 @@ describe("SetLocation", function () {
 
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(mock, "setLocation").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(mock, 'setLocation').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setLocation: { latitude: 34, longitude: -45.12 }
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setLocation: { latitude: 34, longitude: -45.12 }
+        });
 
-        waitsFor(function () {
-            if (dummyTag.enableServices.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'enableServices' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setLocation).toHaveBeenCalled();
-            expect(mock.setLocation.callCount).toEqual(1);
-            expect(mock.setLocation.calls[0].args.length).toEqual(2);
-            expect(mock.setLocation.calls[0].args[0]).toEqual(34);
-            expect(mock.setLocation.calls[0].args[1]).toEqual(-45.12);
-        });
+            expect(mock.setLocation.calls.count()).toEqual(1);
+            expect(mock.setLocation.calls.argsFor(0).length).toEqual(2);
+            expect(mock.setLocation.calls.argsFor(0)[0]).toEqual(34);
+            expect(mock.setLocation.calls.argsFor(0)[1]).toEqual(-45.12);
+            done();
+        }, 5000);
     });
 
-    it("setLocation method called correctly with latitude, longitude and precision", function () {
+    it('setLocation method called correctly with latitude, longitude and precision', function (done) {
         var mock = {};
         mock.setLocation = function (param) { };
 
@@ -69,36 +66,33 @@ describe("SetLocation", function () {
 
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(mock, "setLocation").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(mock, 'setLocation').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setLocation: { latitude: 34, longitude: -45.12, precision: 1000 }
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setLocation: { latitude: 34, longitude: -45.12, precision: 1000 }
+        });
 
-        waitsFor(function () {
-            if (dummyTag.enableServices.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'enableServices' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setLocation).toHaveBeenCalled();
-            expect(mock.setLocation.callCount).toEqual(1);
-            expect(mock.setLocation.calls[0].args.length).toEqual(3);
-            expect(mock.setLocation.calls[0].args[0]).toEqual(34);
-            expect(mock.setLocation.calls[0].args[1]).toEqual(-45.12);
-            expect(mock.setLocation.calls[0].args[2]).toEqual(1000);
-        });
+            expect(mock.setLocation.calls.count()).toEqual(1);
+            expect(mock.setLocation.calls.argsFor(0).length).toEqual(3);
+            expect(mock.setLocation.calls.argsFor(0)[0]).toEqual(34);
+            expect(mock.setLocation.calls.argsFor(0)[1]).toEqual(-45.12);
+            expect(mock.setLocation.calls.argsFor(0)[2]).toEqual(1000);
+            done();
+        }, 5000);
     });
 
-    it("setLocation method not called with latitude missing", function () {
+    it('setLocation method not called with latitude missing', function (done) {
         var mock = {};
         mock.setLocation = function (param) { };
 
@@ -115,31 +109,28 @@ describe("SetLocation", function () {
 
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(mock, "setLocation").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(mock, 'setLocation').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setLocation: { longitude: -45.12, precision: 1000 }
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setLocation: { longitude: -45.12, precision: 1000 }
+        });
 
-        waitsFor(function () {
-            if (dummyTag.enableServices.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'enableServices' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setLocation).not.toHaveBeenCalled();
-        });
+            done();
+        }, 5000);
     });
 
-    it("setLocation string variable type not accepted ", function () {
+    it('setLocation string variable type not accepted', function (done) {
         var mock = {};
         mock.setLocation = function (param) { };
 
@@ -156,27 +147,24 @@ describe("SetLocation", function () {
 
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(mock, "setLocation").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(mock, 'setLocation').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setLocation: { latitude: "34", longitude: -45.12, precision: 1000 }
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setLocation: { latitude: '34', longitude: -45.12, precision: 1000 }
+        });
 
-        waitsFor(function () {
-            if (dummyTag.enableServices.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'enableServices' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setLocation).not.toHaveBeenCalled();
-        });
+            done();
+        }, 5000);
     });
 });

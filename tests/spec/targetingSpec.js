@@ -1,4 +1,4 @@
-describe("Targeting", function () {
+describe('Targeting', function () {
 
     var cleanup = function () {
         $('.adunit').remove();
@@ -8,7 +8,7 @@ describe("Targeting", function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it("Default Targeting options are set (page)", function () {
+    it('Default Targeting options are set (page)', function (done) {
 
         var mock = {};
         mock.setTargeting = function (param) {};
@@ -22,34 +22,30 @@ describe("Targeting", function () {
             };
         };
 
-        spyOn(mock, "setTargeting").andCallThrough();
+        spyOn(mock, 'setTargeting').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setTargeting).toHaveBeenCalled();
-            expect(mock.setTargeting.callCount).toEqual(3);
-            expect(mock.setTargeting.calls[0].args[0]).toEqual("UrlHost");
-            expect(mock.setTargeting.calls[1].args[0]).toEqual("UrlPath");
-            expect(mock.setTargeting.calls[2].args[0]).toEqual("UrlQuery");
-        });
-
+            expect(mock.setTargeting.calls.count()).toEqual(3);
+            expect(mock.setTargeting.calls.argsFor(0)[0]).toEqual('UrlHost');
+            expect(mock.setTargeting.calls.argsFor(1)[0]).toEqual('UrlPath');
+            expect(mock.setTargeting.calls.argsFor(2)[0]).toEqual('UrlQuery');
+            done();
+        }, 5000);
     });
 
-    it("URL Targeting options are not set (page)", function () {
+    it('URL Targeting options are not set (page)', function (done) {
 
         var mock = {};
         mock.setTargeting = function (param) { };
@@ -63,31 +59,27 @@ describe("Targeting", function () {
             };
         };
 
-        spyOn(mock, "setTargeting").andCallThrough();
+        spyOn(mock, 'setTargeting').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                setUrlTargeting: false,
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            setUrlTargeting: false,
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setTargeting).not.toHaveBeenCalled();
-        });
-
+            done();
+        }, 5000);
     });
 
-    it("URL Targeting is correct", function () {
+    it('URL Targeting is correct', function (done) {
 
         var mock = {};
         mock.setTargeting = function (param) {};
@@ -101,35 +93,31 @@ describe("Targeting", function () {
             };
         };
 
-        spyOn(mock, "setTargeting").andCallThrough();
+        spyOn(mock, 'setTargeting').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                url: 'http://www.domain.com/path1/path2?param1=1&param2=2'
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            url: 'http://www.domain.com/path1/path2?param1=1&param2=2'
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setTargeting).toHaveBeenCalled();
-            expect(mock.setTargeting.callCount).toEqual(3);
-            expect(mock.setTargeting.calls[0].args[0]).toEqual('UrlHost');
-            expect(mock.setTargeting.calls[1].args[0]).toEqual('UrlPath');
-            expect(mock.setTargeting.calls[2].args[0]).toEqual('UrlQuery');
-            expect(mock.setTargeting.calls[0].args[1]).toEqual('www.domain.com');
-            expect(mock.setTargeting.calls[1].args[1]).toEqual('/path1/path2');
-            expect(mock.setTargeting.calls[2].args[1]).toEqual(['param1:1', 'param2:2']);
-        });
-
+            expect(mock.setTargeting.calls.count()).toEqual(3);
+            expect(mock.setTargeting.calls.argsFor(0)[0]).toEqual('UrlHost');
+            expect(mock.setTargeting.calls.argsFor(1)[0]).toEqual('UrlPath');
+            expect(mock.setTargeting.calls.argsFor(2)[0]).toEqual('UrlQuery');
+            expect(mock.setTargeting.calls.argsFor(0)[1]).toEqual('www.domain.com');
+            expect(mock.setTargeting.calls.argsFor(1)[1]).toEqual('/path1/path2');
+            expect(mock.setTargeting.calls.argsFor(2)[1]).toEqual(['param1:1', 'param2:2']);
+            done();
+        }, 5000);
     });
 
 });

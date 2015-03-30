@@ -1,4 +1,4 @@
-describe("Category Exclusion", function () {
+describe('Category Exclusion', function () {
 
     var cleanup = function () {
         $('.adunit').remove();
@@ -8,12 +8,12 @@ describe("Category Exclusion", function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it("Gets called correctly (ad unit)", function () {
+    it('Gets called correctly (ad unit)', function (done) {
         var mockAdunit = {
             setCategoryExclusion: function (param) { }
         };
 
-        spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
+        spyOn(mockAdunit, 'setCategoryExclusion').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -25,38 +25,33 @@ describe("Category Exclusion", function () {
             };
         };
 
-        runs(function () {
-            jQuery("body").append("<div class=\"adunit\" id=\"Ad_unit_id\"" +
-                                  " data-exclusions=\"firstcategory, secondcategory\"></div>");
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery('body').append('<div class="adunit" id="Ad_unit_id" data-exclusions="firstcategory, secondcategory"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mockAdunit.setCategoryExclusion).toHaveBeenCalled();
-            expect(mockAdunit.setCategoryExclusion.callCount).toEqual(2);
-            expect(mockAdunit.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-            expect(mockAdunit.setCategoryExclusion.calls[1].args[0]).toEqual("secondcategory");
-        });
-
+            expect(mockAdunit.setCategoryExclusion.calls.count()).toEqual(2);
+            expect(mockAdunit.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            expect(mockAdunit.setCategoryExclusion.calls.argsFor(1)[0]).toEqual('secondcategory');
+            done();
+        }, 5000);
     });
 
-    it("Deals with extra comma (ad unit)", function () {
+    it('Deals with extra comma (ad unit)', function (done) {
         var mockAdunit = {
             setCategoryExclusion: function (param) { }
         };
 
-        spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
+        spyOn(mockAdunit, 'setCategoryExclusion').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -68,37 +63,32 @@ describe("Category Exclusion", function () {
             };
         };
 
-        runs(function () {
-            jQuery("body").append("<div class=\"adunit\" id=\"Ad_unit_id\"" +
-                                  " data-exclusions=\"firstcategory, \"></div>");
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery('body').append('<div class="adunit" id="Ad_unit_id" data-exclusions="firstcategory, "></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mockAdunit.setCategoryExclusion).toHaveBeenCalled();
-            expect(mockAdunit.setCategoryExclusion.callCount).toEqual(1);
-            expect(mockAdunit.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-        });
-
+            expect(mockAdunit.setCategoryExclusion.calls.count()).toEqual(1);
+            expect(mockAdunit.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            done();
+        }, 5000);
     });
 
-    it("Deals with one value and no commas (ad unit)", function () {
+    it('Deals with one value and no commas (ad unit)', function (done) {
         var mockAdunit = {
             setCategoryExclusion: function (param) { }
         };
 
-        spyOn(mockAdunit, "setCategoryExclusion").andCallThrough();
+        spyOn(mockAdunit, 'setCategoryExclusion').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -110,32 +100,27 @@ describe("Category Exclusion", function () {
             };
         };
 
-        runs(function () {
-            jQuery("body").append("<div class=\"adunit\" id=\"Ad_unit_id\"" +
-                                  " data-exclusions=\"firstcategory\"></div>");
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery('body').append('<div class="adunit" id="Ad_unit_id" data-exclusions="firstcategory"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mockAdunit.setCategoryExclusion).toHaveBeenCalled();
-            expect(mockAdunit.setCategoryExclusion.callCount).toEqual(1);
-            expect(mockAdunit.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-        });
-
+            expect(mockAdunit.setCategoryExclusion.calls.count()).toEqual(1);
+            expect(mockAdunit.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            done();
+        }, 5000);
     });
 
-    it("Gets called correctly (page)", function () {
+    it('Gets called correctly (page)', function (done) {
         var mock = {};
         mock.setCategoryExclusion = function (param) {
         };
@@ -151,34 +136,30 @@ describe("Category Exclusion", function () {
             };
         };
 
-        spyOn(mock, "setCategoryExclusion").andCallThrough();
+        spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setCategoryExclusion: "firstcategory, secondcategory"
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setCategoryExclusion: 'firstcategory, secondcategory'
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setCategoryExclusion).toHaveBeenCalled();
-            expect(mock.setCategoryExclusion.callCount).toEqual(2);
-            expect(mock.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-            expect(mock.setCategoryExclusion.calls[1].args[0]).toEqual("secondcategory");
-        });
-
+            expect(mock.setCategoryExclusion.calls.count()).toEqual(2);
+            expect(mock.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            expect(mock.setCategoryExclusion.calls.argsFor(1)[0]).toEqual('secondcategory');
+            done();
+        }, 5000);
     });
 
-    it("Deals with extra comma (page)", function () {
+    it('Deals with extra comma (page)', function (done) {
         var mock = {};
         mock.setCategoryExclusion = function (param) {
         };
@@ -194,32 +175,29 @@ describe("Category Exclusion", function () {
             };
         };
 
-        spyOn(mock, "setCategoryExclusion").andCallThrough();
+        spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setCategoryExclusion: "firstcategory, "
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setCategoryExclusion: 'firstcategory, '
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setCategoryExclusion).toHaveBeenCalled();
-            expect(mock.setCategoryExclusion.callCount).toEqual(1);
-            expect(mock.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-        });
+            expect(mock.setCategoryExclusion.calls.count()).toEqual(1);
+            expect(mock.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            done();
+        }, 5000);
     });
 
-    it("Deals with one value and no commas (page)", function () {
+    it('Deals with one value and no commas (page)', function (done) {
         var mock = {};
         mock.setCategoryExclusion = function (param) {
         };
@@ -235,29 +213,26 @@ describe("Category Exclusion", function () {
             };
         };
 
-        spyOn(mock, "setCategoryExclusion").andCallThrough();
+        spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                setCategoryExclusion: "firstcategory"
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            setCategoryExclusion: 'firstcategory'
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.setCategoryExclusion).toHaveBeenCalled();
-            expect(mock.setCategoryExclusion.callCount).toEqual(1);
-            expect(mock.setCategoryExclusion.calls[0].args[0]).toEqual("firstcategory");
-        });
+            expect(mock.setCategoryExclusion.calls.count()).toEqual(1);
+            expect(mock.setCategoryExclusion.calls.argsFor(0)[0]).toEqual('firstcategory');
+            done();
+        }, 5000);
     });
 
 });

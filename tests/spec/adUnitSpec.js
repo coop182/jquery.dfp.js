@@ -8,86 +8,77 @@ describe('Ad units', function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it("Auto generate an ID for the ad unit if no ID provided", function () {
+    it('Auto generate an ID for the ad unit if no ID provided', function (done) {
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect($('.adunit').attr('id')).toMatch(/Leader-auto-gen-id-\d+/i);
-        });
+            done();
+        }, 5000);
 
     });
 
-    it("Google ad unit object get attached to the ad unit container", function () {
+    it('Google ad unit object get attached to the ad unit container', function (done) {
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/Leader');
-        });
+            done();
+        }, 5000);
 
     });
 
-    it("Google ad unit object get attached to the ad unit container (with namespace)", function () {
+    it('Google ad unit object get attached to the ad unit container (with namespace)', function (done) {
         var namespace = 'my-long-namespace';
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
 
-        runs(function () {
-            $('body').append('<div class="adunit"></div>');
-            $.dfp({
-                dfpID: 'xxxxxxx',
-                googletag: dummyTag,
-                namespace: namespace
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit"></div>');
+        $.dfp({
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag,
+            namespace: namespace
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/' + namespace);
-        });
+            done();
+        }, 5000);
 
     });
 

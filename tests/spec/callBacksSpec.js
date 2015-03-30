@@ -1,4 +1,4 @@
-describe("Callbacks", function () {
+describe('Callbacks', function () {
 
     var cleanup = function () {
         $('.adunit').remove();
@@ -9,7 +9,7 @@ describe("Callbacks", function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it("slotRenderEnded event listener is added", function () {
+    it('slotRenderEnded event listener is added', function (done) {
         var mock = {};
         mock.addEventListener = function (param) { };
 
@@ -25,37 +25,34 @@ describe("Callbacks", function () {
 
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
-        spyOn(mock, "addEventListener").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
+        spyOn(mock, 'addEventListener').and.callThrough();
 
-        runs(function () {
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag
-            });
-        }, "Kick off loader");
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag
+        });
 
-        waitsFor(function () {
-            if (dummyTag.enableServices.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (dummyTag.enableServices.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'enableServices' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.addEventListener).toHaveBeenCalled();
-            expect(mock.addEventListener.callCount).toEqual(1);
-            expect(mock.addEventListener.calls[0].args.length).toEqual(2);
-            expect(mock.addEventListener.calls[0].args[0]).toEqual('slotRenderEnded');
-        });
+            expect(mock.addEventListener.calls.count()).toEqual(1);
+            expect(mock.addEventListener.calls.argsFor(0).length).toEqual(2);
+            expect(mock.addEventListener.calls.argsFor(0)[0]).toEqual('slotRenderEnded');
+            done();
+        }, 5000);
     });
 
-    it("afterEachAdLoaded callback is called once (single ad unit)", function () {
+    it('afterEachAdLoaded callback is called once (single ad unit)', function (done) {
         var mock = {};
         mock.afterEachAdLoaded = function (param) { };
 
-        spyOn(mock, "afterEachAdLoaded").andCallThrough();
+        spyOn(mock, 'afterEachAdLoaded').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -63,30 +60,27 @@ describe("Callbacks", function () {
             mock.afterEachAdLoaded();
         };
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            jQuery.dfp({
-                dfpID: 'xxxxxxxx',
-                afterEachAdLoaded: mock.afterEachAdLoaded,
-                googletag: dummyTag,
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxx',
+            afterEachAdLoaded: mock.afterEachAdLoaded,
+            googletag: dummyTag,
+        });
 
-        waitsFor(function () {
-            if (mock.afterEachAdLoaded.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (mock.afterEachAdLoaded.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'afterEachAdLoaded' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.afterEachAdLoaded).toHaveBeenCalled();
-            expect(mock.afterEachAdLoaded.callCount).toEqual(1);
-        });
+            expect(mock.afterEachAdLoaded.calls.count()).toEqual(1);
+            done();
+        }, 5000);
     });
 
-    it("afterEachAdLoaded callback is called twice (two ad units)", function () {
+    it('afterEachAdLoaded callback is called twice (two ad units)', function (done) {
         var mock = {};
         mock.slotRenderEnded = function () {};
         mock.addEventListener = function (event, func) {
@@ -94,7 +88,7 @@ describe("Callbacks", function () {
         };
         mock.afterEachAdLoaded = function (param) { };
 
-        spyOn(mock, "afterEachAdLoaded").andCallThrough();
+        spyOn(mock, 'afterEachAdLoaded').and.callThrough();
 
         var dummyTag = {};
         dummyTag.pubads = function () {
@@ -125,37 +119,34 @@ describe("Callbacks", function () {
         };
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                afterEachAdLoaded: mock.afterEachAdLoaded
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            afterEachAdLoaded: mock.afterEachAdLoaded
+        });
 
-        waitsFor(function () {
-            if (mock.afterEachAdLoaded.callCount > 0) {
+        waitsForAndRuns(function () {
+            if (mock.afterEachAdLoaded.calls.count() > 0) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'afterEachAdLoaded' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.afterEachAdLoaded).toHaveBeenCalled();
-            expect(mock.afterEachAdLoaded.callCount).toEqual(2);
-        });
+            expect(mock.afterEachAdLoaded.calls.count()).toEqual(2);
+            done();
+        }, 5000);
     });
 
-    it("afterAllAdsLoaded callback is called once (single ad unit)", function () {
+    it('afterAllAdsLoaded callback is called once (single ad unit)', function (done) {
         var mock = {};
         mock.afterAllAdsLoaded = function (param) { };
 
-        spyOn(mock, "afterAllAdsLoaded").andCallThrough();
+        spyOn(mock, 'afterAllAdsLoaded').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -163,30 +154,27 @@ describe("Callbacks", function () {
             mock.afterAllAdsLoaded();
         };
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            jQuery.dfp({
-                dfpID: 'xxxxxxxx',
-                afterAllAdsLoaded: mock.afterAllAdsLoaded,
-                googletag: dummyTag,
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxx',
+            afterAllAdsLoaded: mock.afterAllAdsLoaded,
+            googletag: dummyTag,
+        });
 
-        waitsFor(function () {
-            if (mock.afterAllAdsLoaded.callCount === 1) {
+        waitsForAndRuns(function () {
+            if (mock.afterAllAdsLoaded.calls.count() === 1) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'afterAllAdsLoaded' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.afterAllAdsLoaded).toHaveBeenCalled();
-            expect(mock.afterAllAdsLoaded.callCount).toEqual(1);
-        });
+            expect(mock.afterAllAdsLoaded.calls.count()).toEqual(1);
+            done();
+        }, 5000);
     });
 
-    it("afterAllAdsLoaded callback is called once (two ad units)", function () {
+    it('afterAllAdsLoaded callback is called once (two ad units)', function (done) {
         var mock = {};
         mock.slotRenderEnded = function () {};
         mock.addEventListener = function (event, func) {
@@ -194,7 +182,7 @@ describe("Callbacks", function () {
         };
         mock.afterAllAdsLoaded = function (param) { };
 
-        spyOn(mock, "afterAllAdsLoaded").andCallThrough();
+        spyOn(mock, 'afterAllAdsLoaded').and.callThrough();
 
         var dummyTag = {};
         dummyTag.pubads = function () {
@@ -225,60 +213,53 @@ describe("Callbacks", function () {
         };
         dummyTag.enableServices = function() {};
 
-        spyOn(dummyTag, "enableServices").andCallThrough();
+        spyOn(dummyTag, 'enableServices').and.callThrough();
 
-        runs(function () {
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            $('body').append('<div class="adunit" data-adunit="Leader"></div>');
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                afterAllAdsLoaded: mock.afterAllAdsLoaded
-            });
-        }, "Kick off loader");
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        $('body').append('<div class="adunit" data-adunit="Leader"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            afterAllAdsLoaded: mock.afterAllAdsLoaded
+        });
 
-        waitsFor(function () {
-            if (mock.afterAllAdsLoaded.callCount > 0) {
+        waitsForAndRuns(function () {
+            if (mock.afterAllAdsLoaded.calls.count() > 0) {
                 return true;
             } else {
                 return false;
             }
-        }, "Method 'afterEachAdLoaded' never called", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mock.afterAllAdsLoaded).toHaveBeenCalled();
-            expect(mock.afterAllAdsLoaded.callCount).toEqual(1);
-        });
+            expect(mock.afterAllAdsLoaded.calls.count()).toEqual(1);
+            done();
+        }, 5000);
     });
 
-    it("Alter the ad unit name using callback", function () {
+    it('Alter the ad unit name using callback', function (done) {
 
-      var dummyTag = {};
-      dummyTag.enableServices = function() {};
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
 
-      runs(function () {
         $('body').append('<div class="adunit" data-adunit="Bike" id="leader-123" data-model="BMX"></div>');
         $.dfp({
-          dfpID: 'xxxxxxx',
-          googletag: dummyTag,
-          alterAdUnitName: function(adUnitName,adUnit) {
-            return "PREFIX_" + $(adUnit).data('model') + "_" + adUnitName + "_SUFFIX";
-          }
+            dfpID: 'xxxxxxx',
+            googletag: dummyTag,
+            alterAdUnitName: function(adUnitName,adUnit) {
+                return 'PREFIX_' + $(adUnit).data('model') + '_' + adUnitName + '_SUFFIX';
+            }
         });
-      }, "Kick off loader");
 
-      waitsFor(function () {
-        if (typeof window.googletag.getVersion === 'function') {
-          return true;
-        } else {
-          return false;
-        }
-      }, "getVersion function to exist", 5000);
-
-      runs(function () {
-        expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/PREFIX_BMX_Bike_SUFFIX');
-      });
-
+        waitsForAndRuns(function () {
+            if (typeof window.googletag.getVersion === 'function') {
+                return true;
+            } else {
+                return false;
+            }
+        }, function () {
+            expect($('.adunit').data('googleAdUnit').getName()).toEqual('/xxxxxxx/PREFIX_BMX_Bike_SUFFIX');
+            done();
+        }, 5000);
     });
 
 });

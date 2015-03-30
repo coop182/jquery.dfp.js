@@ -1,4 +1,4 @@
-describe("SizeMapping", function () {
+describe('SizeMapping', function () {
 
     var cleanup = function () {
         $('.adunit').remove();
@@ -8,12 +8,12 @@ describe("SizeMapping", function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
-    it("Gets called correctly (ad unit)", function () {
+    it('Gets called correctly (ad unit)', function (done) {
         var mockAdunit = {
             defineSizeMapping: function (param) { }
         };
 
-        spyOn(mockAdunit, "defineSizeMapping").andCallThrough();
+        spyOn(mockAdunit, 'defineSizeMapping').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -25,43 +25,38 @@ describe("SizeMapping", function () {
             };
         };
 
-        runs(function () {
-            jQuery("body").append("<div class=\"adunit\" id=\"Ad_unit_id\"" +
-                " data-size-mapping=\"my-size-mapping\"></div>");
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                sizeMapping: {
-                    'my-size-mapping': [
-                        {browser: [1024, 768], ad_sizes: [980, 185]},
-                        {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
-                    ]
-                }
-            });
-        }, "Kick off loader");
+        jQuery('body').append('<div class="adunit" id="Ad_unit_id" data-size-mapping="my-size-mapping"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            sizeMapping: {
+                'my-size-mapping': [
+                    {browser: [1024, 768], ad_sizes: [980, 185]},
+                    {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
+                ]
+            }
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
+        }, function () {
             expect(mockAdunit.defineSizeMapping).toHaveBeenCalled();
-            expect(mockAdunit.defineSizeMapping.callCount).toEqual(1);
-            expect(mockAdunit.defineSizeMapping.calls[0].args[0]).toEqual([[[1024, 768],[980, 185]],[[ 980, 600],[[728, 90], [640, 480]]]]);
-        });
-
+            expect(mockAdunit.defineSizeMapping.calls.count()).toEqual(1);
+            expect(mockAdunit.defineSizeMapping.calls.argsFor(0)[0]).toEqual([[[1024, 768],[980, 185]],[[ 980, 600],[[728, 90], [640, 480]]]]);
+            done();
+        }, 5000);
     });
 
-    it("Deals with name mismatch (ad unit)", function () {
+    it('Deals with name mismatch (ad unit)', function (done) {
         var mockAdunit = {
             defineSizeMapping: function (param) { }
         };
 
-        spyOn(mockAdunit, "defineSizeMapping").andCallThrough();
+        spyOn(mockAdunit, 'defineSizeMapping').and.callThrough();
 
         var dummyTag = {};
         dummyTag.enableServices = function() {};
@@ -73,33 +68,28 @@ describe("SizeMapping", function () {
             };
         };
 
-        runs(function () {
-            jQuery("body").append("<div class=\"adunit\" id=\"Ad_unit_id\"" +
-                " data-size-mapping=\"undefined-size-mapping\"></div>");
-            jQuery.dfp({
-                dfpID: 'xxxxxxxxx',
-                googletag: dummyTag,
-                sizeMapping: {
-                    'my-size-mapping': [
-                        {browser: [1024, 768], ad_sizes: [980, 185]},
-                        {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
-                    ]
-                }
-            });
-        }, "Kick off loader");
+        jQuery('body').append('<div class="adunit" id="Ad_unit_id" data-size-mapping="undefined-size-mapping"></div>');
+        jQuery.dfp({
+            dfpID: 'xxxxxxxxx',
+            googletag: dummyTag,
+            sizeMapping: {
+                'my-size-mapping': [
+                    {browser: [1024, 768], ad_sizes: [980, 185]},
+                    {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
+                ]
+            }
+        });
 
-        waitsFor(function () {
+        waitsForAndRuns(function () {
             if (typeof window.googletag.getVersion === 'function') {
                 return true;
             } else {
                 return false;
             }
-        }, "getVersion function to exist", 5000);
-
-        runs(function () {
-            expect(mockAdunit.defineSizeMapping.callCount).toEqual(0);
-        });
-
+        }, function () {
+            expect(mockAdunit.defineSizeMapping.calls.count()).toEqual(0);
+            done();
+        }, 5000);
     });
 
 });
