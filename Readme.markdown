@@ -63,7 +63,7 @@ To create an out of page ad unit set the data-outofpage property on the ad unit.
 <div class="adunit" data-adunit="Ad_unit_id" data-outofpage="true"></div>
 ```
 
-In order to identify an add unit on the page that is a video companion ad, set the data-companion attribute on that unit.
+In order to identify an ad unit on the page that is a video companion ad, set the data-companion attribute on that unit.
 
 ```html
 <div class="adunit" data-adunit="Ad_unit_id" data-dimensions="393x176" data-companion="true"></div>
