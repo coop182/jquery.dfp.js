@@ -8,6 +8,30 @@ describe('Ad units', function () {
     beforeEach(cleanup);
     afterEach(cleanup);
 
+    it('Call to DFP with dfpID in adunit name', function (done) {
+        var id = 'xxxxxxx';
+
+        var dummyTag = {};
+        dummyTag.enableServices = function() {};
+
+        $('body').append('<div class="adunit" data-adunit="/' + id + '/Leader"></div>');
+        $.dfp({
+            googletag: dummyTag
+        });
+
+        waitsForAndRuns(function () {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
+                return true;
+            } else {
+                return false;
+            }
+        }, function () {
+            expect($('.adunit').data('googleAdUnit').getName()).toEqual('/' + id + '/Leader');
+            done();
+        }, 5000);
+
+    });
+
     it('Auto generate an ID for the ad unit if no ID provided', function (done) {
 
         var dummyTag = {};

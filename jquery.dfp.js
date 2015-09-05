@@ -1,5 +1,5 @@
 /**
- * jQuery DFP v2.1.0
+ * jQuery DFP v2.2.0
  * http://github.com/coop182/jquery.dfp.js
  *
  * Copyright 2015 Matt Cooper
@@ -159,11 +159,19 @@
 
                     } else {
 
+                        // Build slotName for loading
+                        var slotName;
+                        if (dfpID === '') {
+                            slotName = adUnitName;
+                        } else {
+                            slotName = '/' + dfpID + '/' + adUnitName;
+                        }
+
                         // Create the ad - out of page or normal
                         if ($adUnit.data('outofpage')) {
-                            googleAdUnit = googletag.defineOutOfPageSlot('/' + dfpID + '/' + adUnitName, adUnitID);
+                            googleAdUnit = googletag.defineOutOfPageSlot(slotName, adUnitID);
                         } else {
-                            googleAdUnit = googletag.defineSlot('/' + dfpID + '/' + adUnitName, dimensions, adUnitID);
+                            googleAdUnit = googletag.defineSlot(slotName, dimensions, adUnitID);
                             if ($adUnit.data('companion')) {
                                 googleAdUnit = googleAdUnit.addService(googletag.companionAds());
                             }

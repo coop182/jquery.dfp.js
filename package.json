@@ -1,6 +1,6 @@
 {
     "name": "jquery.dfp",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "devDependencies": {
         "grunt": "~0.4",
         "grunt-contrib-jasmine": "^0.8.2",
