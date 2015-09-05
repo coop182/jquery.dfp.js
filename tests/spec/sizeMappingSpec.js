@@ -38,7 +38,7 @@ describe('SizeMapping', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -81,7 +81,7 @@ describe('SizeMapping', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;

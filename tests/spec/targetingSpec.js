@@ -24,13 +24,14 @@ describe('Targeting', function () {
 
         spyOn(mock, 'setTargeting').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             googletag: dummyTag
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -61,6 +62,7 @@ describe('Targeting', function () {
 
         spyOn(mock, 'setTargeting').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             setUrlTargeting: false,
@@ -68,7 +70,7 @@ describe('Targeting', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -95,6 +97,7 @@ describe('Targeting', function () {
 
         spyOn(mock, 'setTargeting').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             googletag: dummyTag,
@@ -102,7 +105,7 @@ describe('Targeting', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;

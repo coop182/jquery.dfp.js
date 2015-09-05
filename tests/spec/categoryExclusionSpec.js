@@ -32,7 +32,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -70,7 +70,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -107,7 +107,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -138,6 +138,7 @@ describe('Category Exclusion', function () {
 
         spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             googletag: dummyTag,
@@ -145,7 +146,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -177,6 +178,7 @@ describe('Category Exclusion', function () {
 
         spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             googletag: dummyTag,
@@ -184,7 +186,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -215,6 +217,7 @@ describe('Category Exclusion', function () {
 
         spyOn(mock, 'setCategoryExclusion').and.callThrough();
 
+        jQuery('body').append('<div class="adunit"></div>');
         jQuery.dfp({
             dfpID: 'xxxxxxxxx',
             googletag: dummyTag,
@@ -222,7 +225,7 @@ describe('Category Exclusion', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;

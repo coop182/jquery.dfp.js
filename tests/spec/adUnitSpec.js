@@ -44,7 +44,7 @@ describe('Ad units', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
@@ -70,7 +70,7 @@ describe('Ad units', function () {
         });
 
         waitsForAndRuns(function () {
-            if (typeof window.googletag.getVersion === 'function') {
+            if (typeof window.googletag.getVersion === 'function' && $('.adunit').data('googleAdUnit')) {
                 return true;
             } else {
                 return false;
