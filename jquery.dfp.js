@@ -42,14 +42,8 @@
         // Default DFP selector
         dfpSelector = '.adunit',
 
-        // DFP options object
-        dfpOptions = {},
-
         // Keep track of if we've already tried to load gpt.js before
         dfpIsLoaded = false,
-
-        // Collection of ads
-        $adCollection,
 
         // Store adunit on div as:
         storeAs = 'googleAdUnit',
@@ -61,6 +55,7 @@
          * @param  Object options  Custom options to apply
          */
         init = function (id, selector, options) {
+            var dfpOptions, $adCollection;
 
             // Reset counters on each call
             count = 0;
@@ -70,11 +65,11 @@
             $adCollection = $(selector);
 
             dfpLoader();
-            setOptions(options);
+            dfpOptions = setOptions(options);
 
             $(function () {
-                createAds();
-                displayAds();
+                createAds(dfpOptions, $adCollection);
+                displayAds(dfpOptions, $adCollection);
             });
 
         },
@@ -82,11 +77,12 @@
         /**
          * Set the options for DFP
          * @param Object options Custom options to apply
+         * @return Object extended options
          */
         setOptions = function (options) {
 
             // Set default options
-            dfpOptions = {
+            var dfpOptions = {
                 setTargeting: {},
                 setCategoryExclusion: '',
                 setLocation: '',
@@ -115,13 +111,17 @@
                     $.extend(true, window.googletag, dfpOptions.googletag);
                 });
             }
+
+            return dfpOptions;
         },
 
         /**
          * Find and create all Ads
+         * @param Object dfpOptions options related to ad instantiation
+         * @param jQuery $adCollection collection of ads
          * @return Array an array of ad units that have been created.
          */
-        createAds = function () {
+        createAds = function (dfpOptions, $adCollection) {
             var googletag = window.googletag;
 
             // Loops through on page Ad units and gets ads for them.
@@ -132,7 +132,7 @@
                 count++;
 
                 // adUnit name
-                var adUnitName = getName($adUnit);
+                var adUnitName = getName($adUnit, dfpOptions);
 
                 // adUnit id - this will use an existing id or an auto generated one.
                 var adUnitID = getID($adUnit, adUnitName);
@@ -321,8 +321,10 @@
 
         /**
          * Display all created Ads
+         * @param Object dfpOptions options related to ad instantiation
+         * @param jQuery $adCollection collection of ads
          */
-        displayAds = function () {
+        displayAds = function (dfpOptions, $adCollection) {
 
             // Display each ad
             $adCollection.each(function () {
@@ -383,9 +385,10 @@
          * Get the name of the Ad unit, either use the div id or
          * check for the optional attribute data-adunit
          * @param  Object $adUnit The adunit to work with
+         * @param  Object dfpOptions options related to ad instantiation
          * @return String        The name of the adunit, will be the same as inside DFP
          */
-        getName = function ($adUnit) {
+        getName = function ($adUnit, dfpOptions) {
 
             var adUnitName = $adUnit.data('adunit') || dfpOptions.namespace || $adUnit.attr('id') || '';
             if (typeof dfpOptions.alterAdUnitName === 'function') {
