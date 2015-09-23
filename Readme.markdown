@@ -274,6 +274,15 @@ This script provides two callbacks which you can use to make working with DFP a 
         </td>
         <td>This is called before each ad unit has started rendering.</td>
     </tr>
+    <tr>
+        <td>afterAdBlocked(adUnit)</td>
+        <td>
+            <ul>
+                <li>adUnit - jQuery Object - the jQuery object</li>
+            </ul>
+        </td>
+        <td>This is called after each AdUnit has been blocked.</td>
+    </tr>   
 </table>
 
 Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js) file for an example of how to use these.

@@ -64,7 +64,7 @@
             dfpID = id;
             $adCollection = $(selector);
 
-            dfpLoader();
+            dfpLoader(options, $adCollection);
             dfpOptions = setOptions(options);
 
             $(function () {
@@ -99,7 +99,11 @@
             if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting) {
                 // Get URL Targeting
                 var urlTargeting = getUrlTargeting(options.url);
-                $.extend(true, dfpOptions.setTargeting, { UrlHost: urlTargeting.Host, UrlPath: urlTargeting.Path, UrlQuery: urlTargeting.Query });
+                $.extend(true, dfpOptions.setTargeting, {
+                    UrlHost: urlTargeting.Host,
+                    UrlPath: urlTargeting.Path,
+                    UrlQuery: urlTargeting.Query
+                });
             }
 
             // Merge options objects
@@ -239,7 +243,8 @@
 
                 var setLocation = dfpOptions.setLocation;
                 if (typeof setLocation === 'object') {
-                    if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number' && typeof setLocation.precision === 'number') {
+                    if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number' &&
+                        typeof setLocation.precision === 'number') {
                         pubadsService.setLocation(setLocation.latitude, setLocation.longitude, setLocation.precision);
                     } else if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number') {
                         pubadsService.setLocation(setLocation.latitude, setLocation.longitude);
@@ -294,7 +299,8 @@
                     // if the div has been collapsed but there was existing content expand the
                     // div and reinsert the existing content.
                     var $existingContent = $adUnit.data('existingContent');
-                    if (display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
+                    if (display === 'none' && $.trim($existingContent).length > 0 &&
+                        dfpOptions.collapseEmptyDivs === 'original') {
                         $adUnit.show().html($existingContent);
                         display = 'block display-original';
                     }
@@ -315,6 +321,7 @@
 
                 googletag.enableServices();
 
+                // this will work with adblockplus
                 setTimeout(function () {
                     var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
                     if (slots.length > 0) {
@@ -468,7 +475,18 @@
 
             // Adblock blocks the load of Ad scripts... so we check for that
             gads.onerror = function () {
-                dfpBlocked(options);
+                dfpBlocked();
+            };
+
+            gads.onload = function() {
+                // this will work with ghostery:
+                if (!googletag._loadStarted_) {
+                    $.each($adCollection, function () {
+                        if (typeof options.afterAdBlocked === 'function') {
+                            options.afterAdBlocked.call(dfpScript, $(this));
+                        }
+                    });
+                }
             };
 
             var useSSL = 'https:' === document.location.protocol;
@@ -479,7 +497,7 @@
 
             // Adblock plus seems to hide blocked scripts... so we check for that
             if (gads.style.display === 'none') {
-                dfpBlocked(options);
+                dfpBlocked();
             }
 
         },
