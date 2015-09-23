@@ -56,7 +56,7 @@
          * @param  Object options  Custom options to apply
          */
         init = function (id, selector, options) {
-            var dfpOptions, $adCollection;
+            var $adCollection;
 
             // Reset counters on each call
             count = 0;
@@ -69,17 +69,17 @@
              * @returns {boolean}
              */
             dfpScript.shouldCheckForAdBlockers = function(){
-                return dfpOptions ? typeof dfpOptions.afterAdBlocked === 'function' : false;
+                return options ? typeof options.afterAdBlocked === 'function' : false;
             };
 
             // explicitly wait for loader to be completed, otherwise the googletag might not be available
             dfpLoader(options, $adCollection).then(function(){
-                dfpOptions = setOptions(options);
+                options = setOptions(options);
                 dfpScript.dfpOptions = options;
 
                 $(function () {
-                    createAds(dfpOptions, $adCollection);
-                    displayAds(dfpOptions, $adCollection);
+                    createAds(options, $adCollection);
+                    displayAds(options, $adCollection);
                 });
             });
 
