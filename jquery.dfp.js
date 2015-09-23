@@ -64,7 +64,7 @@
             dfpID = id;
             $adCollection = $(selector);
 
-            dfpLoader();
+            dfpLoader(options);
             dfpOptions = setOptions(options);
 
             $(function () {
@@ -435,8 +435,10 @@
          * Call the google DFP script - there is a little bit of error detection in here to detect
          * if the dfp script has failed to load either through an error or it being blocked by an ad
          * blocker... if it does not load we execute a dummy script to replace the real DFP.
+         *
+         * @param {Object} options
          */
-        dfpLoader = function () {
+        dfpLoader = function (options) {
 
             // make sure we don't load gpt.js multiple times
             dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
@@ -453,7 +455,7 @@
 
             // Adblock blocks the load of Ad scripts... so we check for that
             gads.onerror = function () {
-                dfpBlocked();
+                dfpBlocked(options);
             };
 
             var useSSL = 'https:' === document.location.protocol;
@@ -464,7 +466,7 @@
 
             // Adblock plus seems to hide blocked scripts... so we check for that
             if (gads.style.display === 'none') {
-                dfpBlocked();
+                dfpBlocked(options);
             }
 
         },
@@ -475,8 +477,10 @@
          * regardless of whether DFP is actually loaded or not... it is basically only useful for situations
          * where you are laying DFP over existing content and need to init things like slide shows after the loading
          * is completed.
+         *
+         * @param {Object} options
          */
-        dfpBlocked = function () {
+        dfpBlocked = function (options) {
             var googletag = window.googletag;
 
             // Get the stored dfp commands
@@ -491,6 +495,11 @@
                         renderEnded: function () { },
                         addService: function () { return this; }
                     };
+
+                    if (typeof options.afterEachAdBlocked === 'function') {
+                        options.afterEachAdBlocked.call(this, name, dimensions, id);
+                    }
+
                     return googletag.ads[id];
                 };
 
