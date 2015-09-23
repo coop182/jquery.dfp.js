@@ -457,8 +457,11 @@
          * Call the google DFP script - there is a little bit of error detection in here to detect
          * if the dfp script has failed to load either through an error or it being blocked by an ad
          * blocker... if it does not load we execute a dummy script to replace the real DFP.
+         *
+         * @param {Object} options
+         * @param {Array} $adCollection
          */
-        dfpLoader = function () {
+        dfpLoader = function (options, $adCollection) {
 
             // make sure we don't load gpt.js multiple times
             dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
