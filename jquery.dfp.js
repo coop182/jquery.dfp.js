@@ -355,6 +355,12 @@
                     $adUnitData = $adUnit.data(storeAs),
                     googletag = window.googletag;
 
+                if (googletag._adBlocked_) {
+                    if (typeof dfpOptions.afterAdBlocked === 'function') {
+                        dfpOptions.afterAdBlocked.call(dfpScript, $adUnit);
+                    }
+                }
+
                 if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
                     googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
@@ -484,6 +490,7 @@
             gads.onload = function() {
                 // this will work with ghostery:
                 if (!googletag._loadStarted_) {
+                    googletag._adBlocked_ = true;
                     $.each($adCollection, function () {
                         if (typeof options.afterAdBlocked === 'function') {
                             options.afterAdBlocked.call(dfpScript, $(this));
