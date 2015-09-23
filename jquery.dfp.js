@@ -43,6 +43,8 @@
         // Default DFP selector
         dfpSelector = '.adunit',
 
+        adsCouldNeverBeInitilized = false,
+
         // Keep track of if we've already tried to load gpt.js before
         dfpIsLoaded = false,
 
@@ -493,9 +495,20 @@
          */
         dfpLoader = function (options, $adCollection) {
 
+            function execBlockEvents() {
+                if(dfpScript.shouldCheckForAdBlockers()) {
+                    $.each($adCollection, function () {
+                        options.afterAdBlocked.call(dfpScript, $(this));
+                    });
+                }
+            }
+
             // make sure we don't load gpt.js multiple times
             dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
             if (dfpIsLoaded) {
+                if(adsCouldNeverBeInitilized) {
+                    execBlockEvents();
+                }
                 return $.Deferred().resolve();
             }
 
@@ -508,18 +521,11 @@
             gads.async = true;
             gads.type = 'text/javascript';
 
-            function execBlockEvents() {
-                if(dfpScript.shouldCheckForAdBlockers()) {
-                    $.each($adCollection, function () {
-                       options.afterAdBlocked.call(dfpScript, $(this));
-                    });
-                }
-            }
-
             // Adblock blocks the load of Ad scripts... so we check for that
             gads.onerror = function () {
                 dfpBlocked();
                 loaded.resolve();
+                adsCouldNeverBeInitilized = true;
                 execBlockEvents();
             };
 
