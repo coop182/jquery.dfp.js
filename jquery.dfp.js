@@ -496,7 +496,7 @@
             // make sure we don't load gpt.js multiple times
             dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
             if (dfpIsLoaded) {
-                return;
+                return $.Deferred().resolve();
             }
 
             var loaded = $.Deferred();
