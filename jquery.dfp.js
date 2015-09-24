@@ -336,7 +336,7 @@
                         var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
                         if (slots.length > 0) {
                             $.get(slots[0].getContentUrl()).always(function (r) {
-                                if (r.statusText === 'error') {
+                                if (r.status !== 200) {
                                     $.each(slots, function () {
                                         var $adUnit = $('#' + this.getSlotId().getDomId());
                                         dfpOptions.afterAdBlocked.call(dfpScript, $adUnit, this);
