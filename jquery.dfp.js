@@ -29,8 +29,9 @@
         var
 
         // Save Scope
-        dfpScript = this,
+        dfpScript = this || {};
 
+        var
         // DFP account ID
         dfpID = '',
 
@@ -41,6 +42,8 @@
 
         // Default DFP selector
         dfpSelector = '.adunit',
+
+        adsCouldNeverBeInitilized = false,
 
         // Keep track of if we've already tried to load gpt.js before
         dfpIsLoaded = false,
@@ -55,7 +58,7 @@
          * @param  Object options  Custom options to apply
          */
         init = function (id, selector, options) {
-            var dfpOptions, $adCollection;
+            var $adCollection;
 
             // Reset counters on each call
             count = 0;
@@ -64,12 +67,22 @@
             dfpID = id;
             $adCollection = $(selector);
 
-            dfpLoader();
-            dfpOptions = setOptions(options);
+            /**
+             * @returns {boolean}
+             */
+            dfpScript.shouldCheckForAdBlockers = function(){
+                return options ? typeof options.afterAdBlocked === 'function' : false;
+            };
 
-            $(function () {
-                createAds(dfpOptions, $adCollection);
-                displayAds(dfpOptions, $adCollection);
+            // explicitly wait for loader to be completed, otherwise the googletag might not be available
+            dfpLoader(options, $adCollection).then(function(){
+                options = setOptions(options);
+                dfpScript.dfpOptions = options;
+
+                $(function () {
+                    createAds(options, $adCollection);
+                    displayAds(options, $adCollection);
+                });
             });
 
         },
@@ -99,7 +112,11 @@
             if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting) {
                 // Get URL Targeting
                 var urlTargeting = getUrlTargeting(options.url);
-                $.extend(true, dfpOptions.setTargeting, { UrlHost: urlTargeting.Host, UrlPath: urlTargeting.Path, UrlQuery: urlTargeting.Query });
+                $.extend(true, dfpOptions.setTargeting, {
+                    UrlHost: urlTargeting.Host,
+                    UrlPath: urlTargeting.Path,
+                    UrlQuery: urlTargeting.Query
+                });
             }
 
             // Merge options objects
@@ -123,10 +140,8 @@
          */
         createAds = function (dfpOptions, $adCollection) {
             var googletag = window.googletag;
-
             // Loops through on page Ad units and gets ads for them.
             $adCollection.each(function () {
-
                 var $adUnit = $(this);
 
                 count++;
@@ -239,7 +254,8 @@
 
                 var setLocation = dfpOptions.setLocation;
                 if (typeof setLocation === 'object') {
-                    if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number' && typeof setLocation.precision === 'number') {
+                    if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number' &&
+                        typeof setLocation.precision === 'number') {
                         pubadsService.setLocation(setLocation.latitude, setLocation.longitude, setLocation.precision);
                     } else if (typeof setLocation.latitude === 'number' && typeof setLocation.longitude === 'number') {
                         pubadsService.setLocation(setLocation.latitude, setLocation.longitude);
@@ -294,7 +310,8 @@
                     // if the div has been collapsed but there was existing content expand the
                     // div and reinsert the existing content.
                     var $existingContent = $adUnit.data('existingContent');
-                    if (display === 'none' && $.trim($existingContent).length > 0 && dfpOptions.collapseEmptyDivs === 'original') {
+                    if (display === 'none' && $.trim($existingContent).length > 0 &&
+                        dfpOptions.collapseEmptyDivs === 'original') {
                         $adUnit.show().html($existingContent);
                         display = 'block display-original';
                     }
@@ -313,6 +330,23 @@
 
                 });
 
+                // this will work with AdblockPlus
+                if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
+                    setTimeout(function () {
+                        var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
+                        if (slots.length > 0) {
+                            $.get(slots[0].getContentUrl()).always(function (r) {
+                                if (r.status !== 200) {
+                                    $.each(slots, function () {
+                                        var $adUnit = $('#' + this.getSlotId().getDomId());
+                                        dfpOptions.afterAdBlocked.call(dfpScript, $adUnit, this);
+                                    });
+                                }
+                            });
+                        }
+                    }, 0);
+                }
+
                 googletag.enableServices();
 
             });
@@ -326,13 +360,33 @@
          */
         displayAds = function (dfpOptions, $adCollection) {
 
-            // Display each ad
+            var googletag = window.googletag;
+            // Check if google adLoader can be loaded, this will work with AdBlock
+            if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
+                if (googletag.getVersion) {
+                    var script = 'http://partner.googleadservices.com/gpt/pubads_impl_' +
+                        googletag.getVersion() + '.js';
+                    $.getScript(script).always(function (r) {
+                        if (r && r.statusText === 'error') {
+                            $.each($adCollection, function () {
+                                dfpOptions.afterAdBlocked.call(dfpScript, $(this));
+                            });
+                        }
+                    });
+                }
+
+            }
+
             $adCollection.each(function () {
 
                 var $adUnit = $(this),
-                    $adUnitData = $adUnit.data(storeAs),
-                    googletag = window.googletag;
+                    $adUnitData = $adUnit.data(storeAs);
 
+                if (googletag._adBlocked_) {
+                    if(dfpScript.shouldCheckForAdBlockers()) {
+                        dfpOptions.afterAdBlocked.call(dfpScript, $adUnit);
+                    }
+                }
                 if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
                     googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
@@ -435,14 +489,30 @@
          * Call the google DFP script - there is a little bit of error detection in here to detect
          * if the dfp script has failed to load either through an error or it being blocked by an ad
          * blocker... if it does not load we execute a dummy script to replace the real DFP.
+         *
+         * @param {Object} options
+         * @param {Array} $adCollection
          */
-        dfpLoader = function () {
+        dfpLoader = function (options, $adCollection) {
+
+            function execBlockEvents() {
+                if(dfpScript.shouldCheckForAdBlockers()) {
+                    $.each($adCollection, function () {
+                        options.afterAdBlocked.call(dfpScript, $(this));
+                    });
+                }
+            }
 
             // make sure we don't load gpt.js multiple times
             dfpIsLoaded = dfpIsLoaded || $('script[src*="googletagservices.com/tag/js/gpt.js"]').length;
             if (dfpIsLoaded) {
-                return;
+                if(adsCouldNeverBeInitilized) {
+                    execBlockEvents();
+                }
+                return $.Deferred().resolve();
             }
+
+            var loaded = $.Deferred();
 
             window.googletag = window.googletag || {};
             window.googletag.cmd = window.googletag.cmd || [];
@@ -454,6 +524,18 @@
             // Adblock blocks the load of Ad scripts... so we check for that
             gads.onerror = function () {
                 dfpBlocked();
+                loaded.resolve();
+                adsCouldNeverBeInitilized = true;
+                execBlockEvents();
+            };
+
+            gads.onload = function() {
+                // this will work with ghostery:
+                if (!googletag._loadStarted_) {
+                    googletag._adBlocked_ = true;
+                    execBlockEvents();
+                }
+                loaded.resolve();
             };
 
             var useSSL = 'https:' === document.location.protocol;
@@ -467,6 +549,8 @@
                 dfpBlocked();
             }
 
+            return loaded;
+
         },
 
         /**
@@ -478,57 +562,53 @@
          */
         dfpBlocked = function () {
             var googletag = window.googletag;
-
             // Get the stored dfp commands
             var commands = googletag.cmd;
 
-            // SetTimeout is a bit dirty but the script does not execute in the correct order without it
-            setTimeout(function () {
-
-                var _defineSlot = function (name, dimensions, id, oop) {
-                    googletag.ads.push(id);
-                    googletag.ads[id] = {
-                        renderEnded: function () { },
-                        addService: function () { return this; }
-                    };
-                    return googletag.ads[id];
+            var _defineSlot = function (name, dimensions, id, oop) {
+                googletag.ads.push(id);
+                googletag.ads[id] = {
+                    renderEnded: function () { },
+                    addService: function () { return this; }
                 };
 
-                // overwrite the dfp object - replacing the command array with a function and defining missing functions
-                googletag = {
-                    cmd: {
-                        push: function (callback) {
-                            callback.call(dfpScript);
-                        }
-                    },
-                    ads: [],
-                    pubads: function () { return this; },
-                    noFetch: function () { return this; },
-                    disableInitialLoad: function () { return this; },
-                    disablePublisherConsole: function () { return this; },
-                    enableSingleRequest: function () { return this; },
-                    setTargeting: function () { return this; },
-                    collapseEmptyDivs: function () { return this; },
-                    enableServices: function () { return this; },
-                    defineSlot: function (name, dimensions, id) {
-                        return _defineSlot(name, dimensions, id, false);
-                    },
-                    defineOutOfPageSlot: function (name, id) {
-                        return _defineSlot(name, [], id, true);
-                    },
-                    display: function (id) {
-                        googletag.ads[id].renderEnded.call(dfpScript);
-                        return this;
+                return googletag.ads[id];
+            };
+
+            // overwrite the dfp object - replacing the command array with a function and defining missing functions
+            googletag = {
+                cmd: {
+                    push: function (callback) {
+                        callback.call(dfpScript);
                     }
+                },
+                ads: [],
+                pubads: function () { return this; },
+                noFetch: function () { return this; },
+                disableInitialLoad: function () { return this; },
+                disablePublisherConsole: function () { return this; },
+                enableSingleRequest: function () { return this; },
+                setTargeting: function () { return this; },
+                collapseEmptyDivs: function () { return this; },
+                enableServices: function () { return this; },
+                defineSlot: function (name, dimensions, id) {
+                    return _defineSlot(name, dimensions, id, false);
+                },
+                defineOutOfPageSlot: function (name, id) {
+                    return _defineSlot(name, [], id, true);
+                },
+                display: function (id) {
+                    googletag.ads[id].renderEnded.call(dfpScript);
+                    return this;
+                }
 
-                };
+            };
 
-                // Execute any stored commands
-                $.each(commands, function (k, v) {
-                    googletag.cmd.push(v);
-                });
+            // Execute any stored commands
+            $.each(commands, function (k, v) {
+                googletag.cmd.push(v);
+            });
 
-            }, 50);
 
         };
 
