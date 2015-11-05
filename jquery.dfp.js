@@ -355,8 +355,8 @@
 
         /**
          * Display all created Ads
-         * @param Object dfpOptions options related to ad instantiation
-         * @param jQuery $adCollection collection of ads
+         * @param {Object} dfpOptions options related to ad instantiation
+         * @param {jQuery} $adCollection collection of ads
          */
         displayAds = function (dfpOptions, $adCollection) {
 
