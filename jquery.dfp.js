@@ -355,8 +355,8 @@
 
         /**
          * Display all created Ads
-         * @param Object dfpOptions options related to ad instantiation
-         * @param jQuery $adCollection collection of ads
+         * @param {Object} dfpOptions options related to ad instantiation
+         * @param {jQuery} $adCollection collection of ads
          */
         displayAds = function (dfpOptions, $adCollection) {
 
@@ -364,7 +364,7 @@
             // Check if google adLoader can be loaded, this will work with AdBlock
             if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
                 if (googletag.getVersion) {
-                    var script = 'http://partner.googleadservices.com/gpt/pubads_impl_' +
+                    var script = '//partner.googleadservices.com/gpt/pubads_impl_' +
                         googletag.getVersion() + '.js';
                     $.getScript(script).always(function (r) {
                         if (r && r.statusText === 'error') {
