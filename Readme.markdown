@@ -148,7 +148,7 @@ $('selector').dfp({
     sizeMapping: {
         'my-default': [
         	{browser: [1024, 768], ad_sizes: [980, 185]},
-	        {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]}
+	        {browser: [ 980, 600], ad_sizes: [[728, 90], [640, 480]]},
 	        {browser: [   0,   0], ad_sizes: [88, 31]}
         ],
     }
