@@ -1,4 +1,4 @@
-/**
+/*!
  * jQuery DFP v2.4.1
  * http://github.com/coop182/jquery.dfp.js
  *
