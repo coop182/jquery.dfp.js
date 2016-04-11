@@ -104,6 +104,7 @@
                 refreshExisting: true,
                 disablePublisherConsole: false,
                 disableInitialLoad: false,
+                setCentering: false,
                 noFetch: false,
                 namespace: undefined,
                 sizeMapping: {}
@@ -296,6 +297,11 @@
 
                 if (dfpOptions.noFetch) {
                     pubadsService.noFetch();
+                }
+
+
+                if (dfpOptions.setCentering) {
+                    pubadsService.setCentering(true);
                 }
 
                 // Setup event listener to listen for renderEnded event and fire callbacks.
