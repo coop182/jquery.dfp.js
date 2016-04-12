@@ -213,6 +213,10 @@ Available Options
         <td>This allows for serving companion ad units when the video on the page auto plays.  You'll need to include this setting with companionAds as true to avoid possible double impressions. (https://support.google.com/dfp_premium/answer/1191131)</td>
     </tr>
     <tr>
+        <td>setCentering</td>
+        <td>Enables/disables centering of ads.</td>
+    </tr>
+    <tr>
         <td>afterEachAdLoaded</td>
         <td>This is a call back function, see below for more information.</td>
     </tr>
