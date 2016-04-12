@@ -1,8 +1,8 @@
 /*!
- * jQuery DFP v2.4.1
+ * jQuery DFP v2.4.2
  * http://github.com/coop182/jquery.dfp.js
  *
- * Copyright 2015 Matt Cooper
+ * Copyright 2016 Matt Cooper
  * Released under the MIT license
  */
 
@@ -298,7 +298,6 @@
                 if (dfpOptions.noFetch) {
                     pubadsService.noFetch();
                 }
-
 
                 if (dfpOptions.setCentering) {
                     pubadsService.setCentering(true);
