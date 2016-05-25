@@ -37,7 +37,7 @@
 
         // Init counters
         count = 0,
-        uid = 0,
+        window.dfpUID = 0,
         rendered = 0,
 
         // Default DFP selector
@@ -435,8 +435,8 @@
          */
         getID = function ($adUnit, adUnitName) {
 
-            uid++;
-            return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace(/[^A-z0-9]/g, '_') + '-auto-gen-id-' + uid).attr('id');
+            window.dfpUID++;
+            return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace(/[^A-z0-9]/g, '_') + '-auto-gen-id-' + window.dfpUID).attr('id');
 
         },
 
