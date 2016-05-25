@@ -31,13 +31,15 @@
         // Save Scope
         dfpScript = this || {};
 
+        // Setup global adunit counter
+        window.dfpUID = 0;
+
         var
         // DFP account ID
         dfpID = '',
 
         // Init counters
         count = 0,
-        window.dfpUID = 0,
         rendered = 0,
 
         // Default DFP selector
