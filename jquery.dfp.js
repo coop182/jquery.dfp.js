@@ -369,7 +369,7 @@
             // Check if google adLoader can be loaded, this will work with AdBlock
             if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
                 if (googletag.getVersion) {
-                    var script = '//partner.googleadservices.com/gpt/pubads_impl_' +
+                    var script = 'https://partner.googleadservices.com/gpt/pubads_impl_' +
                         googletag.getVersion() + '.js';
                     $.getScript(script).always(function (r) {
                         if (r && r.statusText === 'error') {
@@ -543,9 +543,7 @@
                 loaded.resolve();
             };
 
-            var useSSL = 'https:' === document.location.protocol;
-            gads.src = (useSSL ? 'https:' : 'http:') +
-            '//www.googletagservices.com/tag/js/gpt.js';
+            gads.src = 'https://www.googletagservices.com/tag/js/gpt.js';
             var node = document.getElementsByTagName('script')[0];
             node.parentNode.insertBefore(gads, node);
 
