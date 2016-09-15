@@ -544,8 +544,15 @@
             };
 
             gads.src = 'https://www.googletagservices.com/tag/js/gpt.js';
+            // See https://www.stevesouders.com/blog/2010/05/11/appendchild-vs-insertbefore/
             var node = document.getElementsByTagName('script')[0];
-            node.parentNode.insertBefore(gads, node);
+            if (node) {
+                node.parentNode.insertBefore(gads, node);
+            } else {
+               // Sometimes there is no script tag due to dynamic injection,
+               // and then we fallback to a simpler method.
+               document.documentElement.firstChild.appendChild(gads);
+            }
 
             // Adblock plus seems to hide blocked scripts... so we check for that
             if (gads.style.display === 'none') {
