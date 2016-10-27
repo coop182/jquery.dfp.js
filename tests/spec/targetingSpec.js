@@ -18,7 +18,8 @@ describe('Targeting', function () {
             return {
                 enableSingleRequest: function () {},
                 setTargeting: mock.setTargeting,
-                collapseEmptyDivs: function () {}
+                collapseEmptyDivs: function () {},
+                addEventListener: function () {}
             };
         };
 
@@ -56,7 +57,8 @@ describe('Targeting', function () {
             return {
                 enableSingleRequest: function () { },
                 setTargeting: mock.setTargeting,
-                collapseEmptyDivs: function () { }
+                collapseEmptyDivs: function () { },
+                addEventListener: function () { }
             };
         };
 
@@ -91,7 +93,8 @@ describe('Targeting', function () {
             return {
                 enableSingleRequest: function () {},
                 setTargeting: mock.setTargeting,
-                collapseEmptyDivs: function () {}
+                collapseEmptyDivs: function () {},
+                addEventListener: function () {}
             };
         };
 

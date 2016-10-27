@@ -47,7 +47,7 @@ describe('Loading Phase', function () {
                 return false;
             }
         }, function () {
-            expect(window.googletag.getVersion()).toBeGreaterThan('23');
+            expect(window.googletag.getVersion()).toBeGreaterThan(23);
             done();
         }, 5000);
     });
