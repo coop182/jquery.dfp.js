@@ -404,6 +404,14 @@
 
             });
 
+            if (dfpOptions.disableInitialLoad) {
+                var $ads = $adCollection.filter('.display-none').map(function () {
+                    return $(this).data(storeAs);
+                }).get();
+
+                googletag.pubads().refresh($ads);
+            }
+
         },
 
         /**
