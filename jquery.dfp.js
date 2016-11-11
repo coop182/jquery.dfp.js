@@ -277,7 +277,7 @@
                     });
                 }
 
-                if (dfpOptions.collapseEmptyDivs) {
+                if (!googletag.__servicesEnabled__ && dfpOptions.collapseEmptyDivs) {
                     pubadsService.collapseEmptyDivs();
                 }
 
@@ -293,7 +293,7 @@
                     }
                 }
 
-                if (dfpOptions.disableInitialLoad) {
+                if (!googletag.__servicesEnabled__ && dfpOptions.disableInitialLoad) {
                     pubadsService.disableInitialLoad();
                 }
 
@@ -354,7 +354,10 @@
                     }, 0);
                 }
 
-                googletag.enableServices();
+                if (!googletag.__servicesEnabled__) {
+                    googletag.enableServices();
+                    googletag.__servicesEnabled__ = true;
+                }
 
             });
 
