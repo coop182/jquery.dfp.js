@@ -401,10 +401,14 @@
                 }
                 if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
-                    googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
+                    googletag.cmd.push(function () {
+                        googletag.pubads().refresh([$adUnitData]);
+                    });
 
                 } else {
-                    googletag.cmd.push(function () { googletag.display($adUnit.attr('id')); });
+                    googletag.cmd.push(function () {
+                        googletag.display($adUnit.attr('id'));
+                    });
                 }
 
             });
@@ -414,7 +418,9 @@
                     return $(this).data(storeAs);
                 }).get();
 
-                googletag.pubads().refresh($ads);
+                googletag.cmd.push(function () {
+                    googletag.pubads().refresh($ads);
+                });
             }
 
         },
