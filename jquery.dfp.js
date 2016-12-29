@@ -520,6 +520,8 @@
          * @param {Array} $adCollection
          */
         dfpLoader = function (options, $adCollection) {
+          window.googletag = window.googletag || {};
+          window.googletag.cmd = window.googletag.cmd || [];
 
             function execBlockEvents() {
                 if(dfpScript.shouldCheckForAdBlockers()) {
@@ -539,9 +541,6 @@
             }
 
             var loaded = $.Deferred();
-
-            window.googletag = window.googletag || {};
-            window.googletag.cmd = window.googletag.cmd || [];
 
             var gads = document.createElement('script');
             gads.async = true;
