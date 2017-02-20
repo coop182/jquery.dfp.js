@@ -343,8 +343,8 @@
                     setTimeout(function () {
                         var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
                         if (slots.length > 0) {
-                            $.get(slots[0].getContentUrl()).always(function (r) {
-                                if (r.status !== 200) {
+                            $.get({ url:slots[0].getContentUrl(), dataType: 'text' }).always(function (c, status) {
+                                if (status !== 'success') {
                                     $.each(slots, function () {
                                         var $adUnit = $('#' + this.getSlotId().getDomId());
                                         dfpOptions.afterAdBlocked.call(dfpScript, $adUnit, this);
