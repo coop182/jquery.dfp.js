@@ -343,7 +343,7 @@
                     setTimeout(function () {
                         var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
                         if (slots.length > 0) {
-                            $.get({ url:slots[0].getContentUrl(), dataType: 'text' }).always(function (c, status) {
+                            $.get({ url:slots[0].getContentUrl(), dataType: 'script' }).always(function (c, status) {
                                 if (status !== 'success') {
                                     $.each(slots, function () {
                                         var $adUnit = $('#' + this.getSlotId().getDomId());
