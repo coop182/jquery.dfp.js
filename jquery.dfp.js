@@ -101,6 +101,7 @@
                 setTargeting: {},
                 setCategoryExclusion: '',
                 setLocation: '',
+                setSafeFrameConfig: undefined,
                 enableSingleRequest: true,
                 collapseEmptyDivs: 'original',
                 refreshExisting: true,
@@ -275,6 +276,10 @@
                             pubadsService.setCategoryExclusion(valueTrimmed);
                         }
                     });
+                }
+
+                if (typeof dfpOptions.setSafeFrameConfig === 'object') {
+                    pubadsService.setSafeFrameConfig(dfpOptions.setSafeFrameConfig);
                 }
 
                 if (!googletag.__servicesEnabled__ && dfpOptions.collapseEmptyDivs) {
