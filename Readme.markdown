@@ -185,9 +185,16 @@ Available Options
     </tr>
     <tr>
         <td>setLocation</td>
-        <td>This object sets geolocalization. String values are not valid. </td>
+        <td>This object sets geolocalization. String values are not valid.</td>
     </tr>
-
+    <tr>
+        <td>setSafeFrameConfig</td>
+        <td>This object sets the page-level preferences for SafeFrame configuration.</td>
+    </tr>
+    <tr>
+        <td>setForceSafeFrame</td>
+        <td>This boolean configures whether all ads on the page should be forced to be rendered using a SafeFrame container.</td>
+    </tr>
     <tr>
         <td>enableSingleRequest</td>
         <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading ad units into the page after the initial load.</td>
@@ -286,7 +293,7 @@ This script provides two callbacks which you can use to make working with DFP a 
             </ul>
         </td>
         <td>This is called after each AdUnit has been blocked.</td>
-    </tr>   
+    </tr>
 </table>
 
 Please see the [example-bootstrap.js](https://github.com/coop182/jquery.dfp.js/blob/master/example-bootstrap.js) file for an example of how to use these.

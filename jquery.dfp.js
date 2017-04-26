@@ -102,6 +102,7 @@
                 setCategoryExclusion: '',
                 setLocation: '',
                 setSafeFrameConfig: undefined,
+                setForceSafeFrame: false,
                 enableSingleRequest: true,
                 collapseEmptyDivs: 'original',
                 refreshExisting: true,
@@ -232,6 +233,10 @@
                         googleAdUnit.defineSizeMapping(map.build());
                     }
 
+                    if ($adUnit.data('safeframe')) {
+                        googleAdUnit.setForceSafeFrame(true);
+                    }
+
                     // Store googleAdUnit reference
                     $adUnit.data(storeAs, googleAdUnit);
 
@@ -280,6 +285,10 @@
 
                 if (typeof dfpOptions.setSafeFrameConfig === 'object') {
                     pubadsService.setSafeFrameConfig(dfpOptions.setSafeFrameConfig);
+                }
+
+                if (dfpOptions.setForceSafeFrame) {
+                    pubadsService.setForceSafeFrame(true);
                 }
 
                 if (!googletag.__servicesEnabled__ && dfpOptions.collapseEmptyDivs) {
