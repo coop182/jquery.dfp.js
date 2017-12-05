@@ -476,7 +476,12 @@
                 $.each(dimensionGroups, function (k, v) {
 
                     var dimensionSet = v.split('x');
-                    dimensions.push([parseInt(dimensionSet[0], 10), parseInt(dimensionSet[1], 10)]);
+
+                    if(dimensionSet.test('fluid')){
+                        dimensions.push([dimensionSet]);
+                    }else{
+                        dimensions.push([parseInt(dimensionSet[0], 10), parseInt(dimensionSet[1], 10)]);
+                    }
 
                 });
 
