@@ -187,7 +187,6 @@ Available Options
         <td>setLocation</td>
         <td>This object sets geolocalization. String values are not valid. </td>
     </tr>
-
     <tr>
         <td>enableSingleRequest</td>
         <td>This boolean sets whether the page ads are fetched with a single request or not, you will need to set this to false it you want to call $.dfp() more than once, typically you would do this if you are loading ad units into the page after the initial load.</td>
