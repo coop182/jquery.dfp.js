@@ -303,45 +303,48 @@
                     pubadsService.setCentering(true);
                 }
 
-                // Setup event listener to listen for renderEnded event and fire callbacks.
-                pubadsService.addEventListener('slotRenderEnded', function (event) {
+                if(!googletag.__dfp_event__) {
+                    // Setup event listener to listen for renderEnded event and fire callbacks.
+                    pubadsService.addEventListener('slotRenderEnded', function (event) {
 
-                    rendered++;
+                        rendered++;
 
-                    var $adUnit = $('#' + event.slot.getSlotId().getDomId());
+                        var $adUnit = $('#' + event.slot.getSlotId().getDomId());
 
-                    var display = event.isEmpty ? 'none' : 'block';
+                        var display = event.isEmpty ? 'none' : 'block';
 
-                    // if the div has been collapsed but there was existing content expand the
-                    // div and reinsert the existing content.
-                    var $existingContent = $adUnit.data('existingContent');
-                    if (display === 'none' && $.trim($existingContent).length > 0 &&
-                        dfpOptions.collapseEmptyDivs === 'original') {
-                        $adUnit.show().html($existingContent);
-                        display = 'block display-original';
-                    }
+                        // if the div has been collapsed but there was existing content expand the
+                        // div and reinsert the existing content.
+                        var $existingContent = $adUnit.data('existingContent');
+                        if (display === 'none' && $.trim($existingContent).length > 0 &&
+                            dfpOptions.collapseEmptyDivs === 'original') {
+                            $adUnit.show().html($existingContent);
+                            display = 'block display-original';
+                        }
 
-                    $adUnit.removeClass('display-none').addClass('display-' + display);
+                        $adUnit.removeClass('display-none').addClass('display-' + display);
 
-                    // Excute afterEachAdLoaded callback if provided
-                    if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                        dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
-                    }
+                        // Excute afterEachAdLoaded callback if provided
+                        if (typeof dfpOptions.afterEachAdLoaded === 'function') {
+                            dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
+                        }
 
-                    // Excute afterAllAdsLoaded callback if provided
-                    if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
-                        dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
-                    }
+                        // Excute afterAllAdsLoaded callback if provided
+                        if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
+                            dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
+                        }
 
-                });
+                    });
+                    googletag.__dfp_event__ = true;
+                }
 
                 // this will work with AdblockPlus
                 if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
                     setTimeout(function () {
                         var slots = pubadsService.getSlots ? pubadsService.getSlots() : [];
                         if (slots.length > 0) {
-                            $.get(slots[0].getContentUrl()).always(function (r) {
-                                if (r.status !== 200) {
+                            $.get({ url:slots[0].getContentUrl(), dataType: 'script' }).always(function (c, status) {
+                                if (status !== 'success') {
                                     $.each(slots, function () {
                                         var $adUnit = $('#' + this.getSlotId().getDomId());
                                         dfpOptions.afterAdBlocked.call(dfpScript, $adUnit, this);
