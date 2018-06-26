@@ -31,13 +31,15 @@
         // Save Scope
         dfpScript = this || {};
 
+        // Setup global adunit counter
+        window.dfpUID = 0;
+
         var
         // DFP account ID
         dfpID = '',
 
         // Init counters
         count = 0,
-        uid = 0,
         rendered = 0,
 
         // Default DFP selector
@@ -99,6 +101,8 @@
                 setTargeting: {},
                 setCategoryExclusion: '',
                 setLocation: '',
+                setSafeFrameConfig: undefined,
+                setForceSafeFrame: false,
                 enableSingleRequest: true,
                 collapseEmptyDivs: 'original',
                 refreshExisting: true,
@@ -229,6 +233,10 @@
                         googleAdUnit.defineSizeMapping(map.build());
                     }
 
+                    if ($adUnit.data('safeframe')) {
+                        googleAdUnit.setForceSafeFrame(true);
+                    }
+
                     // Store googleAdUnit reference
                     $adUnit.data(storeAs, googleAdUnit);
 
@@ -275,7 +283,15 @@
                     });
                 }
 
-                if (dfpOptions.collapseEmptyDivs) {
+                if (typeof dfpOptions.setSafeFrameConfig === 'object') {
+                    pubadsService.setSafeFrameConfig(dfpOptions.setSafeFrameConfig);
+                }
+
+                if (dfpOptions.setForceSafeFrame) {
+                    pubadsService.setForceSafeFrame(true);
+                }
+
+                if (!googletag.__servicesEnabled__ && dfpOptions.collapseEmptyDivs) {
                     pubadsService.collapseEmptyDivs();
                 }
 
@@ -291,7 +307,7 @@
                     }
                 }
 
-                if (dfpOptions.disableInitialLoad) {
+                if (!googletag.__servicesEnabled__ && dfpOptions.disableInitialLoad) {
                     pubadsService.disableInitialLoad();
                 }
 
@@ -303,37 +319,39 @@
                     pubadsService.setCentering(true);
                 }
 
-                // Setup event listener to listen for renderEnded event and fire callbacks.
-                pubadsService.addEventListener('slotRenderEnded', function (event) {
+                if (!googletag.__servicesEnabled__) {
+                    // Setup event listener to listen for renderEnded event and fire callbacks.
+                    pubadsService.addEventListener('slotRenderEnded', function (event) {
 
-                    rendered++;
+                        rendered++;
 
-                    var $adUnit = $('#' + event.slot.getSlotId().getDomId());
+                        var $adUnit = $('#' + event.slot.getSlotId().getDomId());
 
-                    var display = event.isEmpty ? 'none' : 'block';
+                        var display = event.isEmpty ? 'none' : 'block';
 
-                    // if the div has been collapsed but there was existing content expand the
-                    // div and reinsert the existing content.
-                    var $existingContent = $adUnit.data('existingContent');
-                    if (display === 'none' && $.trim($existingContent).length > 0 &&
-                        dfpOptions.collapseEmptyDivs === 'original') {
-                        $adUnit.show().html($existingContent);
-                        display = 'block display-original';
-                    }
+                        // if the div has been collapsed but there was existing content expand the
+                        // div and reinsert the existing content.
+                        var $existingContent = $adUnit.data('existingContent');
+                        if (display === 'none' && $.trim($existingContent).length > 0 &&
+                            dfpOptions.collapseEmptyDivs === 'original') {
+                            $adUnit.show().html($existingContent);
+                            display = 'block display-original';
+                        }
 
-                    $adUnit.removeClass('display-none').addClass('display-' + display);
+                        $adUnit.removeClass('display-none').addClass('display-' + display);
 
-                    // Excute afterEachAdLoaded callback if provided
-                    if (typeof dfpOptions.afterEachAdLoaded === 'function') {
-                        dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
-                    }
+                        // Excute afterEachAdLoaded callback if provided
+                        if (typeof dfpOptions.afterEachAdLoaded === 'function') {
+                            dfpOptions.afterEachAdLoaded.call(this, $adUnit, event);
+                        }
 
-                    // Excute afterAllAdsLoaded callback if provided
-                    if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
-                        dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
-                    }
+                        // Excute afterAllAdsLoaded callback if provided
+                        if (typeof dfpOptions.afterAllAdsLoaded === 'function' && rendered === count) {
+                            dfpOptions.afterAllAdsLoaded.call(this, $adCollection);
+                        }
 
-                });
+                    });
+                }
 
                 // this will work with AdblockPlus
                 if(dfpScript.shouldCheckForAdBlockers() && !googletag._adBlocked_) {
@@ -352,7 +370,10 @@
                     }, 0);
                 }
 
-                googletag.enableServices();
+                if (!googletag.__servicesEnabled__) {
+                    googletag.enableServices();
+                    googletag.__servicesEnabled__ = true;
+                }
 
             });
 
@@ -394,13 +415,27 @@
                 }
                 if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
-                    googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
+                    googletag.cmd.push(function () {
+                        googletag.pubads().refresh([$adUnitData]);
+                    });
 
                 } else {
-                    googletag.cmd.push(function () { googletag.display($adUnit.attr('id')); });
+                    googletag.cmd.push(function () {
+                        googletag.display($adUnit.attr('id'));
+                    });
                 }
 
             });
+
+            if (dfpOptions.disableInitialLoad) {
+                var $ads = $adCollection.filter('.display-none').map(function () {
+                    return $(this).data(storeAs);
+                }).get();
+
+                googletag.cmd.push(function () {
+                    googletag.pubads().refresh($ads);
+                });
+            }
 
         },
 
@@ -435,8 +470,8 @@
          */
         getID = function ($adUnit, adUnitName) {
 
-            uid++;
-            return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace(/[^A-z0-9]/g, '_') + '-auto-gen-id-' + uid).attr('id');
+            window.dfpUID++;
+            return $adUnit.attr('id') || $adUnit.attr('id', adUnitName.replace(/[^A-z0-9]/g, '_') + '-auto-gen-id-' + window.dfpUID).attr('id');
 
         },
 
@@ -475,8 +510,12 @@
 
                 $.each(dimensionGroups, function (k, v) {
 
-                    var dimensionSet = v.split('x');
-                    dimensions.push([parseInt(dimensionSet[0], 10), parseInt(dimensionSet[1], 10)]);
+                    if (v === 'fluid') {
+                        dimensions.push(v);
+                    } else {
+                        var dimensionSet = v.split('x');
+                        dimensions.push([parseInt(dimensionSet[0], 10), parseInt(dimensionSet[1], 10)]);
+                    }
 
                 });
 
@@ -499,6 +538,8 @@
          * @param {Array} $adCollection
          */
         dfpLoader = function (options, $adCollection) {
+          window.googletag = window.googletag || {};
+          window.googletag.cmd = window.googletag.cmd || [];
 
             function execBlockEvents() {
                 if(dfpScript.shouldCheckForAdBlockers()) {
@@ -518,9 +559,6 @@
             }
 
             var loaded = $.Deferred();
-
-            window.googletag = window.googletag || {};
-            window.googletag.cmd = window.googletag.cmd || [];
 
             var gads = document.createElement('script');
             gads.async = true;
