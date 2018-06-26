@@ -105,6 +105,7 @@
                 disablePublisherConsole: false,
                 disableInitialLoad: false,
                 setCentering: false,
+                setCookieOptions: false,
                 noFetch: false,
                 namespace: undefined,
                 sizeMapping: {}
@@ -301,6 +302,10 @@
 
                 if (dfpOptions.setCentering) {
                     pubadsService.setCentering(true);
+                }
+
+                if(dfpOptions.setCookieOptions) {
+                    pubadsService.setCookieOptions(dfpOptions.setCookieOptions);
                 }
 
                 // Setup event listener to listen for renderEnded event and fire callbacks.

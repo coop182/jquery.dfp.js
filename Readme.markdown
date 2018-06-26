@@ -216,6 +216,10 @@ Available Options
         <td>Enables/disables centering of ads.</td>
     </tr>
     <tr>
+        <td>setCookieOptions</td>
+        <td>Enables (pass 0) or disables (pass 1) the usage of cookies.</td>
+    </tr>
+    <tr>
         <td>afterEachAdLoaded</td>
         <td>This is a call back function, see below for more information.</td>
     </tr>
