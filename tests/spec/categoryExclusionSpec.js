@@ -132,6 +132,7 @@ describe('Category Exclusion', function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setCategoryExclusion: mock.setCategoryExclusion
             };
         };
@@ -172,6 +173,7 @@ describe('Category Exclusion', function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setCategoryExclusion: mock.setCategoryExclusion
             };
         };
@@ -211,6 +213,7 @@ describe('Category Exclusion', function () {
                 enableSingleRequest: function () {},
                 setTargeting: function () {},
                 collapseEmptyDivs: function () {},
+                addEventListener: function () {},
                 setCategoryExclusion: mock.setCategoryExclusion
             };
         };
