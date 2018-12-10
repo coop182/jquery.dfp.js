@@ -26,7 +26,29 @@
         }
     }(function ($) {
 
+        // Default options
+        var dfpOptions = {
+            setTargeting: {},
+            setCategoryExclusion: '',
+            setLocation: '',
+            enableSingleRequest: true,
+            collapseEmptyDivs: 'original',
+            refreshExisting: true,
+            disablePublisherConsole: false,
+            disableInitialLoad: false,
+            setCentering: false,
+            noFetch: false,
+            namespace: undefined,
+            sizeMapping: {}
+        };
+
         var
+
+        // True when dfp is already loaded
+        dfpLoaded = false,
+
+        // Ads that have been queued until dfp loads
+        waitingQueue = [],
 
         // Save Scope
         dfpScript = this || {};
@@ -55,7 +77,7 @@
          * Init function sets required params and loads Google's DFP script
          * @param  String id       The DFP account ID
          * @param  String selector The adunit selector
-         * @param  Object options  Custom options to apply
+         * @param  Object options  Default options
          */
         init = function (id, selector, options) {
             var $adCollection;
@@ -76,40 +98,29 @@
 
             // explicitly wait for loader to be completed, otherwise the googletag might not be available
             dfpLoader(options, $adCollection).then(function(){
-                options = setOptions(options);
-                dfpScript.dfpOptions = options;
+                dfpOptions = mixOptions(options);
+                dfpScript.dfpOptions = dfpOptions;
+
+                dfpPostLoad();
 
                 $(function () {
-                    createAds(options, $adCollection);
-                    displayAds(options, $adCollection);
+                    dfpLoaded = true;
+                    $adCollection.each(createAd);
+
+                    // Flush ads previously queued
+                    $.each(waitingQueue, createAd);
                 });
             });
 
         },
 
         /**
-         * Set the options for DFP
+         * Mix given options with the defaults and returns it
+         *
          * @param Object options Custom options to apply
          * @return Object extended options
          */
-        setOptions = function (options) {
-
-            // Set default options
-            var dfpOptions = {
-                setTargeting: {},
-                setCategoryExclusion: '',
-                setLocation: '',
-                enableSingleRequest: true,
-                collapseEmptyDivs: 'original',
-                refreshExisting: true,
-                disablePublisherConsole: false,
-                disableInitialLoad: false,
-                setCentering: false,
-                noFetch: false,
-                namespace: undefined,
-                sizeMapping: {}
-            };
-
+        mixOptions = function (options) {
             if (typeof options.setUrlTargeting === 'undefined' || options.setUrlTargeting) {
                 // Get URL Targeting
                 var urlTargeting = getUrlTargeting(options.url);
@@ -120,125 +131,133 @@
                 });
             }
 
-            // Merge options objects
-            $.extend(true, dfpOptions, options);
+            // Merge options objects into a new object
+            var settings = $.extend(true, {}, dfpOptions, options);
+
 
             // If a custom googletag is specified, use it.
-            if (dfpOptions.googletag) {
+            if (options.googletag) {
                 window.googletag.cmd.push(function () {
-                    $.extend(true, window.googletag, dfpOptions.googletag);
+                    $.extend(true, window.googletag, options.googletag);
                 });
             }
 
-            return dfpOptions;
+            return settings;
         },
 
         /**
-         * Find and create all Ads
-         * @param Object dfpOptions options related to ad instantiation
-         * @param jQuery $adCollection collection of ads
-         * @return Array an array of ad units that have been created.
+         * Creates a new ad. If dfp has not been loaded yet, adunit is queued and automatically flushed
+         *
+         * @param  Object options  Custom options for the ad
          */
-        createAds = function (dfpOptions, $adCollection) {
-            var googletag = window.googletag;
-            // Loops through on page Ad units and gets ads for them.
-            $adCollection.each(function () {
-                var $adUnit = $(this);
+        createAd = function(options) {
+            if(!dfpLoaded) {
+                waitingQueue.push(this);
+                return false;
+            }
 
-                count++;
+            options = mixOptions(options || {});
 
-                // adUnit name
-                var adUnitName = getName($adUnit, dfpOptions);
+            var $adUnit = $(this);
 
-                // adUnit id - this will use an existing id or an auto generated one.
-                var adUnitID = getID($adUnit, adUnitName);
+            count++;
 
-                // get dimensions of the adUnit
-                var dimensions = getDimensions($adUnit);
+            // adUnit name
+            var adUnitName = getName($adUnit, options);
 
-                // set existing content
-                $adUnit.data('existingContent', $adUnit.html());
+            // adUnit id - this will use an existing id or an auto generated one.
+            var adUnitID = getID($adUnit, adUnitName);
 
-                // wipe html clean ready for ad and set the default display class.
-                $adUnit.html('').addClass('display-none');
+            // get dimensions of the adUnit
+            var dimensions = getDimensions($adUnit);
 
-                // Push commands to DFP to create ads
-                googletag.cmd.push(function () {
+            // set existing content
+            $adUnit.data('existingContent', $adUnit.html());
 
-                    var googleAdUnit,
-                        $adUnitData = $adUnit.data(storeAs);
+            // wipe html clean ready for ad and set the default display class.
+            $adUnit.html('').addClass('display-none');
 
-                    if ($adUnitData) {
+            // Push commands to DFP to create ads
+            googletag.cmd.push(function () {
 
-                        // Get existing ad unit
-                        googleAdUnit = $adUnitData;
+                var googleAdUnit,
+                    $adUnitData = $adUnit.data(storeAs);
 
+                if ($adUnitData) {
+
+                    // Get existing ad unit
+                    googleAdUnit = $adUnitData;
+
+                } else {
+
+                    // Build slotName for loading
+                    var slotName;
+                    if (dfpID === '') {
+                        slotName = adUnitName;
                     } else {
+                        slotName = '/' + dfpID + '/' + adUnitName;
+                    }
 
-                        // Build slotName for loading
-                        var slotName;
-                        if (dfpID === '') {
-                            slotName = adUnitName;
-                        } else {
-                            slotName = '/' + dfpID + '/' + adUnitName;
+                    // Create the ad - out of page or normal
+                    if ($adUnit.data('outofpage')) {
+                        googleAdUnit = googletag.defineOutOfPageSlot(slotName, adUnitID);
+                    } else {
+                        googleAdUnit = googletag.defineSlot(slotName, dimensions, adUnitID);
+                        if ($adUnit.data('companion')) {
+                            googleAdUnit = googleAdUnit.addService(googletag.companionAds());
                         }
+                    }
 
-                        // Create the ad - out of page or normal
-                        if ($adUnit.data('outofpage')) {
-                            googleAdUnit = googletag.defineOutOfPageSlot(slotName, adUnitID);
-                        } else {
-                            googleAdUnit = googletag.defineSlot(slotName, dimensions, adUnitID);
-                            if ($adUnit.data('companion')) {
-                                googleAdUnit = googleAdUnit.addService(googletag.companionAds());
-                            }
+                    googleAdUnit = googleAdUnit.addService(googletag.pubads());
+
+                }
+
+                // Sets custom targeting for just THIS ad unit if it has been specified
+                var targeting = $adUnit.data('targeting');
+                if (targeting) {
+                    $.each(targeting, function (k, v) {
+                        googleAdUnit.setTargeting(k, v);
+                    });
+                }
+
+                // Sets custom exclusions for just THIS ad unit if it has been specified
+                var exclusions = $adUnit.data('exclusions');
+                if (exclusions) {
+                    var exclusionsGroup = exclusions.split(',');
+                    var valueTrimmed;
+                    $.each(exclusionsGroup, function (k, v) {
+                        valueTrimmed = $.trim(v);
+                        if (valueTrimmed.length > 0) {
+                            googleAdUnit.setCategoryExclusion(valueTrimmed);
                         }
+                    });
+                }
 
-                        googleAdUnit = googleAdUnit.addService(googletag.pubads());
+                // Sets responsive size mapping for just THIS ad unit if it has been specified
+                var mapping = $adUnit.data('size-mapping');
+                if (mapping && options.sizeMapping[mapping]) {
+                    // Convert verbose to DFP format
+                    var map = googletag.sizeMapping();
+                    $.each(options.sizeMapping[mapping], function (k, v) {
+                        map.addSize(v.browser, v.ad_sizes);
+                    });
+                    googleAdUnit.defineSizeMapping(map.build());
+                }
 
-                    }
+                // Store googleAdUnit reference
+                $adUnit.data(storeAs, googleAdUnit);
 
-                    // Sets custom targeting for just THIS ad unit if it has been specified
-                    var targeting = $adUnit.data('targeting');
-                    if (targeting) {
-                        $.each(targeting, function (k, v) {
-                            googleAdUnit.setTargeting(k, v);
-                        });
-                    }
-
-                    // Sets custom exclusions for just THIS ad unit if it has been specified
-                    var exclusions = $adUnit.data('exclusions');
-                    if (exclusions) {
-                        var exclusionsGroup = exclusions.split(',');
-                        var valueTrimmed;
-                        $.each(exclusionsGroup, function (k, v) {
-                            valueTrimmed = $.trim(v);
-                            if (valueTrimmed.length > 0) {
-                                googleAdUnit.setCategoryExclusion(valueTrimmed);
-                            }
-                        });
-                    }
-
-                    // Sets responsive size mapping for just THIS ad unit if it has been specified
-                    var mapping = $adUnit.data('size-mapping');
-                    if (mapping && dfpOptions.sizeMapping[mapping]) {
-                        // Convert verbose to DFP format
-                        var map = googletag.sizeMapping();
-                        $.each(dfpOptions.sizeMapping[mapping], function (k, v) {
-                            map.addSize(v.browser, v.ad_sizes);
-                        });
-                        googleAdUnit.defineSizeMapping(map.build());
-                    }
-
-                    // Store googleAdUnit reference
-                    $adUnit.data(storeAs, googleAdUnit);
-
-                    // Allow altering of the ad slot before ad load
-                    if (typeof dfpOptions.beforeEachAdLoaded === 'function') {
-                        dfpOptions.beforeEachAdLoaded.call(this, $adUnit);
-                    }
-                });
-
+                // Allow altering of the ad slot before ad load
+                if (typeof options.beforeEachAdLoaded === 'function') {
+                    options.beforeEachAdLoaded.call(this, $adUnit);
+                }
             });
+
+            displayAds($adUnit, options);
+        },
+
+        dfpPostLoad = function () {
+            var googletag = window.googletag;
 
             // Push DFP config options
             googletag.cmd.push(function () {
@@ -360,10 +379,9 @@
 
         /**
          * Display all created Ads
-         * @param {Object} dfpOptions options related to ad instantiation
          * @param {jQuery} $adCollection collection of ads
          */
-        displayAds = function (dfpOptions, $adCollection) {
+        displayAds = function ($adCollection, options) {
 
             var googletag = window.googletag;
             // Check if google adLoader can be loaded, this will work with AdBlock
@@ -374,7 +392,7 @@
                     $.getScript(script).always(function (r) {
                         if (r && r.statusText === 'error') {
                             $.each($adCollection, function () {
-                                dfpOptions.afterAdBlocked.call(dfpScript, $(this));
+                                options.afterAdBlocked.call(dfpScript, $(this));
                             });
                         }
                     });
@@ -389,10 +407,10 @@
 
                 if (googletag._adBlocked_) {
                     if(dfpScript.shouldCheckForAdBlockers()) {
-                        dfpOptions.afterAdBlocked.call(dfpScript, $adUnit);
+                        options.afterAdBlocked.call(dfpScript, $adUnit);
                     }
                 }
-                if (dfpOptions.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
+                if (options.refreshExisting && $adUnitData && $adUnit.hasClass('display-block')) {
 
                     googletag.cmd.push(function () { googletag.pubads().refresh([$adUnitData]); });
 
@@ -617,6 +635,10 @@
 
         };
 
+        var publicMethods = {
+            init: init,
+            createAd: createAd,
+        };
 
         /**
          * Add function to the jQuery / Zepto namespace
@@ -624,28 +646,28 @@
          * @param  Object options (Optional) Custom options to apply
          */
         $.dfp = $.fn.dfp = function (id, options) {
+            var selector = (typeof this === 'function') ? dfpSelector : this;
 
-            options = options || {};
-
-            if (id === undefined) {
-                id = dfpID;
+            // Init without arguments or using string cmd
+            if (id === undefined || (typeof id === 'string' && id === 'init')) {
+                publicMethods.init.call(this, dfpID, selector, {});
             }
-
-            if (typeof id === 'object') {
+            // Init using just options
+            else if(typeof id === 'object') {
                 options = id;
                 id = options.dfpID || dfpID;
+
+                publicMethods.init.call(this, id, selector, options);
             }
-
-            var selector = this;
-
-            if (typeof this === 'function') {
-                selector = dfpSelector;
+            // Any public method
+            else if(publicMethods[id] !== undefined) {
+                return publicMethods[id].apply(this, Array.prototype.slice.call(arguments, 1));
             }
-
-            init(id, selector, options);
+            else {
+                $.error('Method ' + id + ' does not exist');
+            }
 
             return this;
-
         };
 
     }));
